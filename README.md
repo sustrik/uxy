@@ -1,5 +1,12 @@
 # UXY adds structure to the standard UNIX tools
 
+Treating everything as a string is the way through which the great power and
+verstatility of UNIX tools is achieved. However, sometimes the constant
+parsing of strings gets a bit cumbersome.
+
+UXY is a set of tools to manipulate UXY file format, which is a basically
+a two-dimenstional table that's both human- and machine-readable.
+
 # UXY file format
 
 - First line is headers, separated by spaces.
@@ -54,9 +61,9 @@ Alice 25  Main\sRoad\s1,\sLondon
 Bob   23  \m
 ```
 
-### uxy-filter
+### uxy-format
 
-Filters an UXY stream.
+Formats an UXY stream.
 
 - 1st positional arg: A list of output columns. The columns appear in the output
   in the order specified in this argument. A column specified as `foo=bar`
@@ -65,7 +72,7 @@ Filters an UXY stream.
 Example:
 
 ```
-$ uxy-filter ADDR=ADDRESS,NAME < address-book.txt
+$ uxy-format ADDR=ADDRESS,NAME < address-book.txt
 ADDR                   NAME
 Main\sRoad\s1,\sLondon Alice
 \m                     Bob
