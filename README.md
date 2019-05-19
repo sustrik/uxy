@@ -151,6 +151,16 @@ Carol 55  "Hotel \"Excelsior\", New York"
 
 All UXY tools take input from stdin and write the result to stdout.
 
+- **[uxy align](#uxy-align)**
+- **[uxy from-json](#uxy-from-json)**
+- **[uxy from-yaml](#uxy-from-yaml)**
+- **[uxy ls](#uxy-ls)**
+- **[uxy ps](#uxy-ps)**
+- **[uxy re](#uxy-re)**
+- **[uxy reformat](#uxy-reformat)**
+- **[uxy to-json](#uxy-to-json)**
+- **[uxy to-yaml](#uxy-to-yaml)**
+
 ### uxy re
 
 Reads the lines of the input and parses each one using the supplied regular
