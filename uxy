@@ -76,45 +76,64 @@ def encode_field(s):
     f += c
   return f + '"'
 
+UNQUOTED = 1
+QUOTED = 2
+ESCAPE = 3
+TRAILING = 4
+
+# Given a line, this function splits it into individual uxy fields and field widths.
+def split_fields_widths(s):
+  fields = []
+  widths = []
+  state = TRAILING
+  field = ""
+  width = 0
+  for c in s:
+    if state == UNQUOTED:
+      if c == ' ':
+        width += 1
+        state = TRAILING
+      else:
+        field += c
+        width += 1
+    elif state == QUOTED:
+      if c == "\\":
+        field += c
+        width += 1
+        state = ESCAPE
+      elif c == '"':
+        field += c
+        width += 1
+        state = TRAILING
+      else:
+        field += c
+        width += 1      
+    elif state == ESCAPE:
+      field += c
+      width += 1
+      state = QUOTED
+    elif state == TRAILING:
+      if c == " ":
+        width += 1
+      else:
+        if len(field) > 0:
+          fields.append(field)
+          widths.append(width)
+        field = c
+        width = 1
+        if c == '"':
+          state = QUOTED
+        else:
+          state = UNQUOTED
+  if len(field) > 0:
+    fields.append(field)
+    widths.append(width)
+  return (fields, widths)
+
+
 # Given a line, this function splits it into individual uxy fields.
 def split_fields(s):
-  fields = []
-  inquotes = False
-  inescape = False
-  field = ""
-  for c in s:
-    if inquotes:
-      if inescape:
-          inescape = False
-          field += c
-          continue
-      else:
-          if c == '\\':
-            inescape = True
-            field += c
-            continue
-          if c == '"':
-            field += c
-            fields.append(field)
-            field = ""
-            inquotes = False
-            continue
-          field += c
-          continue
-    else:
-      if c == ' ':
-        if field != "":
-          fields.append(field)
-          field = ""
-        continue
-      if field == "" and c == '"':
-          field += c
-          inquotes = True
-          continue
-      field += c
-      continue
-  if field != "":
-    fields.append(field)
+  fields, _ = split_fields_widths(s)
   return fields
 
 
@@ -122,9 +141,8 @@ class Format:
 
   # Create a format from a list of fields.
   # The values of the fields will be used as column names.
-  def __init__(self, fields):
-    self.fields = fields
-    self.widths = [len(f) + 1 for f in fields]
+  def __init__(self, fmt):
+    self.fields, self.widths = split_fields_widths(fmt)
 
   # Adjust the format so that the fields fit in.
   def adjust(self, fields):
@@ -149,7 +167,7 @@ class Format:
 
 def uxy_cmd_re():
   # Use the supplied format.
-  fmt = Format(split_fields(sys.argv[2]))
+  fmt = Format(sys.argv[2])
   sys.stdout.write(fmt.render())
   # Parse the data.
   regexp = re.compile(sys.argv[3])
@@ -166,7 +184,7 @@ def uxy_cmd_re():
 
 def uxy_cmd_align():
   s = trim_newline(sys.stdin.readline())
-  fmt = Format(split_fields(s))
+  fmt = Format(s)
   records = []
   for ln in sys.stdin:
     fields = split_fields(trim_newline(ln))
@@ -176,6 +194,28 @@ def uxy_cmd_align():
   for r in records:
     sys.stdout.write(fmt.render(r))
 
+
+def uxy_cmd_reformat():
+  # Use the supplied format.
+  fmt = Format(sys.argv[2])
+  newhdr = split_fields(sys.argv[2])
+  sys.stdout.write(fmt.render())
+  # Read the old format.
+  s = trim_newline(sys.stdin.readline())
+  oldhdr = split_fields(s)
+  # Process the data.
+  for ln in sys.stdin:
+    oldfields = split_fields(trim_newline(ln))
+    newfields = ['""'] * len(newhdr)
+    for i in range(0, len(oldfields)):
+      if i >= len(oldhdr):
+        break
+      oldname = oldhdr[i]
+      if oldname not in newhdr:
+        continue
+      newfields[newhdr.index(oldname)] = oldfields[i]
+    sys.stdout.write(fmt.render(newfields))
+        
 
 def uxy_cmd_from_json():
   # Read the entire input.
@@ -195,7 +235,7 @@ def uxy_cmd_from_json():
   # Fields will go to the output in alphabetical order.
   fields = sorted(fields)
   # Collect the data. At the same time adjust the format sa that data fit in.
-  fmt = Format([encode_field(f) for f in fields])
+  fmt = Format(" ".join([encode_field(f) for f in fields]))
   records = []
   for i in range(0, len(root)):
     record = []
@@ -234,6 +274,8 @@ def main():
     uxy_cmd_re()
   elif cmd == "align":
     uxy_cmd_align()
+  elif cmd == "reformat":
+    uxy_cmd_reformat()
   elif cmd == "from-json":
     uxy_cmd_from_json()
   elif cmd == "to-json":
