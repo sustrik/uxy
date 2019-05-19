@@ -60,7 +60,7 @@ $ uxy ls . | uxy to-json
 
 # UXY format
 
-## Records and fields
+### Records and fields
 
 - UXY format is a possibly infinite list of lines separated by newlines.
   Each line is a data record.
@@ -77,7 +77,7 @@ $ uxy ls . | uxy to-json
 - UXY format should not contain control characters, such as TABs.
   If there's a need for a TAB, use "\t" instead.
 
-# Header
+### Header
 
 - First line of UXY format is the header.
 - The format of the header line is identical to any other UXY line,
@@ -86,7 +86,7 @@ $ uxy ls . | uxy to-json
 - The spacing of the fields in the header is a hint for the tools. They SHOULD
   try to align the data with the headers.
 
-# Interactions between headers and records
+### Interactions between headers and records
 
 - Fields SHOULD but don't have to be aligned with each other or with the
   headers.
