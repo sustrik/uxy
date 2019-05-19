@@ -17,28 +17,28 @@ UXY format. Along with convertors from/to other common data formats
 ### Examples
 
 ```
-$ uxy ls .
+$ uxy ls
 PERMISSIONS LINKS OWNER GROUP SIZE TIME NAME 
 -rw-rw-r--  1     sustrik sustrik 4147 "2019-05-19 17:50:13.263709560 +0200" README.md 
 -rwxrwxr-x  1     sustrik sustrik 8021 "2019-05-19 17:48:14.962014184 +0200" uxy
 ```
 
 ```
-$ uxy ls . | uxy align
+$ uxy ls | uxy align
 PERMISSIONS LINKS OWNER   GROUP   SIZE TIME                                  NAME
 -rw-rw-r--  1     sustrik sustrik 4147 "2019-05-19 17:50:13.263709560 +0200" README.md 
 -rwxrwxr-x  1     sustrik sustrik 8021 "2019-05-19 17:48:14.962014184 +0200" uxy
 ```
 
 ```
-$ uxy ls . | uxy reformat "NAME SIZE"
+$ uxy ls | uxy reformat "NAME SIZE"
 NAME SIZE 
 README.md 4147 
 uxy  8021 
 ```
 
 ```
-$ uxy ls . | uxy to-json
+$ uxy ls | uxy to-json
 [
     {
         "LINKS": "1",
@@ -222,7 +222,7 @@ Blue  "12742 km" Earth
 Wraps ls tool and outputs the results in UXY format.
 
 ```
-$ uxy ls . | uxy align
+$ uxy ls | uxy align
 PERMISSIONS LINKS OWNER   GROUP   SIZE TIME                                  NAME
 -rw-rw-r--  1     sustrik sustrik 3535 "2019-05-19 16:21:56.835218781 +0200" README.md 
 -rwxrwxr-x  1     sustrik sustrik 7455 "2019-05-19 17:33:49.286905670 +0200" uxy
