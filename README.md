@@ -145,7 +145,7 @@ $ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
 ]
 ```
 
-# uxy ls
+### uxy ls
 
 Wraps ls tool and outputs the results in UXY format.
 
