@@ -111,10 +111,10 @@ UXY format is designed with the following requirements in mind:
   - The characters inside the quotes, including spaces, are taken as they are.
   - The only exception are the characters preceded by backslash. These are
     encoded as follows:
-    - \" double quote
-    - \\ backslash
-    - \t tab
-    - \n newline
+    - `\"` double quote
+    - `\\` backslash
+    - `\t` tab
+    - `\n` newline
     - any other escape sequence MUST be interpreted as `?` (question mark)
       character.
 - Any control characters (e.g. `TAB`) MUST be interpreted as `?` (question mark)
