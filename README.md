@@ -4,7 +4,7 @@ Treating everything as a string is the way through which the great power and
 verstatility of UNIX tools is achieved. However, sometimes the constant
 parsing of strings gets a bit cumbersome.
 
-UXY is a set of tools to manipulate the UXY format, which is a basically
+UXY is a tool to manipulate the UXY format, which is a basically
 a two-dimenstional table that's both human- and machine-readable.
 
 # UXY format
@@ -15,7 +15,7 @@ a two-dimenstional table that's both human- and machine-readable.
   Each line is a data record.
 - Each line is composed of fields separated by arbitrary number spaces.
 - Fields starting AND ending with a double quote are treated in a special way:
-  - The delimiting quote character themselves are ignored.
+  - The delimiting quote characters themselves are ignored.
   - The characters inside the quotes, including spaces, are taken as they are.
   - The only exception are the characters preceded by backslash. These are
     encoded as follows:
@@ -48,7 +48,7 @@ Example:
 
 ```
 NAME  AGE ADDRESS
-Alice 25  "Main Road 1, London"
+Alice 25  "Main Road 1, London" "Let's use this unnamed field for comments."
 Bob   23  ""
 Carol 55  "Hotel \"Excelsior\", New York"
 ```
@@ -75,7 +75,7 @@ Aligns the data with the headers. This is done by resizing the columns so that e
 the longest value fits into the column.
 
 ```
-$ ls -l | ./uxy re "TIME NAME" ".* +(.*) +(.*)" | ./uxy align
+$ ls -l | uxy re "TIME NAME" ".* +(.*) +(.*)" | uxy align
 TIME  NAME
 14:36 README.md 
 14:22 uxy
@@ -100,7 +100,7 @@ $ cat test.json
     }
 ]
 $ uxy from-json < test.json 
-Name        Time  
+Name        Time
 Quasimodo   14:30 
 "Moby Dick" 14:22
 ```
