@@ -67,6 +67,22 @@ $ uxy ps | uxy to-json | jq '.[].CMD'
 "ps"
 ```
 
+```
+$ cat test.yml 
+- Name: Mercury
+  Diameter: 4880 km
+- Name: Venus
+  Diameter: 12103 km
+- Name: Earth
+  Diameter: 12742 km
+  Color: Blue
+sustrik@sustrik:~/uxy$ uxy from-yaml < test.yml 
+Color Diameter   Name
+""    "4880 km"  Mercury 
+""    "12103 km" Venus
+Blue  "12742 km" Earth
+```
+
 # UXY format
 
 ### Records and fields
@@ -174,7 +190,7 @@ $ cat test.json
 [
     {
         "Name": "Quasimodo",
-        "Time": "14:30"
+        "Time": "14:30"Converts from JSON to UXY format.
     },
     {
         "Name": "Moby Dick",
@@ -189,7 +205,7 @@ Quasimodo   14:30
 
 ### uxy to-json
 
-Convers UXY format to JSON.
+Converts UXY format to JSON.
 
 ```
 $ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
@@ -203,6 +219,47 @@ $ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
         "name": "uxy"
     }
 ]
+```
+
+### uxy from-yaml
+
+Converts from YAML to UXY format.
+
+```
+$ cat test.yml 
+- Name: Mercury
+  Diameter: 4880 km
+- Name: Venus
+  Diameter: 12103 km
+- Name: Earth
+  Diameter: 12742 km
+  Color: Blue
+sustrik@sustrik:~/uxy$ uxy from-yaml < test.yml 
+Color Diameter   Name
+""    "4880 km"  Mercury 
+""    "12103 km" Venus
+Blue  "12742 km" Earth
+```
+
+### uxy to-yaml
+
+Converts UXY format to YAML.
+
+```
+$ uxy ps | uxy to-yaml
+- PID: '512'
+  TIME: 00:00:00 uxy
+  TTY: pts/22
+- PID: '513'
+  TIME: 00:00:00 uxy
+  TTY: pts/22
+- PID: '514'
+  TIME: 00:00:00 ps
+  TTY: pts/22
+- CMD: bash
+  PID: '12392'
+  TIME: 00:00:01
+  TTY: pts/22
 ```
 
 ### uxy ls

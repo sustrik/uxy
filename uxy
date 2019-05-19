@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 import unicodedata
+import yaml
 
 def trim_newline(s):
   if s.endswith('\n'):
@@ -267,6 +268,54 @@ def uxy_cmd_to_json():
   sys.stdout.write(json.dumps(res, indent=4) + "\n")
 
 
+def uxy_cmd_from_yaml():
+  # Read the entire input.
+  s = ""
+  for ln in sys.stdin:
+    s += ln
+  root = yaml.load(s)
+  # Normalize the dict. Collect the field names along the way.
+  fields = {}
+  if not isinstance(root, list):
+    root = [root]
+  for i in range(0, len(root)):
+    if not isinstance(root[i], dict):
+      root[i] = {"COL1": root[i]}
+    for k, _ in root[i].items():
+      fields[k] = None
+  # Fields will go to the output in alphabetical order.
+  fields = sorted(fields)
+  # Collect the data. At the same time adjust the format sa that data fit in.
+  fmt = Format(" ".join([encode_field(f) for f in fields]))
+  records = []
+  for i in range(0, len(root)):
+    record = []
+    for f in fields:
+      if f in root[i]:
+        record.append(encode_field(str(root[i][f])))
+      else:
+        record.append('""')
+    fmt.adjust(record)
+    records.append(record)
+  # Write the result to output.
+  sys.stdout.write(fmt.render())
+  for r in records:
+    sys.stdout.write(fmt.render(r))
+
+
+def uxy_cmd_to_yaml():
+  s = trim_newline(sys.stdin.readline())
+  hdr = split_fields(s)
+  res = []
+  for ln in sys.stdin:
+    fields = split_fields(trim_newline(ln))
+    item = {}
+    for i in range(0, len(fields)):
+      item[decode_field(hdr[i])] = decode_field(fields[i])
+    res.append(item)
+  sys.stdout.write(yaml.dump(res, default_flow_style=False))
+
+
 def uxy_cmd_ls():
   proc = subprocess.Popen(['ls','-l', '--time-style=full-iso', sys.argv[2]], stdout=subprocess.PIPE)
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+([^\s]*)')
@@ -318,6 +367,10 @@ def main():
     uxy_cmd_from_json()
   elif cmd == "to-json":
     uxy_cmd_to_json()
+  elif cmd == "from-yaml":
+    uxy_cmd_from_yaml()
+  elif cmd == "to-yaml":
+    uxy_cmd_to_yaml()
   elif cmd == "ls":
     uxy_cmd_ls()
   elif cmd == "ps":
