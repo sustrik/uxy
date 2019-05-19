@@ -12,7 +12,7 @@ a two-dimenstional table that's both human- and machine-readable.
 - First line is headers, separated by spaces.
 - Each header is uppercase letters, digits and dashes.
   First character must be a letter.
-- The spacing of headers MAY be used to determine the default widths of the
+- The spacing of headers SHOULD be used to determine the default widths of the
   fields. The fields that are not present in the header are assumed to have
   width of 10 characters.
 
@@ -28,7 +28,9 @@ a two-dimenstional table that's both human- and machine-readable.
     - \" double quote
     - \\ backslash
     - \t tab
-    - \n newline 
+    - \n newline
+- Unquoted fields SHOULD NOT contain control characters, such as TABs.
+  If they do the character MUST be treated as it was a question mark.
 
 - Fields SHOULD but don't have to be aligned with each other or with the
   headers.
@@ -48,24 +50,52 @@ Carol 55  "Hotel \"Excelsior\", New York"
 
 # TOOLS
 
-All tools take input from stdin.
-and write the result to stdout.
+All tools take input from stdin and write the result to stdout.
 
-### uxy-in
+### uxy re
 
-Converts the input to UXY format.
+Example:
 
-Option -t specifies the format of the input stream (json, yml, xml, etc.)
-Default is 'ssv' (space-separated values).
+Reads the lines of the input and parses each one using the supplied regular
+expression. Groups are then assigned to the fields specified in the header.
 
-### uxy-out
+`uxy re "YEAR MONTH DAY" "(.*)-(.*)-(.*)" < dates.txt`
 
-Coverts the UXY-formatted input to a specified destination format.
+### uxy format
 
-Option -t specifies the format of the output stream (json, yml, xml, etc.)
-Default is 'ssv' (space-separated values).
+Allows for filtering, rearrangement and renaming of columns.
 
-### uxy-pp
+`uxy format "M Y" MONTH YEAR`
+
+The command above converts
+
+```
+YEAR MONTH DAY
+2019 04    29
+2018 12    01
+```
+
+into
+
+```
+M  Y
+04 2019
+12 2018
+```
+
+### uxy from-csv
+
+### uxy to-csv
+
+### uxy from-json
+
+### uxy to-json
+
+### uxy from-yaml
+
+### uxy to-yaml
+
+### uxy pp
 
 Pretty-print the data.
 
@@ -75,13 +105,13 @@ Output:
 
 ```
 NAME  AGE ADDRESS
----------------------------------------
+--------------------------------------
 Alice 25  Main Road 1, London
 Bob   23
 Carol 55  Hotel "Excelsior", New York
 ```
 
-### uxy-ls
+### uxy ls
 
 Same as `ls -l` except that the output is UXY-formatted.
 
