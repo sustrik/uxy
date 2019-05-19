@@ -156,5 +156,18 @@ PERMISSIONS LINKS OWNER   GROUP   SIZE TIME                                  NAM
 -rwxrwxr-x  1     sustrik sustrik 7455 "2019-05-19 17:33:49.286905670 +0200" uxy
 ```
 
+### uxy ps
+
+Wraps ps tool and outputs the results in UXY format.
+
+```
+$ uxy ps | uxy align
+PID   TTY    TIME     CMD
+12392 pts/22 00:00:00 bash 
+28221 pts/22 00:00:00 uxy
+28222 pts/22 00:00:00 uxy
+28223 pts/22 00:00:00 ps
+```
+
 TODO: Wrap more common UNIX tools.
 

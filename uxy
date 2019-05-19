@@ -285,6 +285,24 @@ def uxy_cmd_ls():
     sys.stdout.write(fmt.render(fields))
 
 
+def uxy_cmd_ps():
+  proc = subprocess.Popen(['ps'], stdout=subprocess.PIPE)
+  regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
+  fmt = Format("PID TTY TIME CMD")
+  sys.stdout.write(fmt.render())
+  # Ignore the header file.
+  proc.stdout.readline()
+  for ln in proc.stdout:
+    ln = trim_newline(ln.decode("utf-8"))
+    m = regexp.match(ln)
+    if not m:
+      continue
+    fields = []
+    for i in range(1, regexp.groups + 1):
+      fields.append(encode_field(m.group(i)))
+    sys.stdout.write(fmt.render(fields))
+
+
 def main():
   if len(sys.argv) < 2:
       print("usage: uxy <command> ...", file=sys.stderr)
@@ -302,6 +320,8 @@ def main():
     uxy_cmd_to_json()
   elif cmd == "ls":
     uxy_cmd_ls()
+  elif cmd == "ps":
+    uxy_cmd_ps()
   else:
     print("unrecognized command %s" % cmd, file=sys.stderr)
     sys.exit(1)
