@@ -137,7 +137,7 @@ UXY format is designed with the following requirements in mind:
 - It is valid to for a record to have more fields than the header.
   The tools should consider the name of such column to be an empty string.
 
-Example:
+### Example
 
 ```
 NAME  AGE ADDRESS
