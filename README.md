@@ -4,40 +4,45 @@ Treating everything as a string is the way through which the great power and
 verstatility of UNIX tools is achieved. However, sometimes the constant
 parsing of strings gets a bit cumbersome.
 
-UXY is a set of tools to manipulate UXY file format, which is a basically
+UXY is a set of tools to manipulate the UXY format, which is a basically
 a two-dimenstional table that's both human- and machine-readable.
 
-# UXY file format
+# UXY format
 
-- First line is headers, separated by spaces.
-- Each header is uppercase letters, digits and dashes.
-  First character must be a letter.
-- The spacing of headers SHOULD be used to determine the default widths of the
-  fields. The fields that are not present in the header are assumed to have
-  width of 10 characters.
+## Records and fields
 
-- Remaining lines are data. There may be infinite amount of data items (pipe).
-- Data line is composed of fields separated by arbitrary number spaces.
-  In general the data SHOULD be aligned with headers whereever the fields
-  actually fit in.
+- UXY format is a possibly infinite list of lines separated by newlines.
+  Each line is a data record.
+- Each line is composed of fields separated by arbitrary number spaces.
 - Fields starting AND ending with a double quote are treated in a special way:
-  - The quotes are ignored.
-  - The characters inside the quotes including spaces are taken as is.
-    The only exception are the characters preceded by backslash. These are
-    decoded as follows:
+  - The delimiting quote character themselves are ignored.
+  - The characters inside the quotes, including spaces, are taken as they are.
+  - The only exception are the characters preceded by backslash. These are
+    encoded as follows:
     - \" double quote
     - \\ backslash
     - \t tab
     - \n newline
-- Unquoted fields SHOULD NOT contain control characters, such as TABs.
-  If they do the character MUST be treated as it was a question mark.
+- UXY format should not contain control characters, such as TABs.
+  If there's a need for a TAB, use "\t" instead.
+
+# Header
+
+- First line of UXY format is the header.
+- The format of the header line is identical to any other UXY line,
+  however, its semantics differ.
+- The value of a field in the header is the name of that particular column.
+- The spacing of the fields in the header is a hint for the tools. They SHOULD
+  try to align the data with the headers.
+
+# Interactions between headers and records
 
 - Fields SHOULD but don't have to be aligned with each other or with the
   headers.
 - If there's less fields in a record than in the header the missing values
   are assumed to be empty strings.
-- If there are more fields in a record that there are in the header these
-  are silently ignored.
+- It's valid to for a record to have more fields than the header.
+  The tools should consider the name of such column to be an empty string.
 
 Example:
 
@@ -50,7 +55,7 @@ Carol 55  "Hotel \"Excelsior\", New York"
 
 # TOOLS
 
-All tools take input from stdin and write the result to stdout.
+All UXY tools take input from stdin and write the result to stdout.
 
 ### uxy re
 
@@ -68,6 +73,13 @@ TIME NAME
 
 Aligns the data with the headers. This is done by resizing the columns so that even
 the longest value fits into the column.
+
+```
+$ ls -l | ./uxy re "TIME NAME" ".* +(.*) +(.*)" | ./uxy align
+TIME  NAME
+14:36 README.md 
+14:22 uxy
+```
 
 This command doesn't work with infinite streams.
 
@@ -110,6 +122,4 @@ $ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
     }
 ]
 ```
-
-This command doesn't work with infinite streams.
 
