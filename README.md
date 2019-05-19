@@ -161,19 +161,6 @@ All UXY tools take input from stdin and write the result to stdout.
 - **[uxy to-json](#uxy-to-json)**
 - **[uxy to-yaml](#uxy-to-yaml)**
 
-### uxy re
-
-Reads the lines of the input and parses each one using the supplied regular
-expression. Matched groups are then assigned to the fields specified in
-the header.
-
-```
-$ ls -l | uxy re "TIME NAME" ".* +(.*) +(.*)"
-TIME NAME 
-14:28 README.md
-14:22 uxy
-```
-
 ### uxy align
 
 Aligns the data with the headers. This is done by resizing the columns so that
@@ -187,28 +174,6 @@ TIME  NAME
 ```
 
 This command doesn't work with infinite streams.
-
-### uxy reformat
-
-Takes an UXY input and reformats it according to the supplied headers.
-
-It allows for:
-
-- reordering of columns
-- resizing of columns
-- dropping columns
-- adding new columns
-
-```
-$ cat test.uxy 
-TIME  NAME
-15:03 README.md 
-16:08 uxy
-$ uxy reformat "NAME          TIME" < test.uxy 
-NAME          TIME 
-README.md     15:03 
-uxy           16:08 
-```
 
 ### uxy from-json
 
@@ -232,24 +197,6 @@ Quasimodo   14:30
 "Moby Dick" 14:22
 ```
 
-### uxy to-json
-
-Converts UXY format to JSON.
-
-```
-$ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
-[
-    {
-        "time": "14:22",
-        "name": "README.md"
-    },
-    {
-        "time": "14:22",
-        "name": "uxy"
-    }
-]
-```
-
 ### uxy from-yaml
 
 Converts from YAML to UXY format.
@@ -268,27 +215,6 @@ Color Diameter   Name
 ""    "4880 km"  Mercury 
 ""    "12103 km" Venus
 Blue  "12742 km" Earth
-```
-
-### uxy to-yaml
-
-Converts UXY format to YAML.
-
-```
-$ uxy ps | uxy to-yaml
-- PID: '512'
-  TIME: 00:00:00 uxy
-  TTY: pts/22
-- PID: '513'
-  TIME: 00:00:00 uxy
-  TTY: pts/22
-- PID: '514'
-  TIME: 00:00:00 ps
-  TTY: pts/22
-- CMD: bash
-  PID: '12392'
-  TIME: 00:00:01
-  TTY: pts/22
 ```
 
 ### uxy ls
@@ -315,5 +241,77 @@ PID   TTY    TIME     CMD
 28223 pts/22 00:00:00 ps
 ```
 
-TODO: Wrap more common UNIX tools.
+### uxy re
+
+Reads the lines of the input and parses each one using the supplied regular
+expression. Matched groups are then assigned to the fields specified in
+the header.
+
+```
+$ ls -l | uxy re "TIME NAME" ".* +(.*) +(.*)"
+TIME NAME 
+14:28 README.md
+14:22 uxy
+```
+
+### uxy reformat
+
+Takes an UXY input and reformats it according to the supplied headers.
+
+It allows for:
+
+- reordering of columns
+- resizing of columns
+- dropping columns
+- adding new columns
+
+```
+$ cat test.uxy 
+TIME  NAME
+15:03 README.md 
+16:08 uxy
+$ uxy reformat "NAME          TIME" < test.uxy 
+NAME          TIME 
+README.md     15:03 
+uxy           16:08 
+```
+
+### uxy to-json
+
+Converts UXY format to JSON.
+
+```
+$ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
+[
+    {
+        "time": "14:22",
+        "name": "README.md"
+    },
+    {
+        "time": "14:22",
+        "name": "uxy"
+    }
+]
+```
+
+### uxy to-yaml
+
+Converts UXY format to YAML.
+
+```
+$ uxy ps | uxy to-yaml
+- PID: '512'
+  TIME: 00:00:00 uxy
+  TTY: pts/22
+- PID: '513'
+  TIME: 00:00:00 uxy
+  TTY: pts/22
+- PID: '514'
+  TIME: 00:00:00 ps
+  TTY: pts/22
+- CMD: bash
+  PID: '12392'
+  TIME: 00:00:01
+  TTY: pts/22
+```
 
