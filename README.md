@@ -58,6 +58,15 @@ $ uxy ls . | uxy to-json
 ]
 ```
 
+```
+$ uxy ps | uxy to-json | jq '.[].CMD'
+"bash"
+"uxy"
+"uxy"
+"jq"
+"ps"
+```
+
 # UXY format
 
 ### Records and fields
