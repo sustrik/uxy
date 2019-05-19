@@ -54,65 +54,62 @@ All tools take input from stdin and write the result to stdout.
 
 ### uxy re
 
-Example:
-
 Reads the lines of the input and parses each one using the supplied regular
 expression. Groups are then assigned to the fields specified in the header.
 
-`uxy re "YEAR MONTH DAY" "(.*)-(.*)-(.*)" < dates.txt`
-
-### uxy format
-
-Allows for filtering, rearrangement and renaming of columns.
-
-`uxy format "M Y" MONTH YEAR`
-
-The command above converts
-
 ```
-YEAR MONTH DAY
-2019 04    29
-2018 12    01
+$ ls -l | uxy re "TIME NAME" ".* +(.*) +(.*)"
+TIME NAME 
+14:28 README.md
+14:22 uxy
 ```
 
-into
+### uxy align
 
-```
-M  Y
-04 2019
-12 2018
-```
-
-### uxy from-csv
-
-### uxy to-csv
-
-### uxy from-json
-
-### uxy to-json
-
-### uxy from-yaml
-
-### uxy to-yaml
-
-### uxy pp
-
-Pretty-print the data.
+Aligns the data with the headers. This is done by resizing the columns so that even
+the longest value fits into the column.
 
 This command doesn't work with infinite streams.
 
-Output:
+### uxy from-json
+
+Converts from JSON to uxy format.
 
 ```
-NAME  AGE ADDRESS
---------------------------------------
-Alice 25  Main Road 1, London
-Bob   23
-Carol 55  Hotel "Excelsior", New York
+$ cat test.json 
+[
+    {
+        "Name": "Quasimodo",
+        "Time": "14:30"
+    },
+    {
+        "Name": "Moby Dick",
+        "Time": "14:22"
+    }
+]
+$ uxy from-json < test.json 
+Name        Time  
+Quasimodo   14:30 
+"Moby Dick" 14:22
 ```
 
-### uxy ls
+### uxy to-json
 
-Same as `ls -l` except that the output is UXY-formatted.
+Convers uxy table to JSON.
 
-TODO: Add other common POSIX tools.
+```
+$ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
+[
+    {
+        "time": "14:22",
+        "name": "README.md"
+    },
+    {
+        "time": "14:22",
+        "name": "uxy"
+    }
+]
+```
+
+This command doesn't work with infinite streams.
+

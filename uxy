@@ -1,0 +1,246 @@
+#!/usr/bin/python3
+
+import json
+import re
+import sys
+import unicodedata
+
+def trim_newline(s):
+  if s[-1] == '\n':
+    return s[:-1]
+  return s
+
+ESCAPE_SEQUENCES1 = {
+  't':  '\t',
+  'n':  '\n',
+  '"':  '"',
+  '\\': '\\',
+}
+
+
+ESCAPE_SEQUENCES2 = {
+  '\t':  't',
+  '\n':  'n',
+  '"':  '"',
+  '\\': '\\',
+}
+
+# Convert uxy field into a string.
+def decode_field(s):
+  # Replace control characters by question marks.
+  s = "".join((c if unicodedata.category(c)[0] != "C" else '?') for c in s)
+  if not (s.startswith('"') and s.endswith('"')):
+    return s
+  # Quoted field.
+  s = s[1:-1]
+  # Exapnd escape sequences.
+  f = ""
+  j = 0
+  while j < len(s):
+    if s[j] == '\\':
+      if j + 1 >= len(s):
+        f += "?"
+        j += 1;
+        continue
+      if s[j + 1] not in ESCAPE_SEQUENCES1:
+        f += "?"
+        j += 2
+        continue
+      f += ESCAPE_SEQUENCES1[s[j + 1]]
+      j += 2
+      continue
+    f += s[j]
+    j += 1
+  return f
+
+
+# Convert arbitrary string into a uxy field.
+def encode_field(s):
+  # Check whether the string contains any special characters.
+  special = False
+  if '"' in s or ' ' in s:
+    special = True
+  else:
+    for c in s:
+      if unicodedata.category(c)[0] == "C":
+        special = True
+        break
+  if not special:
+    return s
+  # Quoted field is needed.
+  f = '"'
+  for c in s:
+    if c in ESCAPE_SEQUENCES2:
+      f += ESCAPE_SEQUENCES2[c]
+      continue
+    f += c
+  return f + '"'
+
+# Given a line, this function splits it into individual uxy fields.
+def split_fields(s):
+  fields = []
+  inquotes = False
+  inescape = False
+  field = ""
+  for c in s:
+    if inquotes:
+      if inescape:
+          inescape = False
+          field += c
+          continue
+      else:
+          if c == '\\':
+            inescape = True
+            field += c
+            continue
+          if c == '"':
+            field += c
+            fields.append(field)
+            field = ""
+            inquotes = False
+            continue
+          field += c
+          continue
+    else:
+      if c == ' ':
+        if field != "":
+          fields.append(field)
+          field = ""
+        continue
+      if field == "" and c == '"':
+          field += c
+          inquotes = True
+          continue
+      field += c
+      continue
+  if field != "":
+    fields.append(field)
+  return fields
+
+
+class Format:
+
+  # Create a format from a list of fields.
+  # The values of the fields will be used as column names.
+  def __init__(self, fields):
+    self.fields = fields
+    self.widths = [len(f) + 1 for f in fields]
+
+  # Adjust the format so that the fields fit in.
+  def adjust(self, fields):
+    for i in range(0, len(fields)):
+       self.widths[i] = max(self.widths[i], len(fields[i]) + 1)
+
+  # Renders the supplied fields according to the format.
+  # If fields is None, it renders the header itself.
+  def render(self, fields=None):
+    if fields == None:
+      fields = self.fields
+    broken = False
+    res = ""
+    for i in range(0, len(fields)):
+      if broken or len(fields[i]) + 1 > self.widths[i]:
+        broken = True
+        res += fields[i] + " "
+      else:
+        res += fields[i] + " " * (self.widths[i] - len(fields[i]))
+    return res + "\n"
+
+
+def uxy_cmd_re():
+  # Use the supplied format.
+  fmt = Format(split_fields(sys.argv[2]))
+  sys.stdout.write(fmt.render())
+  # Parse the data.
+  regexp = re.compile(sys.argv[3])
+  for ln in sys.stdin:
+    m = regexp.match(trim_newline(ln))
+    # Non-matching lines are ignored.
+    if not m:
+      continue
+    fields = []
+    for i in range(1, regexp.groups + 1):
+      fields.append(encode_field(m.group(i)))
+    sys.stdout.write(fmt.render(fields))
+
+
+def uxy_cmd_align():
+  s = trim_newline(sys.stdin.readline())
+  fmt = Format(split_fields(s))
+  records = []
+  for ln in sys.stdin:
+    fields = split_fields(trim_newline(ln))
+    fmt.adjust(fields)
+    records.append(fields)
+  sys.stdout.write(fmt.render())
+  for r in records:
+    sys.stdout.write(fmt.render(r))
+
+
+def uxy_cmd_from_json():
+  # Read the entire input.
+  s = ""
+  for ln in sys.stdin:
+    s += ln
+  root = json.loads(s)
+  # Normalize the JSON. Collect the field names along the way.
+  fields = {}
+  if not isinstance(root, list):
+    root = [root]
+  for i in range(0, len(root)):
+    if not isinstance(root[i], dict):
+      root[i] = {"COL1": root[i]}
+    for k, _ in root[i].items():
+      fields[k] = None
+  # Fields will go to the output in alphabetical order.
+  fields = sorted(fields)
+  # Collect the data. At the same time adjust the format sa that data fit in.
+  fmt = Format([encode_field(f) for f in fields])
+  records = []
+  for i in range(0, len(root)):
+    record = []
+    for f in fields:
+      if f in root[i]:
+        record.append(encode_field(str(root[i][f])))
+      else:
+        record.append('""')
+    fmt.adjust(record)
+    records.append(record)
+  # Write the result to output.
+  sys.stdout.write(fmt.render())
+  for r in records:
+    sys.stdout.write(fmt.render(r))
+
+
+def uxy_cmd_to_json():
+  s = trim_newline(sys.stdin.readline())
+  hdr = split_fields(s)
+  res = []
+  for ln in sys.stdin:
+    fields = split_fields(trim_newline(ln))
+    item = {}
+    for i in range(0, len(fields)):
+      item[decode_field(hdr[i])] = decode_field(fields[i])
+    res.append(item)
+  sys.stdout.write(json.dumps(res, indent=4) + "\n")
+
+
+def main():
+  if len(sys.argv) < 2:
+      print("usage: uxy <command> ...", file=sys.stderr)
+      sys.exit(1)
+  cmd = sys.argv[1]
+  if cmd == "re":
+    uxy_cmd_re()
+  elif cmd == "align":
+    uxy_cmd_align()
+  elif cmd == "from-json":
+    uxy_cmd_from_json()
+  elif cmd == "to-json":
+    uxy_cmd_to_json()
+  else:
+    print("unrecognized command %s" % cmd, file=sys.stderr)
+    sys.exit(1)
+
+if __name__ == "__main__":
+    main()
