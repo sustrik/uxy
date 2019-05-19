@@ -95,7 +95,7 @@ UXY format is designed with the following requirements in mind:
 - It should be human-readable.
 - It should be as similar to the output of standard tools, such as `ls` or `ps`,
   as possible.
-- At the same time it should be unabiguous and thus parsable in deterministic
+- At the same time it should be unambiguous and thus parsable in deterministic
   manner.
 - It should be, to some minimal extent, self-describing (column names).
 - It should work well with infinite streams (think, for example, the output of
