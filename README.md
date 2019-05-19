@@ -150,7 +150,7 @@ $ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
 Wraps ls tool and outputs the results in UXY format.
 
 ```
-$ ./uxy ls . | ./uxy align
+$ uxy ls . | uxy align
 PERMISSIONS LINKS OWNER   GROUP   SIZE TIME                                  NAME
 -rw-rw-r--  1     sustrik sustrik 3535 "2019-05-19 16:21:56.835218781 +0200" README.md 
 -rwxrwxr-x  1     sustrik sustrik 7455 "2019-05-19 17:33:49.286905670 +0200" uxy
