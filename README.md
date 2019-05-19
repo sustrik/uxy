@@ -1,4 +1,4 @@
-# UXY adds structure to the standard UNIX tools
+# UXY: Adding structure to the UNIX tools
 
 Treating everything as a string is the way through which the great power and
 verstatility of UNIX tools is achieved. However, sometimes the constant
