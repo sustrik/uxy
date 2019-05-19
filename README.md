@@ -76,7 +76,7 @@ $ cat test.yml
 - Name: Earth
   Diameter: 12742 km
   Color: Blue
-sustrik@sustrik:~/uxy$ uxy from-yaml < test.yml 
+$ uxy from-yaml < test.yml 
 Color Diameter   Name
 ""    "4880 km"  Mercury 
 ""    "12103 km" Venus
@@ -234,7 +234,7 @@ $ cat test.yml
 - Name: Earth
   Diameter: 12742 km
   Color: Blue
-sustrik@sustrik:~/uxy$ uxy from-yaml < test.yml 
+$ uxy from-yaml < test.yml 
 Color Diameter   Name
 ""    "4880 km"  Mercury 
 ""    "12103 km" Venus
