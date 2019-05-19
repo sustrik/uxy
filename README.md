@@ -4,12 +4,15 @@ Treating everything as a string is the way through which the great power and
 verstatility of UNIX tools is achieved. However, sometimes the constant
 parsing of strings gets a bit cumbersome.
 
-UXY is a tool to manipulate the UXY format, which is a basically
+UXY is a tool to manipulate UXY format, which is a basically
 a two-dimenstional table that's both human- and machine-readable.
 
-Additionally, UXY wraps some common UNIX tools and exports their output in
+The format is deliberately designed to be as similar to the output of
+standard tools, such as `ls` or `ps`, as possible.
+
+UXY tool also wraps some common UNIX tools and exports their output in
 UXY format. Along with convertors from/to other common data formats
-(e.g. JSON) this allows for quick and painless access to the data.
+(e.g. JSON) it is meant to allow for quick and painless access to the data.
 
 ### Examples
 
@@ -85,13 +88,26 @@ Blue  "12742 km" Earth
 
 # UXY format
 
+### Rationale
+
+UXY format is designed with the following requirements in mind:
+
+- It should be human-readable.
+- It should be as similar to the output of standard tools, such as `ls` or `ps`,
+  as possible.
+- At the same time it should be unabiguous and thus parsable in deterministic
+  manner.
+- It should be, to some minimal extent, self-describing (column names).
+- It should work well with infinite streams (think, for example, the output of
+  `tail` command).
+- It should be resilient. No possible input should crash the tool.
+
 ### Records and fields
 
 - UXY format is a possibly infinite list of lines separated by newlines.
-  Each line is a data record.
-- Each line is composed of fields separated by arbitrary number spaces.
+- Each line is composed of fields separated by arbitrary number of spaces.
 - Fields starting AND ending with a double quote are treated in a special way:
-  - The delimiting quote characters themselves are ignored.
+  - The delimiting double-quote characters themselves are ignored.
   - The characters inside the quotes, including spaces, are taken as they are.
   - The only exception are the characters preceded by backslash. These are
     encoded as follows:
@@ -99,8 +115,10 @@ Blue  "12742 km" Earth
     - \\ backslash
     - \t tab
     - \n newline
-- UXY format should not contain control characters, such as TABs.
-  If there's a need for a TAB, use "\t" instead.
+    - any other escape sequence MUST be interpreted as `?` (question mark)
+      character.
+- Any control characters (e.g. `TAB`) MUST be interpreted as `?` (question mark)
+  characters.
 
 ### Header
 
@@ -113,11 +131,10 @@ Blue  "12742 km" Earth
 
 ### Interactions between headers and records
 
-- Fields SHOULD but don't have to be aligned with each other or with the
-  headers.
-- If there's less fields in a record than in the header the missing values
+- Fields may or may not be aligned with each other or with the headers.
+- If there are less fields in a record than in the header the missing values
   are assumed to be empty strings.
-- It's valid to for a record to have more fields than the header.
+- It is valid to for a record to have more fields than the header.
   The tools should consider the name of such column to be an empty string.
 
 Example:
@@ -136,7 +153,8 @@ All UXY tools take input from stdin and write the result to stdout.
 ### uxy re
 
 Reads the lines of the input and parses each one using the supplied regular
-expression. Matched groups are then assigned to the fields specified in the header.
+expression. Matched groups are then assigned to the fields specified in
+the header.
 
 ```
 $ ls -l | uxy re "TIME NAME" ".* +(.*) +(.*)"
@@ -147,8 +165,8 @@ TIME NAME
 
 ### uxy align
 
-Aligns the data with the headers. This is done by resizing the columns so that even
-the longest value fits into the column.
+Aligns the data with the headers. This is done by resizing the columns so that
+even the longest value fits into the column.
 
 ```
 $ ls -l | uxy re "TIME NAME" ".* +(.*) +(.*)" | uxy align
