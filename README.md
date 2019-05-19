@@ -60,7 +60,7 @@ All UXY tools take input from stdin and write the result to stdout.
 ### uxy re
 
 Reads the lines of the input and parses each one using the supplied regular
-expression. Groups are then assigned to the fields specified in the header.
+expression. Matched groups are then assigned to the fields specified in the header.
 
 ```
 $ ls -l | uxy re "TIME NAME" ".* +(.*) +(.*)"
@@ -107,7 +107,7 @@ uxy           16:08
 
 ### uxy from-json
 
-Converts from JSON to uxy format.
+Converts from JSON to UXY format.
 
 ```
 $ cat test.json 
@@ -129,7 +129,7 @@ Quasimodo   14:30
 
 ### uxy to-json
 
-Convers uxy table to JSON.
+Convers UXY format to JSON.
 
 ```
 $ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
