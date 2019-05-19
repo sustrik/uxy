@@ -12,26 +12,44 @@ a two-dimenstional table that's both human- and machine-readable.
 - First line is headers, separated by spaces.
 - Each header is uppercase letters, digits and dashes.
   First character must be a letter.
-- Remaining lines are data.
+- The spacing of headers MAY be used to determine the default widths of the
+  fields. The fields that are not present in the header are assumed to have
+  width of 10 characters.
+
+- Remaining lines are data. There may be infinite amount of data items (pipe).
 - Data line is composed of fields separated by arbitrary number spaces.
-- The fields support C escape sequnces plus:
-  - \e - empty string (must by the only character in the field)
-  - \m - missing field (must by the only character in the field)
-  - \s - space
-- Fields don't have to be aligned with each other or with the headers.
+  In general the data SHOULD be aligned with headers whereever the fields
+  actually fit in.
+- Fields starting AND ending with a double quote are treated in a special way:
+  - The quotes are ignored.
+  - The characters inside the quotes including spaces are taken as is.
+    The only exception are the characters preceded by backslash. These are
+    decoded as follows:
+    - \" double quote
+    - \\ backslash
+    - \t tab
+    - \n newline 
+
+- Fields SHOULD but don't have to be aligned with each other or with the
+  headers.
+- If there's less fields in a record than in the header the missing values
+  are assumed to be empty strings.
+- If there are more fields in a record that there are in the header these
+  are silently ignored.
 
 Example:
 
 ```
-NAME AGE ADDRESS
-Alice 25 Main\sRoad\s1,\sLondon
-Bob 23 \m
+NAME  AGE ADDRESS
+Alice 25  "Main Road 1, London"
+Bob   23  ""
+Carol 55  "Hotel \"Excelsior\", New York"
 ```
 
 # TOOLS
 
-All tools take input from stdin (can be redirected from file using -i option)
-and write the result to stdout (can be redirected to file using -o option).
+All tools take input from stdin.
+and write the result to stdout.
 
 ### uxy-in
 
@@ -47,9 +65,9 @@ Coverts the UXY-formatted input to a specified destination format.
 Option -t specifies the format of the output stream (json, yml, xml, etc.)
 Default is 'ssv' (space-separated values).
 
-### uxy-align
+### uxy-pp
 
-Aligned the values with the column names.
+Pretty-print the data.
 
 This command doesn't work with infinite streams.
 
@@ -57,34 +75,11 @@ Output:
 
 ```
 NAME  AGE ADDRESS
-Alice 25  Main\sRoad\s1,\sLondon
-Bob   23  \m
+---------------------------------------
+Alice 25  Main Road 1, London
+Bob   23
+Carol 55  Hotel "Excelsior", New York
 ```
-
-### uxy-format
-
-Formats an UXY stream.
-
-- 1st positional arg: A list of output columns. The columns appear in the output
-  in the order specified in this argument. A column specified as `foo=bar`
-  will be renamed from `bar` to `foo`.
-
-Example:
-
-```
-$ uxy-format ADDR=ADDRESS,NAME < address-book.txt
-ADDR                   NAME
-Main\sRoad\s1,\sLondon Alice
-\m                     Bob
-```
-
-### uxy-grep
-
-Same as grep except that the headers always go to the output.
-
-If -n is specified, column `line` is added.
-
-COMMENT: Maybe we could have per-field search expressions.
 
 ### uxy-ls
 
