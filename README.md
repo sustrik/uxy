@@ -31,10 +31,10 @@ PERMISSIONS LINKS OWNER   GROUP   SIZE TIME                                  NAM
 ```
 
 ```
-$ uxy ls | uxy reformat "NAME SIZE"
-NAME SIZE 
-README.md 4147 
-uxy  8021 
+$ uxy ls | uxy reformat "NAME         SIZE"
+NAME         SIZE 
+README.md    4147 
+uxy          8021 
 ```
 
 ```
