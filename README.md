@@ -7,6 +7,57 @@ parsing of strings gets a bit cumbersome.
 UXY is a tool to manipulate the UXY format, which is a basically
 a two-dimenstional table that's both human- and machine-readable.
 
+Additionally, UXY wraps some common UNIX tools and exports their output in
+UXY format. Along with convertors from/to other common data formats
+(e.g. JSON) this allows for quick and painless access to the data.
+
+### Examples
+
+```
+$ uxy ls .
+PERMISSIONS LINKS OWNER GROUP SIZE TIME NAME 
+-rw-rw-r--  1     sustrik sustrik 4147 "2019-05-19 17:50:13.263709560 +0200" README.md 
+-rwxrwxr-x  1     sustrik sustrik 8021 "2019-05-19 17:48:14.962014184 +0200" uxy
+```
+
+```
+$ uxy ls . | uxy align
+PERMISSIONS LINKS OWNER   GROUP   SIZE TIME                                  NAME
+-rw-rw-r--  1     sustrik sustrik 4147 "2019-05-19 17:50:13.263709560 +0200" README.md 
+-rwxrwxr-x  1     sustrik sustrik 8021 "2019-05-19 17:48:14.962014184 +0200" uxy
+```
+
+```
+$ uxy ls . | uxy reformat "NAME SIZE"
+NAME SIZE 
+README.md 4147 
+uxy  8021 
+```
+
+```
+$ uxy ls . | uxy to-json
+[
+    {
+        "LINKS": "1",
+        "NAME": "README.md",
+        "TIME": "2019-05-19 17:50:13.263709560 +0200",
+        "OWNER": "sustrik",
+        "GROUP": "sustrik",
+        "SIZE": "4147",
+        "PERMISSIONS": "-rw-rw-r--"
+    },
+    {
+        "LINKS": "1",
+        "NAME": "uxy",
+        "TIME": "2019-05-19 17:48:14.962014184 +0200",
+        "OWNER": "sustrik",
+        "GROUP": "sustrik",
+        "SIZE": "8021",
+        "PERMISSIONS": "-rwxrwxr-x"
+    }
+]
+```
+
 # UXY format
 
 ## Records and fields
