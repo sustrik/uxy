@@ -21,6 +21,7 @@
 import argparse
 import csv
 import io
+import itertools
 import json
 import re
 import subprocess
@@ -82,6 +83,9 @@ def decode_field(s):
 
 # Convert arbitrary string into a uxy field.
 def encode_field(s):
+  # Empty string converts to "".
+  if s == "":
+    return '""  '
   # Check whether the string contains any special characters.
   special = False
   if '"' in s or ' ' in s:
@@ -460,7 +464,7 @@ def uxy_cmd_du(args):
 
 def uxy_cmd_top(args):
   proc = subprocess.Popen(['top', '-bn1'] + args.args, stdout=subprocess.PIPE)
-  # Skip summary.
+  # Skip the summary.
   for i in range(0, 7):
     proc.stdout.readline()
   regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
@@ -476,6 +480,33 @@ def uxy_cmd_top(args):
       fields.append(encode_field(m.group(i)))
     sys.stdout.write(fmt.render(fields))
 
+
+def uxy_cmd_lsof(args):
+  proc = subprocess.Popen(['lsof', '+c', '0'] + args.args, stdout=subprocess.PIPE)
+  hdr = trim_newline(proc.stdout.readline().decode("utf-8"))
+  parts = re.split("(\s+)", hdr)
+  pos = [len(p) for p in list(itertools.accumulate(parts))]
+  r1 = re.compile(r'([^\s]*)\s+([^\s]*)')
+  fmt = Format("COMMAND             PID    TID    USER           FD      TYPE    DEVICE             SIZEOFF   NODE       NAME")
+  sys.stdout.write(fmt.render())
+  for ln in proc.stdout:
+    ln = trim_newline(ln.decode("utf-8"))
+    fields = []
+    m = r1.match(ln[:pos[2]])
+    if not m:
+      continue
+    fields.append(m.group(1))
+    fields.append(m.group(2))
+    fields.append(ln[pos[2]:pos[4]].strip())
+    fields.append(ln[pos[4]:pos[6]].strip())
+    fields.append(ln[pos[6]:pos[8] + 1].strip())
+    fields.append(ln[pos[8] + 1:pos[10]].strip())
+    fields.append(ln[pos[10]:pos[12]].strip())
+    fields.append(ln[pos[12]:pos[14]].strip())
+    fields.append(ln[pos[14]:pos[16]].strip())
+    fields.append(ln[pos[16]:].strip())
+    fields = [encode_field(f) for f in fields]
+    sys.stdout.write(fmt.render(fields))
 
 def main():
   
@@ -502,6 +533,10 @@ def main():
   p = subparsers.add_parser('ls', help="wrapper for 'ls' command")
   p.add_argument('args', nargs='*')
   p.set_defaults(func=uxy_cmd_ls)
+
+  p = subparsers.add_parser('lsof', help="wrapper for 'lsof' command")
+  p.add_argument('args', nargs='*')
+  p.set_defaults(func=uxy_cmd_lsof)
 
   p = subparsers.add_parser('ps', help="wrapper for 'ps' command")
   p.add_argument('args', nargs='*')
