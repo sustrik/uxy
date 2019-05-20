@@ -403,6 +403,29 @@ def uxy_cmd_ps(args):
     sys.stdout.write(fmt.render(fields))
 
 
+def uxy_cmd_trim(args):
+  # Read the headers.
+  s = trim_newline(sys.stdin.readline())
+  fmt = Format(s)
+  # Adjust the column widths so that at least quoted elipsis fits in.
+  for i in range(0, len(fmt.widths) - 1):
+    fmt.widths[i] = max(fmt.widths[i], 6)
+  sys.stdout.write(fmt.render())
+  # Process the records.
+  for ln in sys.stdin:
+    fields = split_fields(trim_newline(ln))
+    # Get rid of unnamed fields.
+    fields = fields[:len(fmt.widths)]
+    # Trim the long fields. Last field is never trimmed.
+    for i in range(0, len(fields) - 1):
+      if len(fields[i]) > fmt.widths[i] - 1:
+        if fields[i].startswith('"') and fields[i].endswith('"'):
+            fields[i] = '"' + fields[i][1:fmt.widths[i] - 6] + '..."'
+        else:
+            fields[i] = fields[i][:fmt.widths[i] - 4] + "..."
+    sys.stdout.write(fmt.render(fields))
+
+
 def main():
   
   parser = argparse.ArgumentParser(prog="uxy",
@@ -446,6 +469,10 @@ def main():
 
   p = subparsers.add_parser('to-yaml', help="convert UXY to YAML")
   p.set_defaults(func=uxy_cmd_to_yaml)
+
+  p = subparsers.add_parser('trim',
+    help="trim long fields so that they fit into columns")
+  p.set_defaults(func=uxy_cmd_trim)
 
   args = parser.parse_args(sys.argv[1:])
   args.func(args)
