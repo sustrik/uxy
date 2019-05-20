@@ -429,7 +429,7 @@ def uxy_cmd_trim(args):
 def uxy_cmd_w(args):
   proc = subprocess.Popen(['w', '-h'] + args.args, stdout=subprocess.PIPE)
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-  fmt = Format("USER     TTY    FROM    LOGINAT   IDLE    JCPU    PCPU    WHAT")
+  fmt = Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
   sys.stdout.write(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
