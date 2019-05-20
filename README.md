@@ -359,7 +359,7 @@ $ uxy ps | uxy to-yaml
   TTY: pts/22
 ```
 
-# uxy trim
+### uxy trim
 
 Trims any fields that exceed the width of the column as specified in the
 header. The new value will end with three dots (`...`) to give a visual hint
