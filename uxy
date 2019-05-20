@@ -475,7 +475,10 @@ def main():
   p.set_defaults(func=uxy_cmd_trim)
 
   args = parser.parse_args(sys.argv[1:])
-  args.func(args)
+  if len(vars(args)) == 0:
+    parser.print_help()
+  else:
+    args.func(args)
 
 if __name__ == "__main__":
     main()
