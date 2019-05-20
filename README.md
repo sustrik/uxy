@@ -38,34 +38,21 @@ uxy       11518
 ```
 
 ```
-$ uxy top | uxy to-json
+$ uxy top | uxy reformat "PID CPU COMMAND" | uxy to-json
 [
     {
-        "PID": "4670",
-        "USER": "martin",
-        "PR": "20",
-        "NI": "0",
-        "VIRT": "41920",
-        "RES": "3744",
-        "SHR": "3180",
-        "S": "R",
+        "PID": "4704",
         "CPU": "12.5",
-        "MEM": "0.0",
-        "TIME": "0:00.02",
         "COMMAND": "top"
     },
     {
+        "PID": "2903",
+        "CPU": "6.2",
+        "COMMAND": "Web Content"
+    },
+    {
         "PID": "1",
-        "USER": "root",
-        "PR": "20",
-        "NI": "0",
-        "VIRT": "225916",
-        "RES": "9640",
-        "SHR": "6600",
-        "S": "S",
         "CPU": "0.0",
-        "MEM": "0.1",
-        "TIME": "1:57.91",
         "COMMAND": "systemd"
     }
 ]
