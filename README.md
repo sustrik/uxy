@@ -38,7 +38,7 @@ uxy       11518
 ```
 
 ```
-$ uxy ls | uxy to-json
+$ uxy ls /home/martin/uxy | uxy to-json
 [
     {
         "TYPE": "-",
@@ -79,7 +79,7 @@ NAME,TIME
 Quasimodo,14:30
 Moby Dick,14:22
 $ cat test.csv | uxy from-csv | uxy align
-NAME        TIME  
+NAME        TIME
 Quasimodo   14:30 
 "Moby Dick" 14:22 
 ```
