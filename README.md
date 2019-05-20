@@ -149,11 +149,12 @@ Carol 55  "Hotel \"Excelsior\", New York"
 
 All UXY tools take input from stdin and write the result to stdout.
 
-The tools follow the Postel's principle: "Be conservative in what you do,
-be liberal in what you accept from others." They accept any UXY input, but
+The tools follow the Postel's principle: "Be liberal in what you accept and
+conservative in what you output." They accept any UXY input, but
 they try to align the fields in the output with the headers.
 
 - **[uxy align](#uxy-align)**
+- **[uxy du](#uxy-du)**
 - **[uxy from-csv](#uxy-from-csv)**
 - **[uxy from-json](#uxy-from-json)**
 - **[uxy from-yaml](#uxy-from-yaml)**
@@ -181,6 +182,24 @@ TIME  NAME
 
 This command doesn't work with infinite streams.
 
+### uxy du
+
+Wraps `du` tool and outputs the results in UXY format.
+
+```
+$ uxy du
+USAGE    FILE
+12       ./.git/objects/56 
+12       ./.git/objects/62 
+12       ./.git/objects/9d 
+8        ./.git/objects/04 
+8        ./.git/objects/43 
+932      ./.git/objects 
+1096     ./.git 
+48       ./test 
+1192     . 
+```
+
 ### uxy from-csv
 
 Converts from CSV to UXY format.
@@ -191,7 +210,7 @@ NAME,TIME
 Quasimodo,14:30
 Moby Dick,14:22
 $ cat test.csv | uxy from-csv | uxy align
-NAME        TIME  
+NAME        TIME
 Quasimodo   14:30 
 "Moby Dick" 14:22 
 ```

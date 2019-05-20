@@ -442,6 +442,22 @@ def uxy_cmd_w(args):
     sys.stdout.write(fmt.render(fields))
 
 
+def uxy_cmd_du(args):
+  proc = subprocess.Popen(['du'] + args.args, stdout=subprocess.PIPE)
+  regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
+  fmt = Format("USAGE    FILE")
+  sys.stdout.write(fmt.render())
+  for ln in proc.stdout:
+    ln = trim_newline(ln.decode("utf-8"))
+    m = regexp.match(ln)
+    if not m:
+      continue
+    fields = []
+    for i in range(1, regexp.groups + 1):
+      fields.append(encode_field(m.group(i)))
+    sys.stdout.write(fmt.render(fields))
+
+
 def main():
   
   parser = argparse.ArgumentParser(prog="uxy",
@@ -450,6 +466,10 @@ def main():
 
   p = subparsers.add_parser('align', help="align columns")
   p.set_defaults(func=uxy_cmd_align)
+
+  p = subparsers.add_parser('du', help="wrapper for 'du' command")
+  p.add_argument('args', nargs='*')
+  p.set_defaults(func=uxy_cmd_du)
 
   p = subparsers.add_parser('from-csv', help="convert CSV to UXY")
   p.set_defaults(func=uxy_cmd_from_csv)
