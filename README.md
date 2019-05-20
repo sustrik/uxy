@@ -165,6 +165,7 @@ they try to align the fields in the output with the headers.
 - **[uxy to-json](#uxy-to-json)**
 - **[uxy to-yaml](#uxy-to-yaml)**
 - **[uxy trim](#uxy-trim)**
+- **[uxy w](#uxy-w)**
 
 ### uxy align
 
@@ -233,7 +234,7 @@ Blue  "12742 km" Earth
 
 ### uxy ls
 
-Wraps ls tool and outputs the results in UXY format.
+Wraps `ls` tool and outputs the results in UXY format.
 
 ```
 $ uxy ls
@@ -244,7 +245,7 @@ TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                  
 
 ### uxy ps
 
-Wraps ps tool and outputs the results in UXY format.
+Wraps `ps` tool and outputs the results in UXY format.
 
 ```
 $ uxy ps
@@ -363,4 +364,13 @@ READM... 8060
 test.csv 45
 test     0
 uxy      13458 
+```
+
+### uxy w
+
+Wraps `w` tool and outputs the results in UXY format.
+
+```
+USER     TTY    FROM    LOGINAT   IDLE    JCPU    PCPU    WHAT 
+martin   :0     :0      03May19   ?xdm?   1:08m   0.03s   "/usr/bin/foo --bar"
 ```
