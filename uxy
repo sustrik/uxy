@@ -369,7 +369,7 @@ def uxy_cmd_ls(args):
   proc = subprocess.Popen(
     ['ls','-l', '--time-style=full-iso'] + args.args,
     stdout=subprocess.PIPE)
-  regexp = re.compile(r'(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+([^\s]*)')
+  regexp = re.compile(r'(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
   fmt = Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
   sys.stdout.write(fmt.render())
   for ln in proc.stdout:
