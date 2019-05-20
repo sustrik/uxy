@@ -341,8 +341,8 @@ def uxy_cmd_ls(args):
   proc = subprocess.Popen(
     ['ls','-l', '--time-style=full-iso'] + args.args,
     stdout=subprocess.PIPE)
-  regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+([^\s]*)')
-  fmt = Format("PERMISSIONS LINKS OWNER GROUP SIZE TIME NAME")
+  regexp = re.compile(r'(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+([^\s]*)')
+  fmt = Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
   sys.stdout.write(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
@@ -360,7 +360,7 @@ def uxy_cmd_ls(args):
 def uxy_cmd_ps(args):
   proc = subprocess.Popen(['ps'] + args.args, stdout=subprocess.PIPE)
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-  fmt = Format("PID TTY TIME CMD")
+  fmt = Format("PID      TTY      TIME       CMD")
   sys.stdout.write(fmt.render())
   # Ignore the header file.
   proc.stdout.readline()

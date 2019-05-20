@@ -18,23 +18,23 @@ UXY format. Along with convertors from/to other common data formats
 
 ```
 $ uxy ls
-PERMISSIONS LINKS OWNER GROUP SIZE TIME NAME 
--rw-rw-r--  1     sustrik sustrik 4147 "2019-05-19 17:50:13.263709560 +0200" README.md 
--rwxrwxr-x  1     sustrik sustrik 8021 "2019-05-19 17:48:14.962014184 +0200" uxy
+TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME 
+-    rw-r--r--   1     martin     martin     7451         "2019-05-19 23:35:13.552174105 +0200" README.md 
+-    rwxr-xr-x   1     martin     martin     11518        "2019-05-20 04:08:36.847163604 +0200" uxy
 ```
 
 ```
-$ uxy ls | uxy align
-PERMISSIONS LINKS OWNER   GROUP   SIZE TIME                                  NAME
--rw-rw-r--  1     sustrik sustrik 4147 "2019-05-19 17:50:13.263709560 +0200" README.md 
--rwxrwxr-x  1     sustrik sustrik 8021 "2019-05-19 17:48:14.962014184 +0200" uxy
+$ uxy ls | uxy reformat "NAME SIZE"
+NAME SIZE 
+README.md 7451 
+uxy  11518 
 ```
 
 ```
-$ uxy ls | uxy reformat "NAME         SIZE"
-NAME         SIZE 
-README.md    4147 
-uxy          8021 
+$ uxy ls | uxy reformat "NAME SIZE" | uxy align
+NAME      SIZE
+README.md 7451 
+uxy       11518
 ```
 
 ```
@@ -222,10 +222,10 @@ Blue  "12742 km" Earth
 Wraps ls tool and outputs the results in UXY format.
 
 ```
-$ uxy ls | uxy align
-PERMISSIONS LINKS OWNER   GROUP   SIZE TIME                                  NAME
--rw-rw-r--  1     sustrik sustrik 3535 "2019-05-19 16:21:56.835218781 +0200" README.md 
--rwxrwxr-x  1     sustrik sustrik 7455 "2019-05-19 17:33:49.286905670 +0200" uxy
+$ uxy ls
+TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME 
+-    rw-r--r--   1     martin     martin     7451         "2019-05-19 23:35:13.552174105 +0200" README.md 
+-    rwxr-xr-x   1     martin     martin     11518        "2019-05-20 04:08:36.847163604 +0200" uxy 
 ```
 
 ### uxy ps
@@ -233,12 +233,11 @@ PERMISSIONS LINKS OWNER   GROUP   SIZE TIME                                  NAM
 Wraps ps tool and outputs the results in UXY format.
 
 ```
-$ uxy ps | uxy align
-PID   TTY    TIME     CMD
-12392 pts/22 00:00:00 bash 
-28221 pts/22 00:00:00 uxy
-28222 pts/22 00:00:00 uxy
-28223 pts/22 00:00:00 ps
+$ uxy ps
+PID      TTY      TIME       CMD 
+20829    pts/1    00:00:00   bash 
+29944    pts/1    00:00:00   uxy 
+29945    pts/1    00:00:00   ps
 ```
 
 ### uxy re
