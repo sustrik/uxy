@@ -74,19 +74,14 @@ $ uxy ps | uxy to-json | jq '.[].CMD'
 ```
 
 ```
-$ cat test.yml 
-- Name: Mercury
-  Diameter: 4880 km
-- Name: Venus
-  Diameter: 12103 km
-- Name: Earth
-  Diameter: 12742 km
-  Color: Blue
-$ uxy from-yaml < test.yml 
-Color Diameter   Name
-""    "4880 km"  Mercury 
-""    "12103 km" Venus
-Blue  "12742 km" Earth
+$ cat test.csv 
+NAME,TIME
+Quasimodo,14:30
+Moby Dick,14:22
+$ cat test.csv | uxy from-csv | uxy align
+NAME        TIME  
+Quasimodo   14:30 
+"Moby Dick" 14:22 
 ```
 
 # UXY format
@@ -155,12 +150,14 @@ Carol 55  "Hotel \"Excelsior\", New York"
 All UXY tools take input from stdin and write the result to stdout.
 
 - **[uxy align](#uxy-align)**
+- **[uxy from-csv](#uxy-from-csv)**
 - **[uxy from-json](#uxy-from-json)**
 - **[uxy from-yaml](#uxy-from-yaml)**
 - **[uxy ls](#uxy-ls)**
 - **[uxy ps](#uxy-ps)**
 - **[uxy re](#uxy-re)**
 - **[uxy reformat](#uxy-reformat)**
+- **[uxy to-csv](#uxy-to-csv)**
 - **[uxy to-json](#uxy-to-json)**
 - **[uxy to-yaml](#uxy-to-yaml)**
 
@@ -178,6 +175,21 @@ TIME  NAME
 
 This command doesn't work with infinite streams.
 
+### uxy from-csv
+
+Converts from CSV to UXY format.
+
+```
+$ cat test.csv 
+NAME,TIME
+Quasimodo,14:30
+Moby Dick,14:22
+$ cat test.csv | uxy from-csv | uxy align
+NAME        TIME  
+Quasimodo   14:30 
+"Moby Dick" 14:22 
+```
+
 ### uxy from-json
 
 Converts from JSON to UXY format.
@@ -185,14 +197,8 @@ Converts from JSON to UXY format.
 ```
 $ cat test.json 
 [
-    {
-        "Name": "Quasimodo",
-        "Time": "14:30"Converts from JSON to UXY format.
-    },
-    {
-        "Name": "Moby Dick",
-        "Time": "14:22"
-    }
+    {"Name": "Quasimodo", "Time": "14:30"},
+    {"Name": "Moby Dick", "Time": "14:22"}
 ]
 $ uxy from-json < test.json 
 Name        Time
@@ -276,6 +282,17 @@ $ uxy reformat "NAME          TIME" < test.uxy
 NAME          TIME 
 README.md     15:03 
 uxy           16:08 
+```
+
+### uxy to-csv
+
+Converts UXY format to CSV.
+
+```
+$ uxy ls | uxy to-csv
+TYPE,PERMISSIONS,LINKS,OWNER,GROUP,SIZE,TIME,NAME
+-,rw-r--r--,1,martin,martin,7419,2019-05-20 04:28:47.211667681 +0200,README.md
+-,rwxr-xr-x,1,martin,martin,11912,2019-05-20 04:41:35.316650681 +0200,uxy
 ```
 
 ### uxy to-json

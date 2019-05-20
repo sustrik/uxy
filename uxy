@@ -19,6 +19,8 @@
 #  IN THE SOFTWARE.
 
 import argparse
+import csv
+import io
 import json
 import re
 import subprocess
@@ -337,6 +339,32 @@ def uxy_cmd_to_yaml(args):
   sys.stdout.write(yaml.dump(res, default_flow_style=False))
 
 
+def uxy_cmd_from_csv(args):
+  # Read the headers
+  ln = trim_newline(sys.stdin.readline())
+  r = csv.reader(io.StringIO(ln))
+  for fields in r:
+    fields = " ".join([encode_field(f) for f in fields])
+    fmt = Format(fields)
+    sys.stdout.write(fields + "\n")
+  for ln in sys.stdin:
+    r = csv.reader(io.StringIO(trim_newline(ln)))
+    for fields in r:
+      fields = [encode_field(f) for f in fields]
+      sys.stdout.write(fmt.render(fields))
+    
+
+def uxy_cmd_to_csv(args):
+  for ln in sys.stdin:
+    fields = split_fields(trim_newline(ln))
+    fields = [decode_field(f) for f in fields]
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(fields)
+    sys.stdout.write(buf.getvalue())
+    #print(fields)
+
+
 def uxy_cmd_ls(args):
   proc = subprocess.Popen(
     ['ls','-l', '--time-style=full-iso'] + args.args,
@@ -384,6 +412,9 @@ def main():
   p = subparsers.add_parser('align', help="align columns")
   p.set_defaults(func=uxy_cmd_align)
 
+  p = subparsers.add_parser('from-csv', help="convert CSV to UXY")
+  p.set_defaults(func=uxy_cmd_from_csv)
+
   p = subparsers.add_parser('from-json', help="convert JSON to UXY")
   p.set_defaults(func=uxy_cmd_from_json)
 
@@ -406,6 +437,9 @@ def main():
   p = subparsers.add_parser('reformat', help="reformat UXY data")
   p.add_argument('header', help="new UXY header")
   p.set_defaults(func=uxy_cmd_reformat)
+
+  p = subparsers.add_parser('to-csv', help="convert UXY to CSV")
+  p.set_defaults(func=uxy_cmd_to_csv)
 
   p = subparsers.add_parser('to-json', help="convert UXY to JSON")
   p.set_defaults(func=uxy_cmd_to_json)
