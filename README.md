@@ -41,24 +41,27 @@ uxy       11518
 $ uxy ls | uxy to-json
 [
     {
+        "TYPE": "-",
+        "PERMISSIONS": "rw-r--r--",
         "LINKS": "1",
-        "NAME": "README.md",
-        "TIME": "2019-05-19 17:50:13.263709560 +0200",
-        "OWNER": "sustrik",
-        "GROUP": "sustrik",
-        "SIZE": "4147",
-        "PERMISSIONS": "-rw-rw-r--"
+        "OWNER": "martin",
+        "GROUP": "martin",
+        "SIZE": "7381",
+        "TIME": "2019-05-20 04:16:28.628848180 +0200",
+        "NAME": "README.md"
     },
     {
+        "TYPE": "-",
+        "PERMISSIONS": "rwxr-xr-x",
         "LINKS": "1",
-        "NAME": "uxy",
-        "TIME": "2019-05-19 17:48:14.962014184 +0200",
-        "OWNER": "sustrik",
-        "GROUP": "sustrik",
-        "SIZE": "8021",
-        "PERMISSIONS": "-rwxrwxr-x"
+        "OWNER": "martin",
+        "GROUP": "martin",
+        "SIZE": "11518",
+        "TIME": "2019-05-20 04:08:36.847163604 +0200",
+        "NAME": "uxy"
     }
 ]
+
 ```
 
 ```
