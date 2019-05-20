@@ -387,7 +387,7 @@ def uxy_cmd_ls(args):
 
 def uxy_cmd_ps(args):
   proc = subprocess.Popen(['ps'] + args.args, stdout=subprocess.PIPE)
-  regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
+  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = Format("PID      TTY      TIME       CMD")
   sys.stdout.write(fmt.render())
   # Ignore the header file.
