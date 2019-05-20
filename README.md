@@ -38,30 +38,37 @@ uxy       11518
 ```
 
 ```
-$ uxy ls /home/martin/uxy | uxy to-json
+$ uxy top | uxy to-json
 [
     {
-        "TYPE": "-",
-        "PERMISSIONS": "rw-r--r--",
-        "LINKS": "1",
-        "OWNER": "martin",
-        "GROUP": "martin",
-        "SIZE": "7381",
-        "TIME": "2019-05-20 04:16:28.628848180 +0200",
-        "NAME": "README.md"
+        "PID": "4670",
+        "USER": "martin",
+        "PR": "20",
+        "NI": "0",
+        "VIRT": "41920",
+        "RES": "3744",
+        "SHR": "3180",
+        "S": "R",
+        "CPU": "12.5",
+        "MEM": "0.0",
+        "TIME": "0:00.02",
+        "COMMAND": "top"
     },
     {
-        "TYPE": "-",
-        "PERMISSIONS": "rwxr-xr-x",
-        "LINKS": "1",
-        "OWNER": "martin",
-        "GROUP": "martin",
-        "SIZE": "11518",
-        "TIME": "2019-05-20 04:08:36.847163604 +0200",
-        "NAME": "uxy"
+        "PID": "1",
+        "USER": "root",
+        "PR": "20",
+        "NI": "0",
+        "VIRT": "225916",
+        "RES": "9640",
+        "SHR": "6600",
+        "S": "S",
+        "CPU": "0.0",
+        "MEM": "0.1",
+        "TIME": "1:57.91",
+        "COMMAND": "systemd"
     }
 ]
-
 ```
 
 ```
