@@ -425,6 +425,8 @@ def uxy_cmd_trim(args):
       if len(fields[i]) > fmt.widths[i] - 1:
         if fields[i].startswith('"') and fields[i].endswith('"'):
             fields[i] = '"' + fields[i][1:fmt.widths[i] - 6] + '..."'
+            if fields[i] == '"..."':
+              fields[i] = '...'
         else:
             fields[i] = fields[i][:fmt.widths[i] - 4] + "..."
     sys.stdout.write(fmt.render(fields))
