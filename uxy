@@ -375,7 +375,7 @@ def uxy_cmd_from_yaml(args):
   s = ""
   for ln in sys.stdin:
     s += ln
-  root = yaml.load(s)
+  root = yaml.load(s, Loader=yaml.FullLoader)
   # Normalize the dict. Collect the field names along the way.
   fields = {}
   if not isinstance(root, list):

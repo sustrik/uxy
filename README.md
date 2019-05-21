@@ -1,17 +1,17 @@
 # UXY: Adding structure to the UNIX tools
 
 Treating everything as a string is the way through which the great power and
-verstatility of UNIX tools is achieved. However, sometimes the constant
+versatility of UNIX tools is achieved. However, sometimes the constant
 parsing of strings gets a bit cumbersome.
 
 UXY is a tool to manipulate UXY format, which is a basically
-a two-dimenstional table that's both human- and machine-readable.
+a two-dimensional table that's both human- and machine-readable.
 
 The format is deliberately designed to be as similar to the output of
 standard tools, such as `ls` or `ps`, as possible.
 
 UXY tool also wraps some common UNIX tools and exports their output in
-UXY format. Along with convertors from/to other common data formats
+UXY format. Along with converters from/to other common data formats
 (e.g. JSON) it is meant to allow for quick and painless access to the data.
 
 ### Examples
