@@ -279,6 +279,17 @@ AudioIPC1           28097  28858  martin         8r      FIFO    0,12           
 AudioIPC1           28097  28858  martin         9u      sock    0,9                0t0       2116129    "protocol: UNIX" 
 ```
 
+### uxy netstat
+
+Wraps `netstat` tool and outputs the results in UXY format.
+
+```
+$ uxy netstat
+PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE 
+tcp    0      0      turist:46108     ec2-35-166-184-18:https     ESTABLISHED 
+tcp    0      0      turist:56242     zrh11s03-in-f10.1:https     TIME_WAIT
+```
+
 ### uxy ps
 
 Wraps `ps` tool and outputs the results in UXY format.
