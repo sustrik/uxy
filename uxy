@@ -487,6 +487,28 @@ def uxy_cmd_lsof(args, uargs):
     sys.stdout.write(fmt.render(fields))
 
 
+def uxy_cmd_netstat(args, uargs):
+  proc = subprocess.Popen(['netstat', '--inet'] + uargs, stdout=subprocess.PIPE)
+  # Skip header line.
+  proc.stdout.readline()
+  hdr = trim_newline(proc.stdout.readline().decode("utf-8"))
+  parts = re.split("(\s+)", hdr)
+  pos = [len(p) for p in list(itertools.accumulate(parts))]
+  fmt = Format("PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE")
+  sys.stdout.write(fmt.render())
+  for ln in proc.stdout:
+    ln = trim_newline(ln.decode("utf-8"))
+    fields = []
+    fields.append(ln[0:pos[0]].strip())
+    fields.append(ln[pos[0]:pos[2]].strip())
+    fields.append(ln[pos[2]:pos[4]].strip())
+    fields.append(ln[pos[4]:pos[8]].strip())
+    fields.append(ln[pos[8]:pos[13]].strip())
+    fields.append(ln[pos[13]:].strip())
+    fields = [encode_field(f) for f in fields]
+    sys.stdout.write(fmt.render(fields))
+
+
 def uxy_cmd_ps(args, uargs):
   proc = subprocess.Popen(['ps'] + uargs, stdout=subprocess.PIPE)
   regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
@@ -575,6 +597,9 @@ def main():
 
   p = subparsers.add_parser('lsof', help="wrapper for 'lsof' command")
   p.set_defaults(func=uxy_cmd_lsof)
+
+  p = subparsers.add_parser('netstat', help="wrapper for 'netstat' command")
+  p.set_defaults(func=uxy_cmd_netstat)
 
   p = subparsers.add_parser('ps', help="wrapper for 'ps' command")
   p.set_defaults(func=uxy_cmd_ps)
