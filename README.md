@@ -143,9 +143,9 @@ Carol 55  "Hotel \"Excelsior\", New York"
 
 All UXY tools take input from stdin and write the result to stdout.
 
-The tools follow the Postel's principle: "Be liberal in what you accept and
+The tools follow the Postel's principle: "Be liberal in what you accept,
 conservative in what you output." They accept any UXY input, but
-they try to align the fields in the output with the headers.
+they try to align the fields in the output to make it more convenient to read.
 
 - **[uxy align](#uxy-align)**
 - **[uxy du](#uxy-du)**
