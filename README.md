@@ -154,6 +154,7 @@ they try to align the fields in the output to make it more convenient to read.
 - **[uxy from-yaml](#uxy-from-yaml)**
 - **[uxy ls](#uxy-ls)**
 - **[uxy lsof](#uxy-lsof)**
+- **[uxy netstat](#uxy-netstat)**
 - **[uxy ps](#uxy-ps)**
 - **[uxy re](#uxy-re)**
 - **[uxy reformat](#uxy-reformat)**
