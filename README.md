@@ -59,7 +59,7 @@ $ uxy top | uxy reformat "PID CPU COMMAND" | uxy to-json
 ```
 
 ```
-$ uxy ls | uxy re test NAME
+$ uxy ls | uxy grep test NAME
 TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME 
 -    rw-r--r--   1     martin     martin     45           "2019-05-20 05:07:05.095066240 +0200" test.csv 
 -    rw-r--r--   1     martin     martin     84           "2019-05-20 19:32:37.332820969 +0200" test.txt 
@@ -160,12 +160,12 @@ they try to align the fields in the output to make it more convenient to read.
 - **[uxy from-csv](#uxy-from-csv)**
 - **[uxy from-json](#uxy-from-json)**
 - **[uxy from-yaml](#uxy-from-yaml)**
+- **[uxy grep](#uxy-grep)**
 - **[uxy import](#uxy-import)**
 - **[uxy ls](#uxy-ls)**
 - **[uxy lsof](#uxy-lsof)**
 - **[uxy netstat](#uxy-netstat)**
 - **[uxy ps](#uxy-ps)**
-- **[uxy re](#uxy-re)**
 - **[uxy reformat](#uxy-reformat)**
 - **[uxy to-csv](#uxy-to-csv)**
 - **[uxy to-json](#uxy-to-json)**
@@ -180,7 +180,7 @@ Aligns the data with the headers. This is done by resizing the columns so that
 even the longest value fits into the column.
 
 ```
-$ ls -l | uxy re "TIME NAME" ".* +(.*) +(.*)" | uxy align
+$ ls -l | uxy grep "TIME NAME" ".* +(.*) +(.*)" | uxy align
 TIME  NAME
 14:36 README.md 
 14:22 uxy
@@ -257,6 +257,31 @@ Color Diameter   Name
 Blue  "12742 km" Earth
 ```
 
+### uxy grep
+
+Field-based grep. If one argument is given it searches for the supplied regular
+expression in any fields of the UXY input. If two arguments are given it
+searches for the pattern in the specified field. Note that the pattern matching
+works on decoded field values, not on the uxy greppresentation of the fields.
+For example, for field "A B" A matches but "A does not. 
+
+```
+$ cat test.uxy 
+NAME     SIZE 
+README.md 8060 
+test.csv 45
+test.uxy 0
+uxy      13458 
+$ cat test.uxy | uxy grep csv
+NAME     SIZE 
+test.csv 45
+$ cat test.uxy | uxy grep csv NAME
+NAME     SIZE 
+test.csv 45
+$ cat test.uxy | uxy grep csv SIZE
+NAME     SIZE
+```
+
 ### uxy import
 
 Reads the lines of the input and parses each one using the supplied regular
@@ -323,31 +348,6 @@ PID      TTY      TIME       CMD
 20829    pts/1    00:00:00   bash 
 29944    pts/1    00:00:00   uxy 
 29945    pts/1    00:00:00   ps
-```
-
-### uxy re
-
-Field-based grep. If one argument is given it searches for the supplied regular
-expression in any fields of the UXY input. If two arguments are given it
-searches for the pattern in the specified field. Note that the pattern matching
-works on decoded field values, not on the UXY representation of the fields.
-For example, for field "A B" A matches but "A does not. 
-
-```
-$ cat test.uxy 
-NAME     SIZE 
-README.md 8060 
-test.csv 45
-test.uxy 0
-uxy      13458 
-$ cat test.uxy | uxy re csv
-NAME     SIZE 
-test.csv 45
-$ cat test.uxy | uxy re csv NAME
-NAME     SIZE 
-test.csv 45
-$ cat test.uxy | uxy re csv SIZE
-NAME     SIZE
 ```
 
 ### uxy reformat

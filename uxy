@@ -235,7 +235,7 @@ def uxy_cmd_import(args):
     sys.stdout.write(fmt.render(fields))
 
 
-def uxy_cmd_re(args):
+def uxy_cmd_grep(args):
   regexp = re.compile(args.regexp)
   # Use the old headers.
   s = trim_newline(sys.stdin.readline())
@@ -612,6 +612,12 @@ def main():
   p.set_defaults(func=uxy_cmd_from_yaml)
   p.set_defaults(no_unknown_args=True)
 
+  p = subparsers.add_parser('grep', help="find regexp in UXY")
+  p.add_argument('regexp', help="regexp to parse the input lines")
+  p.add_argument('field', nargs='?', help="UXY field to match")
+  p.set_defaults(func=uxy_cmd_grep)
+  p.set_defaults(no_unknown_args=True)
+
   p = subparsers.add_parser('import', help="convert arbitrary input to UXY")
   p.add_argument('header', help="UXY header")
   p.add_argument('regexp', help="regexp to parse the input lines")
@@ -629,12 +635,6 @@ def main():
 
   p = subparsers.add_parser('ps', help="wrapper for 'ps' command")
   p.set_defaults(func=uxy_cmd_ps)
-
-  p = subparsers.add_parser('re', help="convert arbitrary input to UXY")
-  p.add_argument('regexp', help="regexp to parse the input lines")
-  p.add_argument('field', nargs='?', help="UXY field to match")
-  p.set_defaults(func=uxy_cmd_re)
-  p.set_defaults(no_unknown_args=True)
 
   p = subparsers.add_parser('reformat', help="reformat UXY data")
   p.add_argument('header', help="new UXY header")
