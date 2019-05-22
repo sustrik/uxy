@@ -152,6 +152,7 @@ they try to align the fields in the output to make it more convenient to read.
 - **[uxy from-csv](#uxy-from-csv)**
 - **[uxy from-json](#uxy-from-json)**
 - **[uxy from-yaml](#uxy-from-yaml)**
+- **[uxy import](#uxy-import)**
 - **[uxy ls](#uxy-ls)**
 - **[uxy lsof](#uxy-lsof)**
 - **[uxy netstat](#uxy-netstat)**
@@ -248,6 +249,19 @@ Color Diameter   Name
 Blue  "12742 km" Earth
 ```
 
+### uxy import
+
+Reads the lines of the input and parses each one using the supplied regular
+expression. Matched groups are then assigned to the fields specified in
+the header.
+
+```
+$ ls -l | uxy import "TIME NAME" ".* +(.*) +(.*)"
+TIME NAME 
+14:28 README.md
+14:22 uxy
+```
+
 ### uxy ls
 
 Wraps `ls` tool and outputs the results in UXY format.
@@ -305,15 +319,27 @@ PID      TTY      TIME       CMD
 
 ### uxy re
 
-Reads the lines of the input and parses each one using the supplied regular
-expression. Matched groups are then assigned to the fields specified in
-the header.
+Field-based grep. If one argument is given it searches for the supplied regular
+expression in any fields of the UXY input. If two arguments are given it
+searches for the pattern in the specified field. Note that the pattern matching
+works on decoded field values, not on the UXY representation of the fields.
+For example, for field "A B" A matches but "A does not. 
 
 ```
-$ ls -l | uxy re "TIME NAME" ".* +(.*) +(.*)"
-TIME NAME 
-14:28 README.md
-14:22 uxy
+$ cat test.uxy 
+NAME     SIZE 
+README.md 8060 
+test.csv 45
+test.uxy 0
+uxy      13458 
+$ cat test.uxy | uxy re csv
+NAME     SIZE 
+test.csv 45
+$ cat test.uxy | uxy re csv NAME
+NAME     SIZE 
+test.csv 45
+$ cat test.uxy | uxy re csv SIZE
+NAME     SIZE
 ```
 
 ### uxy reformat
@@ -354,7 +380,7 @@ TYPE,PERMISSIONS,LINKS,OWNER,GROUP,SIZE,TIME,NAME
 Converts UXY format to JSON.
 
 ```
-$ ls -l | uxy re "time name" ".* +(.*) +(.*)" | uxy to-json
+$ ls -l | uxy import "time name" ".* +(.*) +(.*)" | uxy to-json
 [
     {
         "time": "14:22",

@@ -218,7 +218,7 @@ def uxy_cmd_align(args):
     sys.stdout.write(fmt.render(r))
 
 
-def uxy_cmd_re(args):
+def uxy_cmd_import(args):
   # Use the supplied format.
   fmt = Format(args.header)
   sys.stdout.write(fmt.render())
@@ -233,6 +233,26 @@ def uxy_cmd_re(args):
     for i in range(1, regexp.groups + 1):
       fields.append(encode_field(m.group(i)))
     sys.stdout.write(fmt.render(fields))
+
+
+def uxy_cmd_re(args):
+  regexp = re.compile(args.regexp)
+  # Use the old headers.
+  s = trim_newline(sys.stdin.readline())
+  fmt = Format(s)
+  sys.stdout.write(fmt.render())
+  # Process the data.
+  for ln in sys.stdin:
+    match = False
+    fields = split_fields(trim_newline(ln))
+    for i in range(0, len(fields)):
+      if args.field == None or args.field == fmt.fields[i]:
+        m = regexp.search(decode_field(fields[i]))
+        if m:
+          match = True
+          break
+    if match:
+      sys.stdout.write(fmt.render(fields))
 
 
 def uxy_cmd_reformat(args):
@@ -592,6 +612,12 @@ def main():
   p.set_defaults(func=uxy_cmd_from_yaml)
   p.set_defaults(no_unknown_args=True)
 
+  p = subparsers.add_parser('import', help="convert arbitrary input to UXY")
+  p.add_argument('header', help="UXY header")
+  p.add_argument('regexp', help="regexp to parse the input lines")
+  p.set_defaults(func=uxy_cmd_import)
+  p.set_defaults(no_unknown_args=True)
+
   p = subparsers.add_parser('ls', help="wrapper for 'ls' command")
   p.set_defaults(func=uxy_cmd_ls)
 
@@ -605,8 +631,8 @@ def main():
   p.set_defaults(func=uxy_cmd_ps)
 
   p = subparsers.add_parser('re', help="convert arbitrary input to UXY")
-  p.add_argument('header', help="UXY header")
   p.add_argument('regexp', help="regexp to parse the input lines")
+  p.add_argument('field', nargs='?', help="UXY field to match")
   p.set_defaults(func=uxy_cmd_re)
   p.set_defaults(no_unknown_args=True)
 
