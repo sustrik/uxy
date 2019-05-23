@@ -40,6 +40,13 @@ def trim_newline(s):
     return s[:-1]
   return s
 
+def writeout(s):
+ try:
+   sys.stdout.write(s)
+ except BrokenPipeError:
+   # The next command in the pipeline is not interested in more data.
+   # We can shut down cleanly.
+   sys.exit(0)
 
 ESCAPE_SEQUENCES1 = {
   't':  '\t',
@@ -213,15 +220,15 @@ def uxy_cmd_align(args):
     fields = split_fields(trim_newline(ln))
     fmt.adjust(fields)
     records.append(fields)
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   for r in records:
-    sys.stdout.write(fmt.render(r))
+    writeout(fmt.render(r))
 
 
 def uxy_cmd_import(args):
   # Use the supplied format.
   fmt = Format(args.header)
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   # Parse the data.
   regexp = re.compile(args.regexp)
   for ln in sys.stdin:
@@ -232,7 +239,7 @@ def uxy_cmd_import(args):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(encode_field(m.group(i)))
-    sys.stdout.write(fmt.render(fields))
+    writeout(fmt.render(fields))
 
 
 def uxy_cmd_grep(args):
@@ -240,7 +247,7 @@ def uxy_cmd_grep(args):
   # Use the old headers.
   s = trim_newline(sys.stdin.readline())
   fmt = Format(s)
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   # Process the data.
   for ln in sys.stdin:
     match = False
@@ -252,14 +259,14 @@ def uxy_cmd_grep(args):
           match = True
           break
     if match:
-      sys.stdout.write(fmt.render(fields))
+      writeout(fmt.render(fields))
 
 
 def uxy_cmd_reformat(args):
   # Use the supplied format.
   fmt = Format(args.header)
   newhdr = split_fields(args.header)
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   # Read the old format.
   s = trim_newline(sys.stdin.readline())
   oldhdr = split_fields(s)
@@ -274,7 +281,7 @@ def uxy_cmd_reformat(args):
       if oldname not in newhdr:
         continue
       newfields[newhdr.index(oldname)] = oldfields[i]
-    sys.stdout.write(fmt.render(newfields))
+    writeout(fmt.render(newfields))
 
 
 def uxy_cmd_trim(args):
@@ -284,7 +291,7 @@ def uxy_cmd_trim(args):
   # Adjust the column widths so that at least quoted elipsis fits in.
   for i in range(0, len(fmt.widths) - 1):
     fmt.widths[i] = max(fmt.widths[i], 6)
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   # Process the records.
   for ln in sys.stdin:
     fields = split_fields(trim_newline(ln))
@@ -299,7 +306,7 @@ def uxy_cmd_trim(args):
               fields[i] = '...'
         else:
             fields[i] = fields[i][:fmt.widths[i] - 4] + "..."
-    sys.stdout.write(fmt.render(fields))
+    writeout(fmt.render(fields))
 
 
 ################################################################################
@@ -314,12 +321,12 @@ def uxy_cmd_from_csv(args):
   for fields in r:
     fields = " ".join([encode_field(f) for f in fields])
     fmt = Format(fields)
-    sys.stdout.write(fields + "\n")
+    writeout(fields + "\n")
   for ln in sys.stdin:
     r = csv.reader(io.StringIO(trim_newline(ln)))
     for fields in r:
       fields = [encode_field(f) for f in fields]
-      sys.stdout.write(fmt.render(fields))
+      writeout(fmt.render(fields))
     
 
 def uxy_cmd_to_csv(args):
@@ -329,7 +336,7 @@ def uxy_cmd_to_csv(args):
     buf = io.StringIO()
     w = csv.writer(buf)
     w.writerow(fields)
-    sys.stdout.write(buf.getvalue())
+    writeout(buf.getvalue())
     #print(fields)
 
 
@@ -368,9 +375,9 @@ def uxy_cmd_from_json(args):
     fmt.adjust(record)
     records.append(record)
   # Write the result to output.
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   for r in records:
-    sys.stdout.write(fmt.render(r))
+    writeout(fmt.render(r))
 
 
 def uxy_cmd_to_json(args):
@@ -383,7 +390,7 @@ def uxy_cmd_to_json(args):
     for i in range(0, len(fields)):
       item[decode_field(hdr[i])] = decode_field(fields[i])
     res.append(item)
-  sys.stdout.write(json.dumps(res, indent=4) + "\n")
+  writeout(json.dumps(res, indent=4) + "\n")
 
 
 ################################################################################
@@ -420,9 +427,9 @@ def uxy_cmd_from_yaml(args):
     fmt.adjust(record)
     records.append(record)
   # Write the result to output.
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   for r in records:
-    sys.stdout.write(fmt.render(r))
+    writeout(fmt.render(r))
 
 
 def uxy_cmd_to_yaml(args):
@@ -435,7 +442,7 @@ def uxy_cmd_to_yaml(args):
     for i in range(0, len(fields)):
       item[decode_field(hdr[i])] = decode_field(fields[i])
     res.append(item)
-  sys.stdout.write(yaml.dump(res, default_flow_style=False))
+  writeout(yaml.dump(res, default_flow_style=False))
 
 
 ################################################################################
@@ -447,7 +454,7 @@ def uxy_cmd_du(args, uargs):
   proc = subprocess.Popen(['du'] + uargs, stdout=subprocess.PIPE)
   regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
   fmt = Format("USAGE    FILE")
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
     m = regexp.match(ln)
@@ -456,7 +463,7 @@ def uxy_cmd_du(args, uargs):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(encode_field(m.group(i)))
-    sys.stdout.write(fmt.render(fields))
+    writeout(fmt.render(fields))
 
 
 def uxy_cmd_ls(args, uargs):
@@ -465,7 +472,7 @@ def uxy_cmd_ls(args, uargs):
     stdout=subprocess.PIPE)
   regexp = re.compile(r'(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
   fmt = Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
     if ln.startswith('total'):
@@ -476,7 +483,7 @@ def uxy_cmd_ls(args, uargs):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(encode_field(m.group(i)))
-    sys.stdout.write(fmt.render(fields))
+    writeout(fmt.render(fields))
 
 
 def uxy_cmd_lsof(args, uargs):
@@ -486,7 +493,7 @@ def uxy_cmd_lsof(args, uargs):
   pos = [len(p) for p in list(itertools.accumulate(parts))]
   r1 = re.compile(r'([^\s]*)\s+([^\s]*)')
   fmt = Format("COMMAND             PID    TID    USER           FD      TYPE    DEVICE             SIZEOFF   NODE       NAME")
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
     fields = []
@@ -504,7 +511,7 @@ def uxy_cmd_lsof(args, uargs):
     fields.append(ln[pos[14]:pos[16]].strip())
     fields.append(ln[pos[16]:].strip())
     fields = [encode_field(f) for f in fields]
-    sys.stdout.write(fmt.render(fields))
+    writeout(fmt.render(fields))
 
 
 def uxy_cmd_netstat(args, uargs):
@@ -515,7 +522,7 @@ def uxy_cmd_netstat(args, uargs):
   parts = re.split("(\s+)", hdr)
   pos = [len(p) for p in list(itertools.accumulate(parts))]
   fmt = Format("PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE")
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
     fields = []
@@ -526,14 +533,14 @@ def uxy_cmd_netstat(args, uargs):
     fields.append(ln[pos[8]:pos[13]].strip())
     fields.append(ln[pos[13]:].strip())
     fields = [encode_field(f) for f in fields]
-    sys.stdout.write(fmt.render(fields))
+    writeout(fmt.render(fields))
 
 
 def uxy_cmd_ps(args, uargs):
   proc = subprocess.Popen(['ps'] + uargs, stdout=subprocess.PIPE)
   regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = Format("PID      TTY      TIME       CMD")
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   # Ignore the header file.
   proc.stdout.readline()
   for ln in proc.stdout:
@@ -544,7 +551,7 @@ def uxy_cmd_ps(args, uargs):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(encode_field(m.group(i)))
-    sys.stdout.write(fmt.render(fields))
+    writeout(fmt.render(fields))
 
 
 def uxy_cmd_top(args, uargs):
@@ -554,7 +561,7 @@ def uxy_cmd_top(args, uargs):
     proc.stdout.readline()
   regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = Format("PID    USER     PR   NI   VIRT     RES      SHR      S  CPU   MEM   TIME        COMMAND")
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
     m = regexp.match(ln)
@@ -563,14 +570,14 @@ def uxy_cmd_top(args, uargs):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(encode_field(m.group(i)))
-    sys.stdout.write(fmt.render(fields))
+    writeout(fmt.render(fields))
 
 
 def uxy_cmd_w(args, uargs):
   proc = subprocess.Popen(['w', '-h'] + uargs, stdout=subprocess.PIPE)
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
-  sys.stdout.write(fmt.render())
+  writeout(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
     m = regexp.match(ln)
@@ -579,7 +586,7 @@ def uxy_cmd_w(args, uargs):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(encode_field(m.group(i)))
-    sys.stdout.write(fmt.render(fields))
+    writeout(fmt.render(fields))
 
 
 ################################################################################
