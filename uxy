@@ -557,7 +557,6 @@ def uxy_cmd_ls(parser, args):
   parser.add_argument("-Q", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--quote-name", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--quoting-style", nargs=1, default=argparse.SUPPRESS)
-  parser.add_argument("-R", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-s", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--time", nargs=1, default=argparse.SUPPRESS)
   parser.add_argument("--time-style", nargs=1, default=argparse.SUPPRESS)
@@ -577,16 +576,24 @@ def uxy_cmd_ls(parser, args):
   regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
   fmt = Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
   writeout(fmt.render())
+  path = ""
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
     if ln.startswith('total'):
+      continue
+    if ln == "":
+      # When running with -R this is the name of the directory.
+      ln = trim_newline(proc.stdout.readline().decode("utf-8"))
+      if ln.endswith(":"):
+        path = ln[:-1] + "/"
       continue
     m = regexp.match(ln)
     if not m:
       continue
     fields = []
-    for i in range(1, regexp.groups + 1):
+    for i in range(1, regexp.groups):
       fields.append(encode_field(m.group(i)))
+    fields.append(encode_field(path + m.group(regexp.groups)))
     writeout(fmt.render(fields))
 
 
