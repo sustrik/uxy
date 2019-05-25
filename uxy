@@ -72,7 +72,7 @@ def decode_field(s):
     return s
   # Quoted field.
   s = s[1:-1]
-  # Exapnd escape sequences.
+  # Expand escape sequences.
   f = ""
   j = 0
   while j < len(s):
@@ -206,6 +206,19 @@ class Format:
       else:
         res += fields[i] + " " * (self.widths[i] - len(fields[i]))
     return res + "\n"
+
+
+# Makes sure that arguments specified by the parser and not supplied
+# by the user.
+def check_args(args, parser):
+  found, _ = parser.parse_known_args(args)
+  offending = list(vars(found).keys())
+  if len(offending) > 0:
+    print(
+      "uxy: argument '%s' is overriden by uxy, cannot be set by the user" %
+        offending[0],
+      file=sys.stderr)
+    sys.exit(1)
 
 
 ################################################################################
@@ -356,7 +369,7 @@ def uxy_cmd_from_csv(parser, args):
       fields = [encode_field(f) for f in fields]
       writeout(fmt.render(fields))
     
-
+  
 def uxy_cmd_to_csv(parser, args):
   subp = parser.add_subparsers().add_parser('to-csv',
     help="convert UXY to CSV")
@@ -514,11 +527,50 @@ def uxy_cmd_du(parser, args):
 
 
 def uxy_cmd_ls(parser, args):
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--author", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-b", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--escape", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-C", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--color", nargs="?", default=argparse.SUPPRESS)
+  parser.add_argument("-D", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-f", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--format", nargs="?", default=argparse.SUPPRESS)
+  parser.add_argument("--full-time", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-g", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-G", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--no-group", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-i", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--inode", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-l", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-m", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-N", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--literal", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-o", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-q", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--hide-control-chars", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-Q", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--quote-name", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--quoting-style", nargs=1, default=argparse.SUPPRESS)
+  # TODO: R is special...
+  parser.add_argument("-s", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--time", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("--time-style", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("-T", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("--tabsize", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("-w", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("--width", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("-x", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-Z", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--context", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-1", action="store_true", default=argparse.SUPPRESS)
+  check_args(sys.argv[1:], parser)
+
   proc = subprocess.Popen(
-    ['ls','-l', '--time-style=full-iso'] + args[1:],
+    ['ls','-lNisZw0', '--time-style=full-iso'] + args[1:],
     stdout=subprocess.PIPE)
-  regexp = re.compile(r'(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
-  fmt = Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
+  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
+  fmt = Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      CONTEXT SIZE         TIME                                  NAME")
   writeout(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
@@ -639,7 +691,6 @@ def uxy_cmd_w(parser, args):
 ################################################################################
 # Main.
 ################################################################################
-
 
 def main():
 
