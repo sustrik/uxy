@@ -2,6 +2,8 @@
 
 Converts from JSON to UXY format.
 
+### Example
+
 <pre>
 <b>$ cat test.json</b>
 [

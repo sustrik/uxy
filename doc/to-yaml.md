@@ -2,6 +2,8 @@
 
 Converts UXY format to YAML.
 
+### Example
+
 <pre>
 <b>$ uxy ps | uxy to-yaml<b>
 - PID: '512'

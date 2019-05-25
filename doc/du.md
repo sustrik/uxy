@@ -2,6 +2,8 @@
 
 Wraps `du` tool and outputs the results in UXY format.
 
+### Example
+
 <pre>
 <b>$ uxy du</b>
 USAGE    FILE

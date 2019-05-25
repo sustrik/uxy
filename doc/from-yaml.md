@@ -2,6 +2,8 @@
 
 Converts from YAML to UXY format.
 
+### Example
+
 <pre>
 <b>$ cat test.yml</b>
 - Name: Mercury

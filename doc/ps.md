@@ -26,6 +26,8 @@ When uxy is launched with `-l` option (`uxy -l ps`) following fields are added:
 - **PSR**
 - **STIME**
 
+### Example
+
 <pre>
 <b>$ uxy ps</b>
 PID      TTY      TIME       CMD 

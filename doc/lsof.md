@@ -2,6 +2,8 @@
 
 Wraps `lsof` tool and outputs the results in UXY format.
 
+### Example
+
 <pre>
 <b>$ uxy lsof</b>
 COMMAND             PID    TID    USER           FD      TYPE    DEVICE             SIZEOFF   NODE       NAME

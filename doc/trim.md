@@ -9,6 +9,8 @@ in the last column are never truncated.
 
 Unnamed fields are dropped.
 
+### Example
+
 <pre>
 <b>$ cat test.uxy</b>
 NAME     SIZE 

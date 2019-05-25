@@ -2,6 +2,8 @@
 
 Runs `top` tool in one-off manner and outputs the results in UXY format.
 
+### Example
+
 <pre>
 <b>$ ./uxy top</b>
 PID    USER     PR   NI   VIRT     RES      SHR      S CPU   MEM   TIME       COMMAND 

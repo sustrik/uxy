@@ -9,6 +9,8 @@ It allows for:
 - dropping columns
 - adding new columns
 
+### Example
+
 <pre>
 <b>$ cat test.uxy</b>
 TIME  NAME

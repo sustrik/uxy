@@ -2,6 +2,8 @@
 
 Wraps `w` tool and outputs the results in UXY format.
 
+### Example
+
 <pre>
 <b>$ uxy w</b>
 USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT 

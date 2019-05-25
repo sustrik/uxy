@@ -2,6 +2,8 @@
 
 Converts UXY format to CSV.
 
+### Example
+
 <pre>
 <b>$ uxy ls | uxy to-csv</b>
 TYPE,PERMISSIONS,LINKS,OWNER,GROUP,SIZE,TIME,NAME

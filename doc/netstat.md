@@ -2,6 +2,8 @@
 
 Wraps `netstat` tool and outputs the results in UXY format.
 
+### Example
+
 <pre>
 <b>$ uxy netstat</b>
 PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE 

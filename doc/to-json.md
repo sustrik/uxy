@@ -2,6 +2,8 @@
 
 Converts UXY format to JSON.
 
+### Example
+
 <pre>
 <b>$ ls -l | uxy import "time name" ".* +(.*) +(.*)" | uxy to-json</b>
 [

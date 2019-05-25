@@ -6,6 +6,8 @@ searches for the pattern in the specified field. Note that the pattern matching
 works on decoded field values, not on the uxy greppresentation of the fields.
 For example, for field "A B" A matches but "A does not. 
 
+### Example
+
 <pre>
 <b>$ cat test.uxy</b>
 NAME     SIZE 

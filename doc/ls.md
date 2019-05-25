@@ -22,6 +22,8 @@ When uxy is launched with `-l` option (`uxy -l ls`) following fields are added:
 If `-R` option is used to do recursive listing of files, `NAME` field contains
 the enitre path rather than just filename.
 
+### Example
+
 <pre>
 <b>$ uxy ls</b>
 TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME

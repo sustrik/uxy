@@ -2,6 +2,8 @@
 
 Converts from CSV to UXY format.
 
+### Example
+
 <pre>
 <b>$ cat test.csv</b>
 NAME,TIME
