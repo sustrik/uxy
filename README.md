@@ -61,9 +61,9 @@ uxy       11518
 <pre>
 <b>$ uxy ls | uxy grep test NAME</b>
 TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME 
--    rw-r--r--   1     martin     martin     45           "2019-05-20 05:07:05.095066240 +0200" test.csv 
--    rw-r--r--   1     martin     martin     84           "2019-05-20 19:32:37.332820969 +0200" test.txt 
--    rw-r--r--   1     martin     martin     75           "2019-05-20 17:28:47.942511346 +0200" test.uxy
+-    rw-r--r--   1     martin     martin     45           2019-05-25T16:09:58.755551983+02:00 test.csv 
+-    rw-r--r--   1     martin     martin     84           2019-05-25T16:09:58.755552856+02:00 test.txt 
+-    rw-r--r--   1     martin     martin     75           2019-05-25T16:09:58.755559998+02:00 test.uxy
 </pre>
 
 <pre>
