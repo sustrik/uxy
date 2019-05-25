@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 #  Copyright (c) 2019 Martin Sustrik
 #
@@ -123,7 +123,8 @@ QUOTED = 2
 ESCAPE = 3
 TRAILING = 4
 
-# Given a line, this function splits it into individual uxy fields and field widths.
+# Given a line, this function splits it into individual uxy fields and
+# field widths.
 def split_fields_widths(s):
   fields = []
   widths = []
@@ -212,7 +213,10 @@ class Format:
 ################################################################################
 
 
-def uxy_cmd_align(args):
+def uxy_cmd_align(parser, args):
+  subp = parser.add_subparsers().add_parser('align', help="align columns")
+  args = parser.parse_args(args)
+
   s = trim_newline(sys.stdin.readline())
   fmt = Format(s)
   records = []
@@ -225,7 +229,13 @@ def uxy_cmd_align(args):
     writeout(fmt.render(r))
 
 
-def uxy_cmd_import(args):
+def uxy_cmd_import(parser, args):
+  subp = parser.add_subparsers().add_parser('import',
+    help="convert arbitrary input to UXY")
+  subp.add_argument('header', help="UXY header")
+  subp.add_argument('regexp', help="regexp to parse the input lines")
+  args = parser.parse_args(args)
+
   # Use the supplied format.
   fmt = Format(args.header)
   writeout(fmt.render())
@@ -242,7 +252,12 @@ def uxy_cmd_import(args):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_grep(args):
+def uxy_cmd_grep(parser, args):
+  subp = parser.add_subparsers().add_parser('grep', help="find regexp in UXY")
+  subp.add_argument('regexp', help="regexp to parse the input lines")
+  subp.add_argument('field', nargs='?', help="UXY field to match")
+  args = parser.parse_args(args)
+
   regexp = re.compile(args.regexp)
   # Use the old headers.
   s = trim_newline(sys.stdin.readline())
@@ -262,7 +277,12 @@ def uxy_cmd_grep(args):
       writeout(fmt.render(fields))
 
 
-def uxy_cmd_reformat(args):
+def uxy_cmd_reformat(parser, args):
+  subp = parser.add_subparsers().add_parser('reformat',
+    help="reformat UXY data")
+  subp.add_argument('header', help="new UXY header")
+  args = parser.parse_args(args)
+
   # Use the supplied format.
   fmt = Format(args.header)
   newhdr = split_fields(args.header)
@@ -284,7 +304,11 @@ def uxy_cmd_reformat(args):
     writeout(fmt.render(newfields))
 
 
-def uxy_cmd_trim(args):
+def uxy_cmd_trim(parser, args):
+  subp = parser.add_subparsers().add_parser('trim',
+    help="trim long fields to fit into columns")
+  args = parser.parse_args(args)
+
   # Read the headers.
   s = trim_newline(sys.stdin.readline())
   fmt = Format(s)
@@ -314,7 +338,11 @@ def uxy_cmd_trim(args):
 ################################################################################
 
 
-def uxy_cmd_from_csv(args):
+def uxy_cmd_from_csv(parser, args):
+  subp = parser.add_subparsers().add_parser('from-csv',
+    help="convert CSV to UXY")
+  args = parser.parse_args(args)
+
   # Read the headers
   ln = trim_newline(sys.stdin.readline())
   r = csv.reader(io.StringIO(ln))
@@ -329,7 +357,11 @@ def uxy_cmd_from_csv(args):
       writeout(fmt.render(fields))
     
 
-def uxy_cmd_to_csv(args):
+def uxy_cmd_to_csv(parser, args):
+  subp = parser.add_subparsers().add_parser('to-csv',
+    help="convert UXY to CSV")
+  args = parser.parse_args(args)
+
   for ln in sys.stdin:
     fields = split_fields(trim_newline(ln))
     fields = [decode_field(f) for f in fields]
@@ -337,7 +369,6 @@ def uxy_cmd_to_csv(args):
     w = csv.writer(buf)
     w.writerow(fields)
     writeout(buf.getvalue())
-    #print(fields)
 
 
 ################################################################################
@@ -345,7 +376,11 @@ def uxy_cmd_to_csv(args):
 ################################################################################        
 
 
-def uxy_cmd_from_json(args):
+def uxy_cmd_from_json(parser, args):
+  subp = parser.add_subparsers().add_parser('from-json',
+    help="convert JSON to UXY")
+  args = parser.parse_args(args)
+
   # Read the entire input.
   s = ""
   for ln in sys.stdin:
@@ -380,7 +415,11 @@ def uxy_cmd_from_json(args):
     writeout(fmt.render(r))
 
 
-def uxy_cmd_to_json(args):
+def uxy_cmd_to_json(parser, args):
+  subp = parser.add_subparsers().add_parser('to-json',
+    help="convert UXY to JSON")
+  args = parser.parse_args(args)
+
   s = trim_newline(sys.stdin.readline())
   hdr = split_fields(s)
   res = []
@@ -397,7 +436,11 @@ def uxy_cmd_to_json(args):
 # YAML
 ################################################################################
 
-def uxy_cmd_from_yaml(args):
+def uxy_cmd_from_yaml(parser, args):
+  subp = parser.add_subparsers().add_parser('from-yaml',
+    help="convert YAML to UXY")
+  args = parser.parse_args(args)
+
   # Read the entire input.
   s = ""
   for ln in sys.stdin:
@@ -432,7 +475,11 @@ def uxy_cmd_from_yaml(args):
     writeout(fmt.render(r))
 
 
-def uxy_cmd_to_yaml(args):
+def uxy_cmd_to_yaml(parser, args):
+  subp = parser.add_subparsers().add_parser('to-yaml',
+    help="convert UXY to YAML")
+  args = parser.parse_args(args)
+
   s = trim_newline(sys.stdin.readline())
   hdr = split_fields(s)
   res = []
@@ -450,8 +497,8 @@ def uxy_cmd_to_yaml(args):
 ################################################################################
 
 
-def uxy_cmd_du(args, uargs):
-  proc = subprocess.Popen(['du'] + uargs, stdout=subprocess.PIPE)
+def uxy_cmd_du(parser, args):
+  proc = subprocess.Popen(['du'] + args[1:], stdout=subprocess.PIPE)
   regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
   fmt = Format("USAGE    FILE")
   writeout(fmt.render())
@@ -466,9 +513,9 @@ def uxy_cmd_du(args, uargs):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_ls(args, uargs):
+def uxy_cmd_ls(parser, args):
   proc = subprocess.Popen(
-    ['ls','-l', '--time-style=full-iso'] + uargs,
+    ['ls','-l', '--time-style=full-iso'] + args[1:],
     stdout=subprocess.PIPE)
   regexp = re.compile(r'(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
   fmt = Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
@@ -486,8 +533,8 @@ def uxy_cmd_ls(args, uargs):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_lsof(args, uargs):
-  proc = subprocess.Popen(['lsof', '+c', '0'] + uargs, stdout=subprocess.PIPE)
+def uxy_cmd_lsof(parser, args):
+  proc = subprocess.Popen(['lsof', '+c', '0'] + args[1:], stdout=subprocess.PIPE)
   hdr = trim_newline(proc.stdout.readline().decode("utf-8"))
   parts = re.split("(\s+)", hdr)
   pos = [len(p) for p in list(itertools.accumulate(parts))]
@@ -514,8 +561,8 @@ def uxy_cmd_lsof(args, uargs):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_netstat(args, uargs):
-  proc = subprocess.Popen(['netstat', '--inet'] + uargs, stdout=subprocess.PIPE)
+def uxy_cmd_netstat(parser, args):
+  proc = subprocess.Popen(['netstat', '--inet'] + args[1:], stdout=subprocess.PIPE)
   # Skip header line.
   proc.stdout.readline()
   hdr = trim_newline(proc.stdout.readline().decode("utf-8"))
@@ -536,8 +583,8 @@ def uxy_cmd_netstat(args, uargs):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_ps(args, uargs):
-  proc = subprocess.Popen(['ps'] + uargs, stdout=subprocess.PIPE)
+def uxy_cmd_ps(parser, args):
+  proc = subprocess.Popen(['ps'] + args[1:], stdout=subprocess.PIPE)
   regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = Format("PID      TTY      TIME       CMD")
   writeout(fmt.render())
@@ -554,8 +601,8 @@ def uxy_cmd_ps(args, uargs):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_top(args, uargs):
-  proc = subprocess.Popen(['top', '-bn1'] + uargs, stdout=subprocess.PIPE)
+def uxy_cmd_top(parser, args):
+  proc = subprocess.Popen(['top', '-bn1'] + args[1:], stdout=subprocess.PIPE)
   # Skip the summary.
   for i in range(0, 7):
     proc.stdout.readline()
@@ -573,8 +620,8 @@ def uxy_cmd_top(args, uargs):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_w(args, uargs):
-  proc = subprocess.Popen(['w', '-h'] + uargs, stdout=subprocess.PIPE)
+def uxy_cmd_w(parser, args):
+  proc = subprocess.Popen(['w', '-h'] + args[1:], stdout=subprocess.PIPE)
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
   writeout(fmt.render())
@@ -595,94 +642,53 @@ def uxy_cmd_w(args, uargs):
 
 
 def main():
-  
+
+  # Start by finding the subcommand and splitting args meant for uxy itself and
+  # the arguments to be passed to the subcommand (which may be an arbitrary
+  # UNIX tool with arbitrary arguments).
+  idx = len(sys.argv)
+  for i in range(1, len(sys.argv)):
+    if not sys.argv[i].startswith("-"):
+      idx = i
+      break
   parser = argparse.ArgumentParser(prog="uxy",
     description="Tool to manipulate UXY data.")
-  subparsers = parser.add_subparsers()
-
-  p = subparsers.add_parser('align', help="align columns")
-  p.set_defaults(func=uxy_cmd_align)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('du', help="wrapper for 'du' command")
-  p.set_defaults(func=uxy_cmd_du)
-
-  p = subparsers.add_parser('from-csv', help="convert CSV to UXY")
-  p.set_defaults(func=uxy_cmd_from_csv)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('from-json', help="convert JSON to UXY")
-  p.set_defaults(func=uxy_cmd_from_json)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('from-yaml', help="convert YAML to UXY")
-  p.set_defaults(func=uxy_cmd_from_yaml)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('grep', help="find regexp in UXY")
-  p.add_argument('regexp', help="regexp to parse the input lines")
-  p.add_argument('field', nargs='?', help="UXY field to match")
-  p.set_defaults(func=uxy_cmd_grep)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('import', help="convert arbitrary input to UXY")
-  p.add_argument('header', help="UXY header")
-  p.add_argument('regexp', help="regexp to parse the input lines")
-  p.set_defaults(func=uxy_cmd_import)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('ls', help="wrapper for 'ls' command")
-  p.set_defaults(func=uxy_cmd_ls)
-
-  p = subparsers.add_parser('lsof', help="wrapper for 'lsof' command")
-  p.set_defaults(func=uxy_cmd_lsof)
-
-  p = subparsers.add_parser('netstat', help="wrapper for 'netstat' command")
-  p.set_defaults(func=uxy_cmd_netstat)
-
-  p = subparsers.add_parser('ps', help="wrapper for 'ps' command")
-  p.set_defaults(func=uxy_cmd_ps)
-
-  p = subparsers.add_parser('reformat', help="reformat UXY data")
-  p.add_argument('header', help="new UXY header")
-  p.set_defaults(func=uxy_cmd_reformat)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('to-csv', help="convert UXY to CSV")
-  p.set_defaults(func=uxy_cmd_to_csv)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('to-json', help="convert UXY to JSON")
-  p.set_defaults(func=uxy_cmd_to_json)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('to-yaml', help="convert UXY to YAML")
-  p.set_defaults(func=uxy_cmd_to_yaml)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('top', help="wrapper for 'top' command")
-  p.set_defaults(func=uxy_cmd_top)
-
-  p = subparsers.add_parser('trim',
-    help="trim long fields to fit into columns")
-  p.set_defaults(func=uxy_cmd_trim)
-  p.set_defaults(no_unknown_args=True)
-
-  p = subparsers.add_parser('w', help="wrapper for 'w' command")
-  p.set_defaults(func=uxy_cmd_w)
-
-  # There must be a subcommand.
-  if len(sys.argv) <= 1:
-    parser.print_help()
+  parser.add_argument('--strict', action="store_true", default=False,
+    help = "fail on control characters in the input")
+  parser.add_argument('subcommand', metavar="SUBCOMMAND",
+    help = "subcommand to execute")
+  global uxy_args
+  uxy_args = parser.parse_args(sys.argv[1:idx + 1])
+  subcommand = sys.argv[idx]
+  args = sys.argv[idx:]
+  subcommands = {
+    "align": uxy_cmd_align,
+    "du": uxy_cmd_du,
+    "from-csv": uxy_cmd_from_csv,
+    "from-json": uxy_cmd_from_json,
+    "from-yaml": uxy_cmd_from_yaml,
+    "grep": uxy_cmd_grep,
+    "import": uxy_cmd_import,
+    "ls": uxy_cmd_ls,
+    "lsof": uxy_cmd_lsof,
+    "netstat": uxy_cmd_netstat,
+    "ps": uxy_cmd_ps,
+    "reformat": uxy_cmd_reformat,
+    "to-csv": uxy_cmd_to_csv,
+    "to-json": uxy_cmd_to_json,
+    "to-yaml": uxy_cmd_to_yaml,
+    "top": uxy_cmd_top,
+    "trim": uxy_cmd_trim,
+    "w": uxy_cmd_w,
+  }
+  if subcommand not in subcommands:
+    print("uxy: invalid subcommand '%s' (choose from: %s)" % (subcommand,
+      ", ".join(subcommands.keys())), file=sys.stderr)
     sys.exit(1)
-  # Do liberal parsing of the arguments to get the subcommand.
-  args, uargs = parser.parse_known_args(sys.argv[1:])
-  # If required by the subcmmand, do strict parsing.
-  if "no_unknown_args" in args and args.no_unknown_args:
-    args = parser.parse_args(sys.argv[1:])
-    args.func(args)
-  else:
-    args.func(args, uargs)
+  parser = argparse.ArgumentParser(prog="uxy",
+    description="Tool to manipulate UXY data.")
+  subcommands[subcommand](parser, args)
+
 
 if __name__ == "__main__":
     main()
