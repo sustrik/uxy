@@ -567,10 +567,10 @@ def uxy_cmd_ls(parser, args):
   check_args(sys.argv[1:], parser)
 
   proc = subprocess.Popen(
-    ['ls','-lNisZw0', '--time-style=full-iso'] + args[1:],
+    ['ls','-lNisw0', '--time-style=full-iso'] + args[1:],
     stdout=subprocess.PIPE)
-  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
-  fmt = Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      CONTEXT SIZE         TIME                                  NAME")
+  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
+  fmt = Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
   writeout(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
