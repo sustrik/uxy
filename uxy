@@ -527,7 +527,7 @@ def uxy_cmd_du(parser, args):
 
 
 def uxy_cmd_ls(parser, args):
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser(add_help=False)
   parser.add_argument("--author", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-b", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--escape", action="store_true", default=argparse.SUPPRESS)
@@ -552,7 +552,7 @@ def uxy_cmd_ls(parser, args):
   parser.add_argument("-Q", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--quote-name", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--quoting-style", nargs=1, default=argparse.SUPPRESS)
-  # TODO: R is special...
+  parser.add_argument("-R", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-s", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--time", nargs=1, default=argparse.SUPPRESS)
   parser.add_argument("--time-style", nargs=1, default=argparse.SUPPRESS)
