@@ -16,29 +16,29 @@ UXY format. Along with converters from/to other common data formats
 
 ### Examples
 
-```
-$ uxy ls
+<pre>
+<b>$ uxy ls</b>
 TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME 
 -    rw-r--r--   1     martin     martin     7451         "2019-05-19 23:35:13.552174105 +0200" README.md 
 -    rwxr-xr-x   1     martin     martin     11518        "2019-05-20 04:08:36.847163604 +0200" uxy
-```
+</pre>
 
-```
-$ uxy ls | uxy reformat "NAME SIZE"
+<pre>
+<b>$ uxy ls | uxy reformat "NAME SIZE"</b>
 NAME SIZE 
 README.md 7451 
 uxy  11518 
-```
+</pre>
 
-```
-$ uxy ls | uxy reformat "NAME SIZE" | uxy align
+<pre>
+<b>$ uxy ls | uxy reformat "NAME SIZE" | uxy align</b>
 NAME      SIZE
 README.md 7451 
 uxy       11518
-```
+</pre>
 
-```
-$ uxy top | uxy reformat "PID CPU COMMAND" | uxy to-json
+<pre>
+<b>$ uxy top | uxy reformat "PID CPU COMMAND" | uxy to-json</b>
 [
     {
         "PID": "4704",
@@ -56,35 +56,35 @@ $ uxy top | uxy reformat "PID CPU COMMAND" | uxy to-json
         "COMMAND": "systemd"
     }
 ]
-```
+</pre>
 
-```
-$ uxy ls | uxy grep test NAME
+<pre>
+<b>$ uxy ls | uxy grep test NAME</b>
 TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME 
 -    rw-r--r--   1     martin     martin     45           "2019-05-20 05:07:05.095066240 +0200" test.csv 
 -    rw-r--r--   1     martin     martin     84           "2019-05-20 19:32:37.332820969 +0200" test.txt 
 -    rw-r--r--   1     martin     martin     75           "2019-05-20 17:28:47.942511346 +0200" test.uxy
-```
+</pre>
 
-```
-$ uxy ps | uxy to-json | jq '.[].CMD'
+<pre>
+<b>$ uxy ps | uxy to-json | jq '.[].CMD'</b>
 "bash"
 "uxy"
 "uxy"
 "jq"
 "ps"
-```
+</pre>
 
-```
-$ cat test.csv 
+<pre>
+<b>$ cat test.csv</b>
 NAME,TIME
 Quasimodo,14:30
 Moby Dick,14:22
-$ cat test.csv | uxy from-csv | uxy align
+<b>$ cat test.csv | uxy from-csv | uxy align</b>
 NAME        TIME
 Quasimodo   14:30 
 "Moby Dick" 14:22 
-```
+</pre>
 
 # UXY format
 
@@ -139,13 +139,13 @@ UXY format is designed with the following requirements in mind:
 
 ### Example
 
-```
+<pre>
 NAME  AGE ADDRESS
 Alice 25  "Main Road 1, London" "Let's use this unnamed field for comments."
 Bob   23  ""
 Carol 55  "Hotel \"Excelsior\", New York"
   Dylan             15
-```
+</pre>
 
 # TOOLS
 
