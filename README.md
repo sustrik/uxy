@@ -18,12 +18,9 @@ UXY format. Along with converters from/to other common data formats
 
 <pre>
 <b>$ uxy ls</b>
-TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE    TIME                                  NAME 
-d    rwxr-xr-x   2     martin     martin     4096    2019-05-25T16:09:58.755551983+02:00   doc 
--    rw-r--r--   1     martin     martin     1025    2019-05-24T05:37:33.571299899+02:00   LICENSE 
--    rw-r--r--   1     martin     martin     3204    2019-05-25T15:44:46.371308721+02:00   README.md 
-d    rwxr-xr-x   2     martin     martin     4096    2019-05-25T11:10:55.561843561+02:00   test 
--    rwxr-xr-x   1     martin     martin     25535   2019-05-25T16:29:28.518397541+02:00   uxy 
+TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE    TIME                                  NAME
+-    rw-r--r--   1     martin     martin     3204    2019-05-25T15:44:46.371308721+02:00   README.md
+-    rwxr-xr-x   1     martin     martin     25535   2019-05-25T16:29:28.518397541+02:00   uxy
 </pre>
 
 <pre>
