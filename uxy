@@ -685,6 +685,7 @@ def uxy_cmd_ps(parser, args, uxy_args):
   parser.add_argument("--help", nargs=1, default=argparse.SUPPRESS)
   check_args(args, parser)
 
+  # TODO: This is better parsed as fixed-width fields.
   if uxy_args.long:
     fmtargs = ['-FMlww', '--no-headers']
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
