@@ -290,8 +290,8 @@ def uxy_cmd_grep(parser, args, uxy_args):
       writeout(fmt.render(fields))
 
 
-def uxy_cmd_reformat(parser, args, uxy_args):
-  subp = parser.add_subparsers().add_parser('reformat',
+def uxy_cmd_fmt(parser, args, uxy_args):
+  subp = parser.add_subparsers().add_parser('fmt',
     help="reformat UXY data")
   subp.add_argument('header', help="new UXY header")
   args = parser.parse_args(args)
@@ -734,6 +734,7 @@ def main():
   subcommands = {
     "align": uxy_cmd_align,
     "du": uxy_cmd_du,
+    "fmt": uxy_cmd_fmt,
     "from-csv": uxy_cmd_from_csv,
     "from-json": uxy_cmd_from_json,
     "from-yaml": uxy_cmd_from_yaml,
@@ -743,7 +744,6 @@ def main():
     "lsof": uxy_cmd_lsof,
     "netstat": uxy_cmd_netstat,
     "ps": uxy_cmd_ps,
-    "reformat": uxy_cmd_reformat,
     "to-csv": uxy_cmd_to_csv,
     "to-json": uxy_cmd_to_json,
     "to-yaml": uxy_cmd_to_yaml,

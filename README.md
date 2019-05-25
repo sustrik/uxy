@@ -24,21 +24,21 @@ TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE    TIME                       
 </pre>
 
 <pre>
-<b>$ uxy ls | uxy reformat "NAME SIZE"</b>
+<b>$ uxy ls | uxy fmt "NAME SIZE"</b>
 NAME SIZE 
 README.md 7451 
 uxy  11518 
 </pre>
 
 <pre>
-<b>$ uxy ls | uxy reformat "NAME SIZE" | uxy align</b>
+<b>$ uxy ls | uxy fmt "NAME SIZE" | uxy align</b>
 NAME      SIZE
 README.md 7451 
 uxy       11518
 </pre>
 
 <pre>
-<b>$ uxy top | uxy reformat "PID CPU COMMAND" | uxy to-json</b>
+<b>$ uxy top | uxy fmt "PID CPU COMMAND" | uxy to-json</b>
 [
     {
         "PID": "4704",
@@ -105,7 +105,7 @@ they try to align the fields in the output to make it more convenient to read.
 - **[uxy lsof](doc/lsof.md)**
 - **[uxy netstat](doc/netstat.md)**
 - **[uxy ps](doc/ps.md)**
-- **[uxy reformat](doc/reformat.md)**
+- **[uxy fmt](doc/fmt.md)**
 - **[uxy to-csv](doc/to-csv.md)**
 - **[uxy to-json](doc/to-json.md)**
 - **[uxy to-yaml](doc/to-yaml.md)**

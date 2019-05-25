@@ -1,4 +1,4 @@
-# uxy reformat
+# uxy fmt
 
 Takes an UXY input and reformats it according to the supplied headers.
 
@@ -14,7 +14,7 @@ It allows for:
 TIME  NAME
 15:03 README.md 
 16:08 uxy
-$ uxy reformat "NAME          TIME" < test.uxy 
+$ uxy fmt "NAME          TIME" < test.uxy 
 NAME          TIME 
 README.md     15:03 
 uxy           16:08 
