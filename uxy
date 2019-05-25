@@ -573,11 +573,11 @@ def uxy_cmd_ls(parser, args, uxy_args):
 
   if uxy_args.long:
     fmtargs = ['-lNisZw0', '--time-style=full-iso']
-    regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
+    regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      CONTEXT SIZE         TIME                                  NAME")
   else:
     fmtargs = ['-lNw0', '--time-style=full-iso']
-    regexp = re.compile(r'\s*(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
+    regexp = re.compile(r'\s*(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
 
   proc = subprocess.Popen(['ls'] + fmtargs + args[1:], stdout=subprocess.PIPE)
@@ -597,8 +597,15 @@ def uxy_cmd_ls(parser, args, uxy_args):
     if not m:
       continue
     fields = []
-    for i in range(1, regexp.groups):
+    for i in range(1, regexp.groups - 3):
       fields.append(encode_field(m.group(i)))
+    # Convert to actual ISO8601 format.
+    time = "%sT%s%s:%s" % (
+      m.group(regexp.groups - 3),
+      m.group(regexp.groups - 2),
+      m.group(regexp.groups - 1)[:-2],
+      m.group(regexp.groups - 1)[-2:])
+    fields.append(encode_field(time))
     fields.append(encode_field(path + m.group(regexp.groups)))
     writeout(fmt.render(fields))
 
