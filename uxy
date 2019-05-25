@@ -569,6 +569,7 @@ def uxy_cmd_ls(parser, args, uxy_args):
   parser.add_argument("-Z", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--context", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-1", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--help", action="store_true", default=argparse.SUPPRESS)
   check_args(args, parser)
 
   if uxy_args.long:
@@ -661,12 +662,40 @@ def uxy_cmd_netstat(parser, args, uxy_args):
 
 
 def uxy_cmd_ps(parser, args, uxy_args):
-  proc = subprocess.Popen(['ps'] + args[1:], stdout=subprocess.PIPE)
-  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-  fmt = Format("PID      TTY      TIME       CMD")
+  parser = argparse.ArgumentParser(add_help=False)
+  parser.add_argument("-c", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--context", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-f", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-F", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-j", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-l", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-M", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-o", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("-O", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("-y", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--cols", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("--columns", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("--forest", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-H", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--headers", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--lines", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("--no-headers", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--rows", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("--width", nargs=1, default=argparse.SUPPRESS)
+  parser.add_argument("--help", nargs=1, default=argparse.SUPPRESS)
+  check_args(args, parser)
+
+  if uxy_args.long:
+    fmtargs = ['-FMlww', '--no-headers']
+    regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
+    fmt = Format("CONTEXT        F  S  UID        PID    PPID    C  PRI  NI  ADDR  SZ        WCHAN    RSS     PSR  STIME   TTY    TIME       CMD")
+  else:
+    fmtargs = ['-ww', '--no-headers']
+    regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
+    fmt = Format("PID      TTY      TIME       CMD")
+
+  proc = subprocess.Popen(['ps'] + fmtargs + args[1:], stdout=subprocess.PIPE)
   writeout(fmt.render())
-  # Ignore the header file.
-  proc.stdout.readline()
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
     m = regexp.match(ln)
