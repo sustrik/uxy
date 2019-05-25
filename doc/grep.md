@@ -6,20 +6,20 @@ searches for the pattern in the specified field. Note that the pattern matching
 works on decoded field values, not on the uxy greppresentation of the fields.
 For example, for field "A B" A matches but "A does not. 
 
-```
-$ cat test.uxy 
+<pre>
+<b>$ cat test.uxy</b>
 NAME     SIZE 
 README.md 8060 
 test.csv 45
 test.uxy 0
 uxy      13458 
-$ cat test.uxy | uxy grep csv
+<b>$ cat test.uxy | uxy grep csv</b>
 NAME     SIZE 
 test.csv 45
-$ cat test.uxy | uxy grep csv NAME
+<b>$ cat test.uxy | uxy grep csv NAME</b>
 NAME     SIZE 
 test.csv 45
-$ cat test.uxy | uxy grep csv SIZE
+<b>$ cat test.uxy | uxy grep csv SIZE</b>
 NAME     SIZE
-```
+</pre>
 

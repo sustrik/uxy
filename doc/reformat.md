@@ -9,8 +9,8 @@ It allows for:
 - dropping columns
 - adding new columns
 
-```
-$ cat test.uxy 
+<pre>
+<b>$ cat test.uxy</b>
 TIME  NAME
 15:03 README.md 
 16:08 uxy
@@ -18,5 +18,5 @@ $ uxy reformat "NAME          TIME" < test.uxy
 NAME          TIME 
 README.md     15:03 
 uxy           16:08 
-```
+</pre>
 

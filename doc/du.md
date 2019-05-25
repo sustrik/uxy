@@ -2,8 +2,8 @@
 
 Wraps `du` tool and outputs the results in UXY format.
 
-```
-$ uxy du
+<pre>
+<b>$ uxy du</b>
 USAGE    FILE
 12       ./.git/objects/56 
 12       ./.git/objects/62 
@@ -14,5 +14,5 @@ USAGE    FILE
 1096     ./.git 
 48       ./test 
 1192     . 
-```
+</pre>
 

@@ -2,15 +2,15 @@
 
 Converts from JSON to UXY format.
 
-```
-$ cat test.json 
+<pre>
+<b>$ cat test.json</b>
 [
     {"Name": "Quasimodo", "Time": "14:30"},
     {"Name": "Moby Dick", "Time": "14:22"}
 ]
-$ uxy from-json < test.json 
+<b>$ uxy from-json < test.json</b>
 Name        Time
 Quasimodo   14:30 
 "Moby Dick" 14:22
-```
+</pre>
 

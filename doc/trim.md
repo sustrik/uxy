@@ -9,18 +9,17 @@ in the last column are never truncated.
 
 Unnamed fields are dropped.
 
-```
-$ cat test.uxy 
+<pre>
+<b>$ cat test.uxy</b>
 NAME     SIZE 
 README.md 8060 
 test.csv 45
 test     0
 uxy      13458 
-$ cat test.uxy | uxy trim
+<b>$ cat test.uxy | uxy trim</b>
 NAME     SIZE 
 READM... 8060 
 test.csv 45
 test     0
 uxy      13458 
-```
-
+</pre>

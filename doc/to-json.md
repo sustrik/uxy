@@ -2,8 +2,8 @@
 
 Converts UXY format to JSON.
 
-```
-$ ls -l | uxy import "time name" ".* +(.*) +(.*)" | uxy to-json
+<pre>
+<b>$ ls -l | uxy import "time name" ".* +(.*) +(.*)" | uxy to-json</b>
 [
     {
         "time": "14:22",
@@ -14,5 +14,5 @@ $ ls -l | uxy import "time name" ".* +(.*) +(.*)" | uxy to-json
         "name": "uxy"
     }
 ]
-```
+</pre>
 

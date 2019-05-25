@@ -2,8 +2,8 @@
 
 Converts UXY format to YAML.
 
-```
-$ uxy ps | uxy to-yaml
+<pre>
+<b>$ uxy ps | uxy to-yaml<b>
 - PID: '512'
   TIME: 00:00:00 uxy
   TTY: pts/22
@@ -17,5 +17,5 @@ $ uxy ps | uxy to-yaml
   PID: '12392'
   TIME: 00:00:01
   TTY: pts/22
-```
+</pre>
 
