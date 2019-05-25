@@ -226,7 +226,7 @@ def check_args(args, parser):
 ################################################################################
 
 
-def uxy_cmd_align(parser, args):
+def uxy_cmd_align(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('align', help="align columns")
   args = parser.parse_args(args)
 
@@ -242,7 +242,7 @@ def uxy_cmd_align(parser, args):
     writeout(fmt.render(r))
 
 
-def uxy_cmd_import(parser, args):
+def uxy_cmd_import(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('import',
     help="convert arbitrary input to UXY")
   subp.add_argument('header', help="UXY header")
@@ -265,7 +265,7 @@ def uxy_cmd_import(parser, args):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_grep(parser, args):
+def uxy_cmd_grep(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('grep', help="find regexp in UXY")
   subp.add_argument('regexp', help="regexp to parse the input lines")
   subp.add_argument('field', nargs='?', help="UXY field to match")
@@ -290,7 +290,7 @@ def uxy_cmd_grep(parser, args):
       writeout(fmt.render(fields))
 
 
-def uxy_cmd_reformat(parser, args):
+def uxy_cmd_reformat(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('reformat',
     help="reformat UXY data")
   subp.add_argument('header', help="new UXY header")
@@ -317,7 +317,7 @@ def uxy_cmd_reformat(parser, args):
     writeout(fmt.render(newfields))
 
 
-def uxy_cmd_trim(parser, args):
+def uxy_cmd_trim(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('trim',
     help="trim long fields to fit into columns")
   args = parser.parse_args(args)
@@ -351,7 +351,7 @@ def uxy_cmd_trim(parser, args):
 ################################################################################
 
 
-def uxy_cmd_from_csv(parser, args):
+def uxy_cmd_from_csv(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('from-csv',
     help="convert CSV to UXY")
   args = parser.parse_args(args)
@@ -370,7 +370,7 @@ def uxy_cmd_from_csv(parser, args):
       writeout(fmt.render(fields))
     
   
-def uxy_cmd_to_csv(parser, args):
+def uxy_cmd_to_csv(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('to-csv',
     help="convert UXY to CSV")
   args = parser.parse_args(args)
@@ -389,7 +389,7 @@ def uxy_cmd_to_csv(parser, args):
 ################################################################################        
 
 
-def uxy_cmd_from_json(parser, args):
+def uxy_cmd_from_json(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('from-json',
     help="convert JSON to UXY")
   args = parser.parse_args(args)
@@ -428,7 +428,7 @@ def uxy_cmd_from_json(parser, args):
     writeout(fmt.render(r))
 
 
-def uxy_cmd_to_json(parser, args):
+def uxy_cmd_to_json(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('to-json',
     help="convert UXY to JSON")
   args = parser.parse_args(args)
@@ -449,7 +449,8 @@ def uxy_cmd_to_json(parser, args):
 # YAML
 ################################################################################
 
-def uxy_cmd_from_yaml(parser, args):
+
+def uxy_cmd_from_yaml(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('from-yaml',
     help="convert YAML to UXY")
   args = parser.parse_args(args)
@@ -488,7 +489,7 @@ def uxy_cmd_from_yaml(parser, args):
     writeout(fmt.render(r))
 
 
-def uxy_cmd_to_yaml(parser, args):
+def uxy_cmd_to_yaml(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('to-yaml',
     help="convert UXY to YAML")
   args = parser.parse_args(args)
@@ -510,7 +511,7 @@ def uxy_cmd_to_yaml(parser, args):
 ################################################################################
 
 
-def uxy_cmd_du(parser, args):
+def uxy_cmd_du(parser, args, uxy_args):
   proc = subprocess.Popen(['du'] + args[1:], stdout=subprocess.PIPE)
   regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
   fmt = Format("USAGE    FILE")
@@ -526,7 +527,7 @@ def uxy_cmd_du(parser, args):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_ls(parser, args):
+def uxy_cmd_ls(parser, args, uxy_args):
   parser = argparse.ArgumentParser(add_help=False)
   parser.add_argument("--author", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-b", action="store_true", default=argparse.SUPPRESS)
@@ -568,13 +569,18 @@ def uxy_cmd_ls(parser, args):
   parser.add_argument("-Z", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--context", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-1", action="store_true", default=argparse.SUPPRESS)
-  check_args(sys.argv[1:], parser)
+  check_args(args, parser)
 
-  proc = subprocess.Popen(
-    ['ls','-lNisw0', '--time-style=full-iso'] + args[1:],
-    stdout=subprocess.PIPE)
-  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
-  fmt = Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
+  if uxy_args.long:
+    fmtargs = ['-lNisZw0', '--time-style=full-iso']
+    regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
+    fmt = Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      CONTEXT SIZE         TIME                                  NAME")
+  else:
+    fmtargs = ['-lNw0', '--time-style=full-iso']
+    regexp = re.compile(r'\s*(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
+    fmt = Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
+
+  proc = subprocess.Popen(['ls'] + fmtargs + args[1:], stdout=subprocess.PIPE)
   writeout(fmt.render())
   path = ""
   for ln in proc.stdout:
@@ -597,7 +603,7 @@ def uxy_cmd_ls(parser, args):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_lsof(parser, args):
+def uxy_cmd_lsof(parser, args, uxy_args):
   proc = subprocess.Popen(['lsof', '+c', '0'] + args[1:], stdout=subprocess.PIPE)
   hdr = trim_newline(proc.stdout.readline().decode("utf-8"))
   parts = re.split("(\s+)", hdr)
@@ -625,7 +631,7 @@ def uxy_cmd_lsof(parser, args):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_netstat(parser, args):
+def uxy_cmd_netstat(parser, args, uxy_args):
   proc = subprocess.Popen(['netstat', '--inet'] + args[1:], stdout=subprocess.PIPE)
   # Skip header line.
   proc.stdout.readline()
@@ -647,7 +653,7 @@ def uxy_cmd_netstat(parser, args):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_ps(parser, args):
+def uxy_cmd_ps(parser, args, uxy_args):
   proc = subprocess.Popen(['ps'] + args[1:], stdout=subprocess.PIPE)
   regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = Format("PID      TTY      TIME       CMD")
@@ -665,7 +671,7 @@ def uxy_cmd_ps(parser, args):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_top(parser, args):
+def uxy_cmd_top(parser, args, uxy_args):
   proc = subprocess.Popen(['top', '-bn1'] + args[1:], stdout=subprocess.PIPE)
   # Skip the summary.
   for i in range(0, 7):
@@ -684,7 +690,7 @@ def uxy_cmd_top(parser, args):
     writeout(fmt.render(fields))
 
 
-def uxy_cmd_w(parser, args):
+def uxy_cmd_w(parser, args, uxy_args):
   proc = subprocess.Popen(['w', '-h'] + args[1:], stdout=subprocess.PIPE)
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
@@ -716,11 +722,12 @@ def main():
       break
   parser = argparse.ArgumentParser(prog="uxy",
     description="Tool to manipulate UXY data.")
+  parser.add_argument('-l', '--long', action="store_true", default=False,
+    help = "produce more data")
   parser.add_argument('--strict', action="store_true", default=False,
     help = "fail on control characters in the input")
   parser.add_argument('subcommand', metavar="SUBCOMMAND",
     help = "subcommand to execute")
-  global uxy_args
   uxy_args = parser.parse_args(sys.argv[1:idx + 1])
   subcommand = sys.argv[idx]
   args = sys.argv[idx:]
@@ -750,7 +757,7 @@ def main():
     sys.exit(1)
   parser = argparse.ArgumentParser(prog="uxy",
     description="Tool to manipulate UXY data.")
-  subcommands[subcommand](parser, args)
+  subcommands[subcommand](parser, args, uxy_args)
 
 
 if __name__ == "__main__":
