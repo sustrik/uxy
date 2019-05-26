@@ -122,7 +122,6 @@ as "the most useful info that fits on page") or long set of result fields
 <pre>
 <b>$ uxy -l ps</b>
 </pre>
-```
 
 Any options that have to do with sorting or filtering are perfectly all right
 to pass to the wrapped tool though.
