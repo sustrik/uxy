@@ -119,8 +119,9 @@ to either print the default (short) set of result fields (mostly defined
 as "the most useful info that fits on page") or long set of result fields
 ("all the information UXY was able to extract"):
 
-```
-$ uxy -l ls
+<pre>
+<b>$ uxy -l ps</b>
+</pre>
 ```
 
 Any options that have to do with sorting or filtering are perfectly all right
@@ -131,8 +132,8 @@ terminal width, gets wrapped and unreadable. In such cases it's useful to
 pipe the output to `to-yaml` tool. YAML has one-line-per-field syntax and thus
 makes the output more readable:
 
-```
-./uxy -l ps | ./uxy to-yaml
+<pre>
+<b>$ ./uxy -l ps | ./uxy to-yaml</b>
 - ADDR: '-'
   C: '0'
   CMD: python3 ./uxy -l ps
@@ -169,25 +170,7 @@ makes the output more readable:
   TTY: pts/0
   UID: martin
   WCHAN: pipe_w
-- ADDR: '-'
-  C: '0'
-  CMD: ps -FMlww --no-headers
-  CONTEXT: unconfined
-  F: '4'
-  NI: '0'
-  PID: '26076'
-  PPID: '26074'
-  PRI: '80'
-  PSR: '2'
-  RSS: '3560'
-  S: R
-  STIME: 05:11
-  SZ: '10519'
-  TIME: 00:00:00
-  TTY: pts/0
-  UID: martin
-  WCHAN: '-'
-``` 
+</pre> 
 
 - **[uxy du](doc/du.md)**
 - **[uxy ls](doc/ls.md)**
