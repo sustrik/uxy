@@ -267,24 +267,45 @@ def uxy_cmd_import(parser, args, uxy_args):
 
 def uxy_cmd_grep(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('grep', help="find regexp in UXY")
-  subp.add_argument('regexp', help="regexp to parse the input lines")
-  subp.add_argument('field', nargs='?', help="UXY field to match")
+  subp.add_argument('conditions', nargs="*", metavar="CONDITION",
+    help="list of regexp and field pairs; regexp without a field matches any field")
   args = parser.parse_args(args)
 
-  regexp = re.compile(args.regexp)
   # Use the old headers.
   s = trim_newline(sys.stdin.readline())
   fmt = Format(s)
   writeout(fmt.render())
+
+  # Precompile the conditions.
+  conds = []
+  for i in range(0, len(args.conditions), 2):
+    if i + 1 >= len(args.conditions):
+      field = None
+    else:
+      if not args.conditions[i + 1] in fmt.fields:
+        continue
+      field = fmt.fields.index(args.conditions[i + 1])
+    conds.append((re.compile(args.conditions[i]), field))
+
   # Process the data.
   for ln in sys.stdin:
-    match = False
     fields = split_fields(trim_newline(ln))
-    for i in range(0, len(fields)):
-      if args.field == None or args.field == fmt.fields[i]:
-        m = regexp.search(decode_field(fields[i]))
-        if m:
-          match = True
+    match = True
+    for c in conds:
+      if c[1] == None:
+        match2 = False
+        for f in fields:
+          m = c[0].search(f)
+          if m:
+            match2 = True
+            break
+        if not match2:
+          match = False
+          break
+      else:
+        m = c[0].search(fields[c[1]])
+        if not m:
+          match = False
           break
     if match:
       writeout(fmt.render(fields))
