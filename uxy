@@ -535,7 +535,7 @@ def uxy_cmd_to_yaml(parser, args, uxy_args):
 
 
 def uxy_cmd_du(parser, args, uxy_args):
-  parser = argparse.ArgumentParser(add_help=False)
+  parser = argparse.ArgumentParser("uxy du", add_help=False)
   parser.add_argument("-0", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--null", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-c", action="store_true", default=argparse.SUPPRESS)
@@ -590,7 +590,7 @@ def write_ifconfig_record(fmt, iface):
 
 
 def uxy_cmd_ifconfig(parser, args, uxy_args):
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser("uxy ifconfig")
   parser.add_argument("-a", action="store_true", default=False,
     help=" display all interfaces which are currently available, even if down")
   parser.add_argument('interface', nargs="?", default=None,
@@ -666,7 +666,7 @@ def uxy_cmd_ifconfig(parser, args, uxy_args):
     write_ifconfig_record(fmt, iface)
 
 def uxy_cmd_ls(parser, args, uxy_args):
-  parser = argparse.ArgumentParser(add_help=False)
+  parser = argparse.ArgumentParser("uxy ls", add_help=False)
   parser.add_argument("--author", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-b", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--escape", action="store_true", default=argparse.SUPPRESS)
@@ -800,7 +800,7 @@ def uxy_cmd_netstat(parser, args, uxy_args):
 
 
 def uxy_cmd_ps(parser, args, uxy_args):
-  parser = argparse.ArgumentParser(add_help=False)
+  parser = argparse.ArgumentParser("uxy ps", add_help=False)
   parser.add_argument("-c", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--context", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-f", action="store_true", default=argparse.SUPPRESS)
@@ -847,12 +847,21 @@ def uxy_cmd_ps(parser, args, uxy_args):
 
 
 def uxy_cmd_top(parser, args, uxy_args):
+  parser = argparse.ArgumentParser("uxy top")
+  parser.parse_args(args[1:])
+
   proc = subprocess.Popen(['top', '-bn1'] + args[1:], stdout=subprocess.PIPE)
   # Skip the summary.
   for i in range(0, 7):
     proc.stdout.readline()
-  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-  fmt = Format("PID    USER     PR   NI   VIRT     RES      SHR      S  CPU   MEM   TIME        COMMAND")
+
+  if uxy_args.long:
+    regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
+    fmt = Format("PID    USER     PR   NI   VIRT     RES      SHR      S  CPU   MEM   TIME        CMD")
+  else:
+    regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
+    fmt = Format("PID    USER     CPU   MEM   TIME        CMD")
+
   writeout(fmt.render())
   for ln in proc.stdout:
     ln = trim_newline(ln.decode("utf-8"))
@@ -866,7 +875,7 @@ def uxy_cmd_top(parser, args, uxy_args):
 
 
 def uxy_cmd_w(parser, args, uxy_args):
-  parser = argparse.ArgumentParser(add_help=False)
+  parser = argparse.ArgumentParser("uxy w", add_help=False)
   parser.add_argument("-h", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--no-header", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-s", action="store_true", default=argparse.SUPPRESS)
