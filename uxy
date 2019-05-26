@@ -761,8 +761,6 @@ def main():
     description="Tool to manipulate UXY data.")
   parser.add_argument('-l', '--long', action="store_true", default=False,
     help = "produce more data")
-  parser.add_argument('--strict', action="store_true", default=False,
-    help = "fail on control characters in the input")
   parser.add_argument('subcommand', metavar="SUBCOMMAND",
     help = "subcommand to execute")
   uxy_args = parser.parse_args(sys.argv[1:idx + 1])

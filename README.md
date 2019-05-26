@@ -88,6 +88,8 @@ Quasimodo   14:30
 
 # TOOLS
 
+### UXY tools
+
 All UXY tools take input from stdin and write the result to stdout.
 
 The tools follow the Postel's principle: "Be liberal in what you accept,
@@ -95,21 +97,103 @@ conservative in what you output." They accept any UXY input, but
 they try to align the fields in the output to make it more convenient to read.
 
 - **[uxy align](doc/align.md)**
-- **[uxy du](doc/du.md)**
 - **[uxy from-csv](doc/from-csv.md)**
 - **[uxy from-json](doc/from-json.md)**
 - **[uxy from-yaml](doc/from-yaml.md)**
 - **[uxy grep](doc/grep.md)**
 - **[uxy import](doc/import.md)**
-- **[uxy ls](doc/ls.md)**
-- **[uxy lsof](doc/lsof.md)**
-- **[uxy netstat](doc/netstat.md)**
-- **[uxy ps](doc/ps.md)**
 - **[uxy fmt](doc/fmt.md)**
 - **[uxy to-csv](doc/to-csv.md)**
 - **[uxy to-json](doc/to-json.md)**
 - **[uxy to-yaml](doc/to-yaml.md)**
-- **[uxy top](doc/top.md)**
 - **[uxy trim](doc/trim.md)**
+
+### Wrapped UNIX tools
+
+Any argument that could be passed to the original tool can also be passed to
+the UXY-wrapped version of the tool.
+
+The exception are the arguments that modify how the output looks like. UXY
+manages those arguments itself. The only control you have over the output is
+to either print the default (short) set of result fields (mostly defined
+as "the most useful info that fits on page") or long set of result fields
+("all the information UXY was able to extract"):
+
+```
+$ uxy -l ls
+```
+
+Any options that have to do with sorting or filtering are perfectly all right
+to pass to the wrapped tool though.
+
+When running with `-l` option it often happens that the output exceeds the
+terminal width, gets wrapped and unreadable. In such cases it's useful to
+pipe the output to `to-yaml` tool. YAML has one-line-per-field syntax and thus
+makes the output more readable:
+
+```
+./uxy -l ps | ./uxy to-yaml
+- ADDR: '-'
+  C: '0'
+  CMD: python3 ./uxy -l ps
+  CONTEXT: unconfined
+  F: '0'
+  NI: '0'
+  PID: '26074'
+  PPID: '4464'
+  PRI: '80'
+  PSR: '1'
+  RSS: '12508'
+  S: S
+  STIME: 05:11
+  SZ: '10280'
+  TIME: 00:00:00
+  TTY: pts/0
+  UID: martin
+  WCHAN: pipe_w
+- ADDR: '-'
+  C: '0'
+  CMD: python3 ./uxy to-yaml
+  CONTEXT: unconfined
+  F: '0'
+  NI: '0'
+  PID: '26075'
+  PPID: '4464'
+  PRI: '80'
+  PSR: '0'
+  RSS: '12356'
+  S: S
+  STIME: 05:11
+  SZ: '10262'
+  TIME: 00:00:00
+  TTY: pts/0
+  UID: martin
+  WCHAN: pipe_w
+- ADDR: '-'
+  C: '0'
+  CMD: ps -FMlww --no-headers
+  CONTEXT: unconfined
+  F: '4'
+  NI: '0'
+  PID: '26076'
+  PPID: '26074'
+  PRI: '80'
+  PSR: '2'
+  RSS: '3560'
+  S: R
+  STIME: 05:11
+  SZ: '10519'
+  TIME: 00:00:00
+  TTY: pts/0
+  UID: martin
+  WCHAN: '-'
+``` 
+
+- **[uxy du](doc/du.md)**
+- **[uxy ls](doc/ls.md)**
+- **[uxy lsof](doc/lsof.md)**
+- **[uxy netstat](doc/netstat.md)**
+- **[uxy ps](doc/ps.md)**
+- **[uxy top](doc/top.md)**
 - **[uxy w](doc/w.md)**
 
