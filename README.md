@@ -132,43 +132,25 @@ pipe the output to `to-yaml` tool. YAML has one-line-per-field syntax and thus
 makes the output more readable:
 
 <pre>
-<b>$ ./uxy -l ps | ./uxy to-yaml</b>
+<b>$ uxy -l ps | head -n 2 | uxy to-yaml</b>
 - ADDR: '-'
   C: '0'
-  CMD: python3 ./uxy -l ps
+  CMD: bash
   CONTEXT: unconfined
   F: '0'
   NI: '0'
-  PID: '26074'
-  PPID: '4464'
+  PID: '4464'
+  PPID: '4455'
   PRI: '80'
-  PSR: '1'
-  RSS: '12508'
+  PSR: '2'
+  RSS: '6396'
   S: S
-  STIME: 05:11
-  SZ: '10280'
-  TIME: 00:00:00
+  STIME: May25
+  SZ: '5949'
+  TIME: 00:00:02
   TTY: pts/0
   UID: martin
-  WCHAN: pipe_w
-- ADDR: '-'
-  C: '0'
-  CMD: python3 ./uxy to-yaml
-  CONTEXT: unconfined
-  F: '0'
-  NI: '0'
-  PID: '26075'
-  PPID: '4464'
-  PRI: '80'
-  PSR: '0'
-  RSS: '12356'
-  S: S
-  STIME: 05:11
-  SZ: '10262'
-  TIME: 00:00:00
-  TTY: pts/0
-  UID: martin
-  WCHAN: pipe_w
+  WCHAN: wait
 </pre> 
 
 - **[uxy du](doc/du.md)**
