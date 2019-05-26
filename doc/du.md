@@ -2,6 +2,15 @@
 
 Wraps `du` tool and outputs the results in UXY format.
 
+The output has following fields:
+
+- **USAGE**
+- **FILE**
+
+When uxy is launched with `-l` option (`uxy -l du`) following fields are added:
+
+- **TIME**
+
 ### Example
 
 <pre>
