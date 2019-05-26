@@ -154,6 +154,7 @@ makes the output more readable:
 </pre> 
 
 - **[uxy du](doc/du.md)**
+- **[uxy ifconfig](doc/ifconfig.md)**
 - **[uxy ls](doc/ls.md)**
 - **[uxy lsof](doc/lsof.md)**
 - **[uxy netstat](doc/netstat.md)**
