@@ -2,6 +2,17 @@
 
 Wraps `w` tool and outputs the results in UXY format.
 
+The output has following fields:
+
+- **USER**
+- **TTY**
+- **FROM**
+- **LOGIN**
+- **IDLE**
+- **JCPU**
+- **PCPU**
+- **WHAT**
+
 ### Example
 
 <pre>

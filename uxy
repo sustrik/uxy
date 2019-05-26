@@ -780,7 +780,19 @@ def uxy_cmd_top(parser, args, uxy_args):
 
 
 def uxy_cmd_w(parser, args, uxy_args):
-  proc = subprocess.Popen(['w', '-h'] + args[1:], stdout=subprocess.PIPE)
+  parser = argparse.ArgumentParser(add_help=False)
+  parser.add_argument("-h", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--no-header", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-s", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--short", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-f", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--from", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("-o", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--old-style", action="store_true", default=argparse.SUPPRESS)
+  parser.add_argument("--help", action="store_true", default=argparse.SUPPRESS)
+  check_args(args, parser)
+
+  proc = subprocess.Popen(['w', '--no-header'] + args[1:], stdout=subprocess.PIPE)
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
   writeout(fmt.render())
