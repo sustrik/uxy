@@ -1,4 +1,4 @@
-# uxy du
+# uxy ifconfig
 
 Wraps `ifconfig` tool and outputs the results in UXY format.
 
