@@ -25,8 +25,14 @@ UXY format is designed with the following requirements in mind:
     encoded as follows:
     - `\"` double quote
     - `\\` backslash
-    - `\t` tab
-    - `\n` newline
+    - `\a` alert (ascii code 0x07)
+    - `\b` backspace (ascii code 0x08)
+    - `\e` escape (ascii code 0x1b)
+    - `\f` formfeed page break (ascii code 0x0c)
+    - `\n` newline (ascii code 0x0a)
+    - `\r` carriage return (ascii code 0x0d)
+    - `\t` horizontal tab (ascii code 0x09)
+    - `\v` vertical tab (ascii code 0x0b)
     - any other escape sequence MUST be interpreted as `?` (question mark)
       character.
 - Any control characters (e.g. `TAB`) MUST be interpreted as `?` (question mark)
