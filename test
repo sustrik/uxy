@@ -33,8 +33,8 @@ test_parser() {
 
 $UXY ls testdata | $UXY align
 $UXY ls testdata | $UXY to-csv | $UXY from-csv
-$UXY du testdata
-$UXY -l du testdata
+$UXY du
+$UXY -l du
 $UXY ls testdata | $UXY fmt "NAME SIZE"
 $UXY ls testdata | $UXY grep a
 $UXY ls testdata | $UXY grep a NAME
