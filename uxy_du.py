@@ -18,7 +18,6 @@
 
 import argparse
 import re
-import subprocess
 
 import base
 
@@ -47,10 +46,9 @@ def du(parser, args, uxy_args):
     regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
     fmt = base.Format("USAGE    FILE")
 
-  proc = subprocess.Popen(['du'] + fmtargs + args[1:], stdout=subprocess.PIPE)
+  proc = base.launch(['du'] + fmtargs + args[1:])
   base.writeout(fmt.render())
-  for ln in proc.stdout:
-    ln = base.trim_newline(ln.decode("utf-8"))
+  for ln in proc:
     m = regexp.match(ln)
     if not m:
       continue

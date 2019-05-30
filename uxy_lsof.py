@@ -19,20 +19,18 @@
 import argparse
 import itertools
 import re
-import subprocess
 
 import base
 
 def lsof(parser, args, uxy_args):
-  proc = subprocess.Popen(['lsof', '+c', '0'] + args[1:], stdout=subprocess.PIPE)
-  hdr = base.trim_newline(proc.stdout.readline().decode("utf-8"))
+  proc = base.launch(['lsof', '+c', '0'] + args[1:])
+  hdr = proc.readline()
   parts = re.split("(\s+)", hdr)
   pos = [len(p) for p in list(itertools.accumulate(parts))]
   r1 = re.compile(r'([^\s]*)\s+([^\s]*)')
   fmt = base.Format("COMMAND             PID    TID    USER           FD      TYPE    DEVICE             SIZEOFF   NODE       NAME")
   base.writeout(fmt.render())
-  for ln in proc.stdout:
-    ln = base.trim_newline(ln.decode("utf-8"))
+  for ln in proc:
     fields = []
     m = r1.match(ln[:pos[2]])
     if not m:

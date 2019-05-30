@@ -18,7 +18,6 @@
 
 import argparse
 import re
-import subprocess
 import sys
 
 import base
@@ -46,13 +45,12 @@ def ifconfig(parser, args, uxy_args):
   else:
     fmt = base.Format("NAME       RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED FLAGS")
 
-  proc = subprocess.Popen(['ifconfig'] + args[1:], stdout=subprocess.PIPE)
+  proc = base.launch(['ifconfig'] + args[1:])
   base.writeout(fmt.render())
   leading = re.compile("([^:]+):\s+flags=\d+<([^>]*)>\s+mtu\s+(\d+)")
   first = True
   iface = {}
-  for ln in proc.stdout:
-    ln = base.trim_newline(ln.decode("utf-8"))
+  for ln in proc:
     if len(ln) == 0:
       continue
     if ln[0] != ' ':

@@ -18,6 +18,7 @@
 
 import sys
 import unicodedata
+import subprocess
 
 def trim_newline(s):
   if s.endswith('\n'):
@@ -203,3 +204,25 @@ def check_args(args, parser):
         offending[0],
       file=sys.stderr)
     sys.exit(1)
+
+# Make reading from the pipe much like reading from a file.
+class PipeReader(object):
+  def __init__(self, pipe):
+    self.pipe = pipe
+
+  def __iter__(self):
+    return self
+
+  def __next__(self):
+    return self.readline()
+ 
+  def readline(self):
+    ln = self.pipe.readline()
+    if not ln:
+      raise StopIteration()
+    return ln.decode("utf-8").rstrip("\n")
+
+def launch(args):
+  proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+  return PipeReader(proc.stdout)
+

@@ -18,7 +18,6 @@
 
 import argparse
 import re
-import subprocess
 
 import base
 
@@ -76,16 +75,15 @@ def ls(parser, args, uxy_args):
     regexp = re.compile(r'\s*(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = base.Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
 
-  proc = subprocess.Popen(['ls'] + fmtargs + args[1:], stdout=subprocess.PIPE)
+  proc = base.launch(['ls'] + fmtargs + args[1:])
   base.writeout(fmt.render())
   path = ""
-  for ln in proc.stdout:
-    ln = base.trim_newline(ln.decode("utf-8"))
+  for ln in proc:
     if ln.startswith('total'):
       continue
     if ln == "":
       # When running with -R this is the name of the directory.
-      ln = base.trim_newline(proc.stdout.readline().decode("utf-8"))
+      ln = proc.readline()
       if ln.endswith(":"):
         path = ln[:-1] + "/"
       continue

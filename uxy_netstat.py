@@ -18,21 +18,19 @@
 
 import re
 import itertools
-import subprocess
 
 import base
 
 def netstat(parser, args, uxy_args):
-  proc = subprocess.Popen(['netstat', '--inet'] + args[1:], stdout=subprocess.PIPE)
+  proc = base.launch(['netstat', '--inet'] + args[1:])
   # Skip header line.
-  proc.stdout.readline()
-  hdr = base.trim_newline(proc.stdout.readline().decode("utf-8"))
+  proc.readline()
+  hdr = proc.readline()
   parts = re.split("(\s+)", hdr)
   pos = [len(p) for p in list(itertools.accumulate(parts))]
   fmt = base.Format("PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE")
   base.writeout(fmt.render())
-  for ln in proc.stdout:
-    ln = base.trim_newline(ln.decode("utf-8"))
+  for ln in proc:
     fields = []
     fields.append(ln[0:pos[0]].strip())
     fields.append(ln[pos[0]:pos[2]].strip())

@@ -18,7 +18,6 @@
 
 import argparse
 import re
-import subprocess
 
 import base
 
@@ -35,12 +34,12 @@ def w(parser, args, uxy_args):
   parser.add_argument("--help", action="store_true", default=argparse.SUPPRESS)
   base.check_args(args, parser)
 
-  proc = subprocess.Popen(['w', '--no-header'] + args[1:], stdout=subprocess.PIPE)
+  proc = base.launch(['w', '--no-header'] + args[1:])
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = base.Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
   base.writeout(fmt.render())
-  for ln in proc.stdout:
-    ln = base.trim_newline(ln.decode("utf-8"))
+
+  for ln in proc:
     m = regexp.match(ln)
     if not m:
       continue

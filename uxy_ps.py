@@ -18,7 +18,6 @@
 
 import argparse
 import re
-import subprocess
 
 import base
 
@@ -56,10 +55,9 @@ def ps(parser, args, uxy_args):
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = base.Format("PID      TTY      TIME       CMD")
 
-  proc = subprocess.Popen(['ps'] + fmtargs + args[1:], stdout=subprocess.PIPE)
+  proc = base.launch(['ps'] + fmtargs + args[1:])
   base.writeout(fmt.render())
-  for ln in proc.stdout:
-    ln = base.trim_newline(ln.decode("utf-8"))
+  for ln in proc:
     m = regexp.match(ln)
     if not m:
       continue

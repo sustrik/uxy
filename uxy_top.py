@@ -18,7 +18,6 @@
 
 import argparse
 import re
-import subprocess
 
 import base
 
@@ -26,10 +25,10 @@ def top(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy top")
   parser.parse_args(args[1:])
 
-  proc = subprocess.Popen(['top', '-bn1'] + args[1:], stdout=subprocess.PIPE)
+  proc = base.launch(['top', '-bn1'] + args[1:])
   # Skip the summary.
   for i in range(0, 7):
-    proc.stdout.readline()
+    proc.readline()
 
   if uxy_args.long:
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
@@ -39,8 +38,7 @@ def top(parser, args, uxy_args):
     fmt = base.Format("PID    USER     CPU   MEM   TIME        CMD")
 
   base.writeout(fmt.render())
-  for ln in proc.stdout:
-    ln = base.trim_newline(ln.decode("utf-8"))
+  for ln in proc:
     m = regexp.match(ln)
     if not m:
       continue
