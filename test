@@ -38,8 +38,8 @@ $UXY -l du
 $UXY ls testdata | $UXY fmt "NAME SIZE"
 $UXY ls testdata | $UXY grep a
 $UXY ls testdata | $UXY grep a NAME
-$UXY ifconfig
-$UXY -l ifconfig
+#$UXY ifconfig
+#$UXY -l ifconfig
 echo ABC | $UXY import COL "(.*)"
 $UXY ls testdata | $UXY to-json | $UXY from-json
 $UXY ls testdata
