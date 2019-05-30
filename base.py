@@ -20,11 +20,6 @@ import sys
 import unicodedata
 import subprocess
 
-def trim_newline(s):
-  if s.endswith('\n'):
-    return s[:-1]
-  return s
-
 def writeline(s):
  try:
    sys.stdout.write(s)

@@ -126,7 +126,7 @@ def _bsd(parser, args, uxy_args):
     if not m:
       continue
     fields = []
-    for i in range(1, regexp.groups):
+    for i in range(1, regexp.groups + 1):
       fields.append(base.encode_field(m.group(i)))
     base.writeline(fmt.render(fields))
 
