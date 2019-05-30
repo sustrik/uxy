@@ -21,7 +21,7 @@ import itertools
 
 import base
 
-def netstat(parser, args, uxy_args):
+def _linux(parser, args, uxy_args):
   proc = base.launch(uxy_args, ['netstat', '--inet'] + args[1:])
   # Skip header line.
   proc.readline()
@@ -41,3 +41,12 @@ def netstat(parser, args, uxy_args):
     fields = [base.encode_field(f) for f in fields]
     base.writeline(fmt.render(fields))
 
+def _bsd(parser, args, uxy_args):
+  # TODO
+  pass
+
+def netstat(parser, args, uxy_args):
+  if sys.platform.startswith("linux"):
+    _linux(parser, args, uxy_args)
+  else:
+    _bsd(parser, args, uxy_args)
