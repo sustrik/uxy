@@ -68,11 +68,11 @@ def _linux(parser, args, uxy_args):
   base.check_args(args, parser)
 
   if uxy_args.long:
-    fmtargs = ['-lNisZw0', '--time-style=full-iso']
+    fmtargs = ['-lNisZ', '--time-style=full-iso']
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = base.Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      CONTEXT SIZE         TIME                                  NAME")
   else:
-    fmtargs = ['-lNw0', '--time-style=full-iso']
+    fmtargs = ['-lN', '--time-style=full-iso']
     regexp = re.compile(r'\s*(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = base.Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
 
