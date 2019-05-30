@@ -18,10 +18,11 @@
 
 import argparse
 import re
+import sys
 
 import base
 
-def ls(parser, args, uxy_args):
+def _linux(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy ls", add_help=False)
   parser.add_argument("--author", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-b", action="store_true", default=argparse.SUPPRESS)
@@ -103,3 +104,42 @@ def ls(parser, args, uxy_args):
     fields.append(base.encode_field(path + m.group(regexp.groups)))
     base.writeline(fmt.render(fields))
 
+def _bsd(parser, args, uxy_args):
+
+  fmtargs = ['-l']
+  regexp = re.compile(r'(.*)')
+  fmt = base.Format("ALL")
+
+  proc = base.launch(uxy_args, ['ls'] + fmtargs + args[1:])
+  base.writeline(fmt.render())
+  path = ""
+  for ln in proc:
+    if ln.startswith('total'):
+      continue
+    if ln == "":
+      # When running with -R this is the name of the directory.
+      ln = proc.readline()
+      if ln.endswith(":"):
+        path = ln[:-1] + "/"
+      continue
+    m = regexp.match(ln)
+    if not m:
+      continue
+    fields = []
+    for i in range(1, regexp.groups - 3):
+      fields.append(base.encode_field(m.group(i)))
+    # Convert to actual ISO8601 format.
+    time = "%sT%s%s:%s" % (
+      m.group(regexp.groups - 3),
+      m.group(regexp.groups - 2),
+      m.group(regexp.groups - 1)[:-2],
+      m.group(regexp.groups - 1)[-2:])
+    fields.append(base.encode_field(time))
+    fields.append(base.encode_field(path + m.group(regexp.groups)))
+    base.writeline(fmt.render(fields))
+
+def ls(parser, args, uxy_args):
+  if sys.platform.startswith("linux"):
+    _linux(parser, args, uxy_args)
+  else:
+    _bsd(parser, args, uxy_args)
