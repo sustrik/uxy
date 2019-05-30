@@ -2,4 +2,10 @@ language: python
 python:
   - "3.6"
 script:
-  - test
+  - ./test
+matrix:
+  include:
+    - name: "Linux"
+      os: linux
+    - name: "OSX"
+      os: osx
