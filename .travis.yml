@@ -3,6 +3,8 @@ python:
   - "3.6"
 script:
   - ./test
+install:
+  - pip install -r requirements.txt
 matrix:
   include:
     - name: "Linux"
