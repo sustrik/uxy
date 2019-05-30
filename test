@@ -18,14 +18,44 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-set -e
+set -ex
 
 ROOT=$(dirname "$0")
+UXY=$ROOT/uxy
 TESTDATA=$ROOT/testdata
 
 test_parser() {
-  $ROOT/uxy --test $1 < $TESTDATA/$2.source > $TESTDATA/$2.result
+  $UXY --test $1 < $TESTDATA/$2.source > $TESTDATA/$2.result
   diff $TESTDATA/$2.result $TESTDATA/$2.expected
 }
 
+# Make sure that the tools don't straight out fail.
+
+$UXY ls testdata | $UXY align > /dev/null
+$UXY ls testdata | $UXY to-csv | $UXY from-csv > /dev/null
+$UXY du testdata > /dev/null
+$UXY -l du testdata > /dev/null
+$UXY ls testdata | $UXY fmt "NAME SIZE" > /dev/null
+$UXY ls testdata | $UXY grep a > /dev/null
+$UXY ls testdata | $UXY grep a NAME > /dev/null
+$UXY ifconfig testdata > /dev/null
+$UXY -l ifconfig testdata > /dev/null
+echo ABC | $UXY import COL "(.*)" > /dev/null
+$UXY ls testdata | $UXY to-json | $UXY from-json > /dev/null
+$UXY ls testdata > /dev/null
+$UXY -l ls testdata > /dev/null
+$UXY lsof > /dev/null
+$UXY -l lsof > /dev/null
+$UXY netstat > /dev/null
+$UXY -l netstat > /dev/null
+$UXY ps > /dev/null
+$UXY -l ps > /dev/null
+$UXY top > /dev/null
+$UXY -l top > /dev/null
+$UXY ls testdata | $UXY trim > /dev/null
+$UXY w > /dev/null
+$UXY -l w > /dev/null
+
+
+# Check the parsers against the inputs collected from different systems.
 test_parser ls ls-short-linux-1
