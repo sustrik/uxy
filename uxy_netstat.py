@@ -22,7 +22,7 @@ import itertools
 import base
 
 def netstat(parser, args, uxy_args):
-  proc = base.launch(['netstat', '--inet'] + args[1:])
+  proc = base.launch(uxy_args, ['netstat', '--inet'] + args[1:])
   # Skip header line.
   proc.readline()
   hdr = proc.readline()

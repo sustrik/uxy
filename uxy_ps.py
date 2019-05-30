@@ -55,7 +55,7 @@ def ps(parser, args, uxy_args):
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = base.Format("PID      TTY      TIME       CMD")
 
-  proc = base.launch(['ps'] + fmtargs + args[1:])
+  proc = base.launch(uxy_args, ['ps'] + fmtargs + args[1:])
   base.writeline(fmt.render())
   for ln in proc:
     m = regexp.match(ln)

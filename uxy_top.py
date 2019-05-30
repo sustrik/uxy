@@ -25,7 +25,7 @@ def top(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy top")
   parser.parse_args(args[1:])
 
-  proc = base.launch(['top', '-bn1'] + args[1:])
+  proc = base.launch(uxy_args, ['top', '-bn1'] + args[1:])
   # Skip the summary.
   for i in range(0, 7):
     proc.readline()

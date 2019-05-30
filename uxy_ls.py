@@ -75,7 +75,7 @@ def ls(parser, args, uxy_args):
     regexp = re.compile(r'\s*(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = base.Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
 
-  proc = base.launch(['ls'] + fmtargs + args[1:])
+  proc = base.launch(uxy_args, ['ls'] + fmtargs + args[1:])
   base.writeline(fmt.render())
   path = ""
   for ln in proc:

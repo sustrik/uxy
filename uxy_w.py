@@ -34,7 +34,7 @@ def w(parser, args, uxy_args):
   parser.add_argument("--help", action="store_true", default=argparse.SUPPRESS)
   base.check_args(args, parser)
 
-  proc = base.launch(['w', '--no-header'] + args[1:])
+  proc = base.launch(uxy_args, ['w', '--no-header'] + args[1:])
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = base.Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
   base.writeline(fmt.render())

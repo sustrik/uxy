@@ -46,7 +46,7 @@ def du(parser, args, uxy_args):
     regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
     fmt = base.Format("USAGE    FILE")
 
-  proc = base.launch(['du'] + fmtargs + args[1:])
+  proc = base.launch(uxy_args, ['du'] + fmtargs + args[1:])
   base.writeline(fmt.render())
   for ln in proc:
     m = regexp.match(ln)

@@ -23,7 +23,7 @@ import re
 import base
 
 def lsof(parser, args, uxy_args):
-  proc = base.launch(['lsof', '+c', '0'] + args[1:])
+  proc = base.launch(uxy_args, ['lsof', '+c', '0'] + args[1:])
   hdr = proc.readline()
   parts = re.split("(\s+)", hdr)
   pos = [len(p) for p in list(itertools.accumulate(parts))]

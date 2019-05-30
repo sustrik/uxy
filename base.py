@@ -222,7 +222,9 @@ class PipeReader(object):
       raise StopIteration()
     return ln.decode("utf-8").rstrip("\n")
 
-def launch(args):
+def launch(uxy_args, args):
+  if uxy_args.test:
+    return stdin
   proc = subprocess.Popen(args, stdout=subprocess.PIPE)
   return PipeReader(proc.stdout)
 

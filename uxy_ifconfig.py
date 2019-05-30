@@ -45,7 +45,7 @@ def ifconfig(parser, args, uxy_args):
   else:
     fmt = base.Format("NAME       RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED FLAGS")
 
-  proc = base.launch(['ifconfig'] + args[1:])
+  proc = base.launch(uxy_args, ['ifconfig'] + args[1:])
   base.writeline(fmt.render())
   leading = re.compile("([^:]+):\s+flags=\d+<([^>]*)>\s+mtu\s+(\d+)")
   first = True
