@@ -47,7 +47,7 @@ def du(parser, args, uxy_args):
     fmt = base.Format("USAGE    FILE")
 
   proc = base.launch(['du'] + fmtargs + args[1:])
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   for ln in proc:
     m = regexp.match(ln)
     if not m:
@@ -62,5 +62,5 @@ def du(parser, args, uxy_args):
     else:
       for i in range(1, regexp.groups + 1):
         fields.append(base.encode_field(m.group(i)))
-    base.writeout(fmt.render(fields))
+    base.writeline(fmt.render(fields))
 

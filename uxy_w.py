@@ -37,7 +37,7 @@ def w(parser, args, uxy_args):
   proc = base.launch(['w', '--no-header'] + args[1:])
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = base.Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
 
   for ln in proc:
     m = regexp.match(ln)
@@ -46,5 +46,5 @@ def w(parser, args, uxy_args):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(base.encode_field(m.group(i)))
-    base.writeout(fmt.render(fields))
+    base.writeline(fmt.render(fields))
 

@@ -33,12 +33,12 @@ def from_csv(parser, args, uxy_args):
   for fields in r:
     fields = " ".join([encode_field(f) for f in fields])
     fmt = base.Format(fields)
-    base.writeout(fields + "\n")
+    base.writeline(fields + "\n")
   for ln in sys.stdin:
     r = csv.reader(io.StringIO(trim_newline(ln)))
     for fields in r:
       fields = [encode_field(f) for f in fields]
-      base.writeout(fmt.render(fields))
+      base.writeline(fmt.render(fields))
 
 def to_csv(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('to-csv',
@@ -51,5 +51,5 @@ def to_csv(parser, args, uxy_args):
     buf = io.StringIO()
     w = csv.writer(buf)
     w.writerow(fields)
-    base.writeout(buf.getvalue())
+    base.writeline(buf.getvalue())
 

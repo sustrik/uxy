@@ -76,7 +76,7 @@ def ls(parser, args, uxy_args):
     fmt = base.Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
 
   proc = base.launch(['ls'] + fmtargs + args[1:])
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   path = ""
   for ln in proc:
     if ln.startswith('total'):
@@ -101,5 +101,5 @@ def ls(parser, args, uxy_args):
       m.group(regexp.groups - 1)[-2:])
     fields.append(base.encode_field(time))
     fields.append(base.encode_field(path + m.group(regexp.groups)))
-    base.writeout(fmt.render(fields))
+    base.writeline(fmt.render(fields))
 

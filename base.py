@@ -25,7 +25,7 @@ def trim_newline(s):
     return s[:-1]
   return s
 
-def writeout(s):
+def writeline(s):
  try:
    sys.stdout.write(s)
  except BrokenPipeError:

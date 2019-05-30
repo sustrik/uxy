@@ -32,6 +32,6 @@ def align(parser, args, uxy_args):
     fields = base.split_fields(base.trim_newline(ln))
     fmt.adjust(fields)
     records.append(fields)
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   for r in records:
-    base.writeout(fmt.render(r))
+    base.writeline(fmt.render(r))

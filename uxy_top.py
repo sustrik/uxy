@@ -37,7 +37,7 @@ def top(parser, args, uxy_args):
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = base.Format("PID    USER     CPU   MEM   TIME        CMD")
 
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   for ln in proc:
     m = regexp.match(ln)
     if not m:
@@ -45,5 +45,5 @@ def top(parser, args, uxy_args):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(base.encode_field(m.group(i)))
-    base.writeout(fmt.render(fields))
+    base.writeline(fmt.render(fields))
 

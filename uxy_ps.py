@@ -56,7 +56,7 @@ def ps(parser, args, uxy_args):
     fmt = base.Format("PID      TTY      TIME       CMD")
 
   proc = base.launch(['ps'] + fmtargs + args[1:])
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   for ln in proc:
     m = regexp.match(ln)
     if not m:
@@ -64,5 +64,5 @@ def ps(parser, args, uxy_args):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(base.encode_field(m.group(i)))
-    base.writeout(fmt.render(fields))
+    base.writeline(fmt.render(fields))
 

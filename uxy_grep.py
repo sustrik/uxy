@@ -30,7 +30,7 @@ def grep(parser, args, uxy_args):
   # Use the old headers.
   s = base.trim_newline(sys.stdin.readline())
   fmt = base.Format(s)
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
 
   # Precompile the conditions.
   conds = []
@@ -64,5 +64,5 @@ def grep(parser, args, uxy_args):
           match = False
           break
     if match:
-      base.writeout(fmt.render(fields))
+      base.writeline(fmt.render(fields))
 

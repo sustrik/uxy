@@ -31,7 +31,7 @@ def trim(parser, args, uxy_args):
   # Adjust the column widths so that at least quoted elipsis fits in.
   for i in range(0, len(fmt.widths) - 1):
     fmt.widths[i] = max(fmt.widths[i], 6)
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   # Process the records.
   for ln in sys.stdin:
     fields = base.split_fields(base.trim_newline(ln))
@@ -46,5 +46,5 @@ def trim(parser, args, uxy_args):
               fields[i] = '...'
         else:
             fields[i] = fields[i][:fmt.widths[i] - 4] + "..."
-    base.writeout(fmt.render(fields))
+    base.writeline(fmt.render(fields))
 

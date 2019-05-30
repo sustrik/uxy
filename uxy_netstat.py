@@ -29,7 +29,7 @@ def netstat(parser, args, uxy_args):
   parts = re.split("(\s+)", hdr)
   pos = [len(p) for p in list(itertools.accumulate(parts))]
   fmt = base.Format("PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE")
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   for ln in proc:
     fields = []
     fields.append(ln[0:pos[0]].strip())
@@ -39,5 +39,5 @@ def netstat(parser, args, uxy_args):
     fields.append(ln[pos[8]:pos[13]].strip())
     fields.append(ln[pos[13]:].strip())
     fields = [base.encode_field(f) for f in fields]
-    base.writeout(fmt.render(fields))
+    base.writeline(fmt.render(fields))
 

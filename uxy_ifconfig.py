@@ -29,7 +29,7 @@ def _write_ifconfig_record(fmt, iface):
       fields.append(base.encode_field(iface[f]))
     else:
       fields.append(base.encode_field(""))
-  base.writeout(fmt.render(fields))
+  base.writeline(fmt.render(fields))
 
 
 def ifconfig(parser, args, uxy_args):
@@ -46,7 +46,7 @@ def ifconfig(parser, args, uxy_args):
     fmt = base.Format("NAME       RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED FLAGS")
 
   proc = base.launch(['ifconfig'] + args[1:])
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   leading = re.compile("([^:]+):\s+flags=\d+<([^>]*)>\s+mtu\s+(\d+)")
   first = True
   iface = {}

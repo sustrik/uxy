@@ -55,9 +55,9 @@ def from_yaml(parser, args, uxy_args):
     fmt.adjust(record)
     records.append(record)
   # Write the result to output.
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   for r in records:
-    base.writeout(fmt.render(r))
+    base.writeline(fmt.render(r))
 
 def to_yaml(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('to-yaml',
@@ -71,5 +71,5 @@ def to_yaml(parser, args, uxy_args):
     item = {}
     for i in range(0, len(fields)):
       item[base.decode_field(hdr[i])] = base.decode_field(fields[i])
-    base.writeout(yaml.dump([item], default_flow_style=False))
+    base.writeline(yaml.dump([item], default_flow_style=False))
 

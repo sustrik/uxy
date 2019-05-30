@@ -29,7 +29,7 @@ def fmt(parser, args, uxy_args):
   # Use the supplied format.
   fmt = base.Format(args.header)
   newhdr = base.split_fields(args.header)
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   # Read the old format.
   s = base.trim_newline(sys.stdin.readline())
   oldhdr = base.split_fields(s)
@@ -44,5 +44,5 @@ def fmt(parser, args, uxy_args):
       if oldname not in newhdr:
         continue
       newfields[newhdr.index(oldname)] = oldfields[i]
-    base.writeout(fmt.render(newfields))
+    base.writeline(fmt.render(newfields))
 

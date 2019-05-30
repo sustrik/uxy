@@ -29,7 +29,7 @@ def lsof(parser, args, uxy_args):
   pos = [len(p) for p in list(itertools.accumulate(parts))]
   r1 = re.compile(r'([^\s]*)\s+([^\s]*)')
   fmt = base.Format("COMMAND             PID    TID    USER           FD      TYPE    DEVICE             SIZEOFF   NODE       NAME")
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   for ln in proc:
     fields = []
     m = r1.match(ln[:pos[2]])
@@ -46,4 +46,4 @@ def lsof(parser, args, uxy_args):
     fields.append(ln[pos[14]:pos[16]].strip())
     fields.append(ln[pos[16]:].strip())
     fields = [base.encode_field(f) for f in fields]
-    base.writeout(fmt.render(fields))
+    base.writeline(fmt.render(fields))

@@ -30,7 +30,7 @@ def do_import(parser, args, uxy_args):
 
   # Use the supplied format.
   fmt = base.Format(args.header)
-  base.writeout(fmt.render())
+  base.writeline(fmt.render())
   # Parse the data.
   regexp = re.compile(args.regexp)
   for ln in sys.stdin:
@@ -41,4 +41,4 @@ def do_import(parser, args, uxy_args):
     fields = []
     for i in range(1, regexp.groups + 1):
       fields.append(base.encode_field(m.group(i)))
-    base.writeout(fmt.render(fields))
+    base.writeline(fmt.render(fields))
