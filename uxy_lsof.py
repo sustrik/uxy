@@ -21,18 +21,18 @@ import itertools
 import re
 import subprocess
 
-import helpers
+import base
 
 def lsof(parser, args, uxy_args):
   proc = subprocess.Popen(['lsof', '+c', '0'] + args[1:], stdout=subprocess.PIPE)
-  hdr = helpers.trim_newline(proc.stdout.readline().decode("utf-8"))
+  hdr = base.trim_newline(proc.stdout.readline().decode("utf-8"))
   parts = re.split("(\s+)", hdr)
   pos = [len(p) for p in list(itertools.accumulate(parts))]
   r1 = re.compile(r'([^\s]*)\s+([^\s]*)')
-  fmt = helpers.Format("COMMAND             PID    TID    USER           FD      TYPE    DEVICE             SIZEOFF   NODE       NAME")
-  helpers.writeout(fmt.render())
+  fmt = base.Format("COMMAND             PID    TID    USER           FD      TYPE    DEVICE             SIZEOFF   NODE       NAME")
+  base.writeout(fmt.render())
   for ln in proc.stdout:
-    ln = helpers.trim_newline(ln.decode("utf-8"))
+    ln = base.trim_newline(ln.decode("utf-8"))
     fields = []
     m = r1.match(ln[:pos[2]])
     if not m:
@@ -47,5 +47,5 @@ def lsof(parser, args, uxy_args):
     fields.append(ln[pos[12]:pos[14]].strip())
     fields.append(ln[pos[14]:pos[16]].strip())
     fields.append(ln[pos[16]:].strip())
-    fields = [helpers.encode_field(f) for f in fields]
-    helpers.writeout(fmt.render(fields))
+    fields = [base.encode_field(f) for f in fields]
+    base.writeout(fmt.render(fields))

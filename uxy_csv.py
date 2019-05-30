@@ -20,7 +20,7 @@ import io
 import csv
 import sys
 
-import helpers
+import base
 
 def from_csv(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('from-csv',
@@ -28,17 +28,17 @@ def from_csv(parser, args, uxy_args):
   args = parser.parse_args(args)
 
   # Read the headers
-  ln = helpers.trim_newline(sys.stdin.readline())
+  ln = base.trim_newline(sys.stdin.readline())
   r = csv.reader(io.StringIO(ln))
   for fields in r:
     fields = " ".join([encode_field(f) for f in fields])
-    fmt = helpers.Format(fields)
-    helpers.writeout(fields + "\n")
+    fmt = base.Format(fields)
+    base.writeout(fields + "\n")
   for ln in sys.stdin:
     r = csv.reader(io.StringIO(trim_newline(ln)))
     for fields in r:
       fields = [encode_field(f) for f in fields]
-      helpers.writeout(fmt.render(fields))
+      base.writeout(fmt.render(fields))
 
 def to_csv(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('to-csv',
@@ -46,10 +46,10 @@ def to_csv(parser, args, uxy_args):
   args = parser.parse_args(args)
 
   for ln in sys.stdin:
-    fields = helpers.split_fields(helpers.trim_newline(ln))
-    fields = [helpers.decode_field(f) for f in fields]
+    fields = base.split_fields(base.trim_newline(ln))
+    fields = [base.decode_field(f) for f in fields]
     buf = io.StringIO()
     w = csv.writer(buf)
     w.writerow(fields)
-    helpers.writeout(buf.getvalue())
+    base.writeout(buf.getvalue())
 

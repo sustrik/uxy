@@ -19,7 +19,7 @@
 import re
 import sys
 
-import helpers
+import base
 
 def grep(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('grep', help="find regexp in UXY")
@@ -28,9 +28,9 @@ def grep(parser, args, uxy_args):
   args = parser.parse_args(args)
 
   # Use the old headers.
-  s = helpers.trim_newline(sys.stdin.readline())
-  fmt = helpers.Format(s)
-  helpers.writeout(fmt.render())
+  s = base.trim_newline(sys.stdin.readline())
+  fmt = base.Format(s)
+  base.writeout(fmt.render())
 
   # Precompile the conditions.
   conds = []
@@ -45,7 +45,7 @@ def grep(parser, args, uxy_args):
 
   # Process the data.
   for ln in sys.stdin:
-    fields = helpers.split_fields(helpers.trim_newline(ln))
+    fields = base.split_fields(base.trim_newline(ln))
     match = True
     for c in conds:
       if c[1] == None:
@@ -64,5 +64,5 @@ def grep(parser, args, uxy_args):
           match = False
           break
     if match:
-      helpers.writeout(fmt.render(fields))
+      base.writeout(fmt.render(fields))
 

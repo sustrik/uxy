@@ -20,7 +20,7 @@ import argparse
 import re
 import subprocess
 
-import helpers
+import base
 
 def ps(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy ps", add_help=False)
@@ -44,27 +44,27 @@ def ps(parser, args, uxy_args):
   parser.add_argument("--rows", nargs=1, default=argparse.SUPPRESS)
   parser.add_argument("--width", nargs=1, default=argparse.SUPPRESS)
   parser.add_argument("--help", nargs=1, default=argparse.SUPPRESS)
-  helpers.check_args(args, parser)
+  base.check_args(args, parser)
 
   # TODO: This is better parsed as fixed-width fields.
   if uxy_args.long:
     fmtargs = ['-FMlww', '--no-headers']
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-    fmt = helpers.Format("CONTEXT        F  S  UID        PID    PPID    C  PRI  NI  ADDR  SZ        WCHAN    RSS     PSR  STIME   TTY    TIME       CMD")
+    fmt = base.Format("CONTEXT        F  S  UID        PID    PPID    C  PRI  NI  ADDR  SZ        WCHAN    RSS     PSR  STIME   TTY    TIME       CMD")
   else:
     fmtargs = ['-ww', '--no-headers']
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-    fmt = helpers.Format("PID      TTY      TIME       CMD")
+    fmt = base.Format("PID      TTY      TIME       CMD")
 
   proc = subprocess.Popen(['ps'] + fmtargs + args[1:], stdout=subprocess.PIPE)
-  helpers.writeout(fmt.render())
+  base.writeout(fmt.render())
   for ln in proc.stdout:
-    ln = helpers.trim_newline(ln.decode("utf-8"))
+    ln = base.trim_newline(ln.decode("utf-8"))
     m = regexp.match(ln)
     if not m:
       continue
     fields = []
     for i in range(1, regexp.groups + 1):
-      fields.append(helpers.encode_field(m.group(i)))
-    helpers.writeout(fmt.render(fields))
+      fields.append(base.encode_field(m.group(i)))
+    base.writeout(fmt.render(fields))
 

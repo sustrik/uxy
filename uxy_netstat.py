@@ -20,19 +20,19 @@ import re
 import itertools
 import subprocess
 
-import helpers
+import base
 
 def netstat(parser, args, uxy_args):
   proc = subprocess.Popen(['netstat', '--inet'] + args[1:], stdout=subprocess.PIPE)
   # Skip header line.
   proc.stdout.readline()
-  hdr = helpers.trim_newline(proc.stdout.readline().decode("utf-8"))
+  hdr = base.trim_newline(proc.stdout.readline().decode("utf-8"))
   parts = re.split("(\s+)", hdr)
   pos = [len(p) for p in list(itertools.accumulate(parts))]
-  fmt = helpers.Format("PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE")
-  helpers.writeout(fmt.render())
+  fmt = base.Format("PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE")
+  base.writeout(fmt.render())
   for ln in proc.stdout:
-    ln = helpers.trim_newline(ln.decode("utf-8"))
+    ln = base.trim_newline(ln.decode("utf-8"))
     fields = []
     fields.append(ln[0:pos[0]].strip())
     fields.append(ln[pos[0]:pos[2]].strip())
@@ -40,6 +40,6 @@ def netstat(parser, args, uxy_args):
     fields.append(ln[pos[4]:pos[8]].strip())
     fields.append(ln[pos[8]:pos[13]].strip())
     fields.append(ln[pos[13]:].strip())
-    fields = [helpers.encode_field(f) for f in fields]
-    helpers.writeout(fmt.render(fields))
+    fields = [base.encode_field(f) for f in fields]
+    base.writeout(fmt.render(fields))
 

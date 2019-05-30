@@ -21,16 +21,16 @@ import re
 import subprocess
 import sys
 
-import helpers
+import base
 
 def _write_ifconfig_record(fmt, iface):
   fields = []
   for f in fmt.fields:
     if f in iface:
-      fields.append(helpers.encode_field(iface[f]))
+      fields.append(base.encode_field(iface[f]))
     else:
-      fields.append(helpers.encode_field(""))
-  helpers.writeout(fmt.render(fields))
+      fields.append(base.encode_field(""))
+  base.writeout(fmt.render(fields))
 
 
 def ifconfig(parser, args, uxy_args):
@@ -42,17 +42,17 @@ def ifconfig(parser, args, uxy_args):
   parser.parse_args(args[1:])
 
   if uxy_args.long:
-    fmt = helpers.Format("NAME       INET-ADDR       INET-NETMASK       INET6-ADDR               INET6-PREFIXLEN INET6-SCOPEID ETHER-ADDR        MTU   INTERRUPT MEMORY              RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED RX-OVERRUNS RX-FRAME TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED TX-OVERRUNS TX-CARRIER TX-COLLISIONS TX-QUEUELEN FLAGS")
+    fmt = base.Format("NAME       INET-ADDR       INET-NETMASK       INET6-ADDR               INET6-PREFIXLEN INET6-SCOPEID ETHER-ADDR        MTU   INTERRUPT MEMORY              RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED RX-OVERRUNS RX-FRAME TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED TX-OVERRUNS TX-CARRIER TX-COLLISIONS TX-QUEUELEN FLAGS")
   else:
-    fmt = helpers.Format("NAME       RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED FLAGS")
+    fmt = base.Format("NAME       RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED FLAGS")
 
   proc = subprocess.Popen(['ifconfig'] + args[1:], stdout=subprocess.PIPE)
-  helpers.writeout(fmt.render())
+  base.writeout(fmt.render())
   leading = re.compile("([^:]+):\s+flags=\d+<([^>]*)>\s+mtu\s+(\d+)")
   first = True
   iface = {}
   for ln in proc.stdout:
-    ln = helpers.trim_newline(ln.decode("utf-8"))
+    ln = base.trim_newline(ln.decode("utf-8"))
     if len(ln) == 0:
       continue
     if ln[0] != ' ':

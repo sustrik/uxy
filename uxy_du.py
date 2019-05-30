@@ -20,7 +20,7 @@ import argparse
 import re
 import subprocess
 
-import helpers
+import base
 
 def du(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy du", add_help=False)
@@ -36,21 +36,21 @@ def du(parser, args, uxy_args):
   parser.add_argument("--time", nargs="?", default=argparse.SUPPRESS)
   parser.add_argument("--time-style", nargs=1, default=argparse.SUPPRESS)
   parser.add_argument("--help", action="store_true", default=argparse.SUPPRESS)
-  helpers.check_args(args, parser)
+  base.check_args(args, parser)
 
   if uxy_args.long:
     fmtargs = ['--time', '--time-style=full-iso']
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-    fmt = helpers.Format("USAGE    TIME                                FILE")
+    fmt = base.Format("USAGE    TIME                                FILE")
   else:
     fmtargs = []
     regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
-    fmt = helpers.Format("USAGE    FILE")
+    fmt = base.Format("USAGE    FILE")
 
   proc = subprocess.Popen(['du'] + fmtargs + args[1:], stdout=subprocess.PIPE)
-  helpers.writeout(fmt.render())
+  base.writeout(fmt.render())
   for ln in proc.stdout:
-    ln = helpers.trim_newline(ln.decode("utf-8"))
+    ln = base.trim_newline(ln.decode("utf-8"))
     m = regexp.match(ln)
     if not m:
       continue
@@ -58,11 +58,11 @@ def du(parser, args, uxy_args):
     if uxy_args.long:
       time = "%sT%s%s:%s" % (m.group(2), m.group(3), m.group(4)[:-2],
         m.group(4)[-2:])
-      fields.append(helpers.encode_field(m.group(1)))
-      fields.append(helpers.encode_field(time))
-      fields.append(helpers.encode_field(m.group(5)))
+      fields.append(base.encode_field(m.group(1)))
+      fields.append(base.encode_field(time))
+      fields.append(base.encode_field(m.group(5)))
     else:
       for i in range(1, regexp.groups + 1):
-        fields.append(helpers.encode_field(m.group(i)))
-    helpers.writeout(fmt.render(fields))
+        fields.append(base.encode_field(m.group(i)))
+    base.writeout(fmt.render(fields))
 

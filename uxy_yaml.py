@@ -19,7 +19,7 @@
 import sys
 import yaml
 
-import helpers
+import base
 
 def from_yaml(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('from-yaml',
@@ -43,7 +43,7 @@ def from_yaml(parser, args, uxy_args):
   # Fields will go to the output in alphabetical order.
   fields = sorted(fields)
   # Collect the data. At the same time adjust the format sa that data fit in.
-  fmt = helpers.Format(" ".join([helpers.encode_field(f) for f in fields]))
+  fmt = base.Format(" ".join([base.encode_field(f) for f in fields]))
   records = []
   for i in range(0, len(root)):
     record = []
@@ -55,21 +55,21 @@ def from_yaml(parser, args, uxy_args):
     fmt.adjust(record)
     records.append(record)
   # Write the result to output.
-  helpers.writeout(fmt.render())
+  base.writeout(fmt.render())
   for r in records:
-    helpers.writeout(fmt.render(r))
+    base.writeout(fmt.render(r))
 
 def to_yaml(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('to-yaml',
     help="convert UXY to YAML")
   args = parser.parse_args(args)
 
-  s = helpers.trim_newline(sys.stdin.readline())
-  hdr = helpers.split_fields(s)
+  s = base.trim_newline(sys.stdin.readline())
+  hdr = base.split_fields(s)
   for ln in sys.stdin:
-    fields = helpers.split_fields(helpers.trim_newline(ln))
+    fields = base.split_fields(base.trim_newline(ln))
     item = {}
     for i in range(0, len(fields)):
-      item[helpers.decode_field(hdr[i])] = helpers.decode_field(fields[i])
-    helpers.writeout(yaml.dump([item], default_flow_style=False))
+      item[base.decode_field(hdr[i])] = base.decode_field(fields[i])
+    base.writeout(yaml.dump([item], default_flow_style=False))
 

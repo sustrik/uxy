@@ -18,7 +18,7 @@
 
 import sys
 
-import helpers
+import base
 
 def trim(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('trim',
@@ -26,15 +26,15 @@ def trim(parser, args, uxy_args):
   args = parser.parse_args(args)
 
   # Read the headers.
-  s = helpers.trim_newline(sys.stdin.readline())
-  fmt = helpers.Format(s)
+  s = base.trim_newline(sys.stdin.readline())
+  fmt = base.Format(s)
   # Adjust the column widths so that at least quoted elipsis fits in.
   for i in range(0, len(fmt.widths) - 1):
     fmt.widths[i] = max(fmt.widths[i], 6)
-  helpers.writeout(fmt.render())
+  base.writeout(fmt.render())
   # Process the records.
   for ln in sys.stdin:
-    fields = helpers.split_fields(helpers.trim_newline(ln))
+    fields = base.split_fields(base.trim_newline(ln))
     # Get rid of unnamed fields.
     fields = fields[:len(fmt.widths)]
     # Trim the long fields. Last field is never trimmed.
@@ -46,5 +46,5 @@ def trim(parser, args, uxy_args):
               fields[i] = '...'
         else:
             fields[i] = fields[i][:fmt.widths[i] - 4] + "..."
-    helpers.writeout(fmt.render(fields))
+    base.writeout(fmt.render(fields))
 

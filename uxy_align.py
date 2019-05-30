@@ -19,19 +19,19 @@
 import argparse
 import sys
 
-import helpers
+import base
 
 def align(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('align', help="align columns")
   args = parser.parse_args(args)
 
-  s = helpers.trim_newline(sys.stdin.readline())
-  fmt = helpers.Format(s)
+  s = base.trim_newline(sys.stdin.readline())
+  fmt = base.Format(s)
   records = []
   for ln in sys.stdin:
-    fields = helpers.split_fields(helpers.trim_newline(ln))
+    fields = base.split_fields(base.trim_newline(ln))
     fmt.adjust(fields)
     records.append(fields)
-  helpers.writeout(fmt.render())
+  base.writeout(fmt.render())
   for r in records:
-    helpers.writeout(fmt.render(r))
+    base.writeout(fmt.render(r))

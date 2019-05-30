@@ -20,7 +20,7 @@ import argparse
 import re
 import subprocess
 
-import helpers
+import base
 
 def w(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy w", add_help=False)
@@ -33,19 +33,19 @@ def w(parser, args, uxy_args):
   parser.add_argument("-o", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--old-style", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--help", action="store_true", default=argparse.SUPPRESS)
-  helpers.check_args(args, parser)
+  base.check_args(args, parser)
 
   proc = subprocess.Popen(['w', '--no-header'] + args[1:], stdout=subprocess.PIPE)
   regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-  fmt = helpers.Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
-  helpers.writeout(fmt.render())
+  fmt = base.Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
+  base.writeout(fmt.render())
   for ln in proc.stdout:
-    ln = helpers.trim_newline(ln.decode("utf-8"))
+    ln = base.trim_newline(ln.decode("utf-8"))
     m = regexp.match(ln)
     if not m:
       continue
     fields = []
     for i in range(1, regexp.groups + 1):
-      fields.append(helpers.encode_field(m.group(i)))
-    helpers.writeout(fmt.render(fields))
+      fields.append(base.encode_field(m.group(i)))
+    base.writeout(fmt.render(fields))
 

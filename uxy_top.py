@@ -20,7 +20,7 @@ import argparse
 import re
 import subprocess
 
-import helpers
+import base
 
 def top(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy top")
@@ -33,19 +33,19 @@ def top(parser, args, uxy_args):
 
   if uxy_args.long:
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-    fmt = helpers.Format("PID    USER     PR   NI   VIRT     RES      SHR      S  CPU   MEM   TIME        CMD")
+    fmt = base.Format("PID    USER     PR   NI   VIRT     RES      SHR      S  CPU   MEM   TIME        CMD")
   else:
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-    fmt = helpers.Format("PID    USER     CPU   MEM   TIME        CMD")
+    fmt = base.Format("PID    USER     CPU   MEM   TIME        CMD")
 
-  helpers.writeout(fmt.render())
+  base.writeout(fmt.render())
   for ln in proc.stdout:
-    ln = helpers.trim_newline(ln.decode("utf-8"))
+    ln = base.trim_newline(ln.decode("utf-8"))
     m = regexp.match(ln)
     if not m:
       continue
     fields = []
     for i in range(1, regexp.groups + 1):
-      fields.append(helpers.encode_field(m.group(i)))
-    helpers.writeout(fmt.render(fields))
+      fields.append(base.encode_field(m.group(i)))
+    base.writeout(fmt.render(fields))
 
