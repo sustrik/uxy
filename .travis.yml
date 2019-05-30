@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3"
+  - "3.6"
 script:
   - ./test
 matrix:
@@ -9,3 +9,4 @@ matrix:
       os: linux
     - name: "OSX"
       os: osx
+      language: shell # 'language: python' is an error on Travis CI macOS
