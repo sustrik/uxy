@@ -18,10 +18,11 @@
 
 import argparse
 import re
+import sys
 
 import base
 
-def w(parser, args, uxy_args):
+def _linux(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy w", add_help=False)
   parser.add_argument("-h", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--no-header", action="store_true", default=argparse.SUPPRESS)
@@ -48,3 +49,12 @@ def w(parser, args, uxy_args):
       fields.append(base.encode_field(m.group(i)))
     base.writeline(fmt.render(fields))
 
+def _bsd(parser, args, uxy_args):
+  # TODO
+  pass
+
+def w(parser, args, uxy_args):
+  if sys.platform.startswith("linux"):
+    _linux(parser, args, uxy_args)
+  else:
+    _bsd(parser, args, uxy_args)
