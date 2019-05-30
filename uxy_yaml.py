@@ -16,7 +16,6 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import sys
 import yaml
 
 import base
@@ -28,9 +27,9 @@ def from_yaml(parser, args, uxy_args):
 
   # Read the entire input.
   s = ""
-  for ln in sys.stdin:
-    s += ln
-  root = yaml.load(s, Loader=yaml.FullLoader)
+  for ln in base.stdin:
+    s += ln + "\n"
+  root = yaml.load(s)
   # Normalize the dict. Collect the field names along the way.
   fields = {}
   if not isinstance(root, list):
@@ -49,7 +48,7 @@ def from_yaml(parser, args, uxy_args):
     record = []
     for f in fields:
       if f in root[i]:
-        record.append(encode_field(str(root[i][f])))
+        record.append(base.encode_field(str(root[i][f])))
       else:
         record.append('""')
     fmt.adjust(record)
@@ -64,10 +63,10 @@ def to_yaml(parser, args, uxy_args):
     help="convert UXY to YAML")
   args = parser.parse_args(args)
 
-  s = base.trim_newline(sys.stdin.readline())
+  s = base.stdin.readline()
   hdr = base.split_fields(s)
-  for ln in sys.stdin:
-    fields = base.split_fields(base.trim_newline(ln))
+  for ln in base.stdin:
+    fields = base.split_fields(ln)
     item = {}
     for i in range(0, len(fields)):
       item[base.decode_field(hdr[i])] = base.decode_field(fields[i])

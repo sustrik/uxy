@@ -226,3 +226,21 @@ def launch(args):
   proc = subprocess.Popen(args, stdout=subprocess.PIPE)
   return PipeReader(proc.stdout)
 
+# Like sys.stdin but trims newlines from the end of the lines.
+class StdinReader(object):
+  def __init__(self):
+    pass
+
+  def __iter__(self):
+    return self
+
+  def __next__(self):
+    return self.readline()
+ 
+  def readline(self):
+    ln = sys.stdin.readline()
+    if not ln:
+      raise StopIteration()
+    return ln.rstrip("\n")
+
+stdin = StdinReader()

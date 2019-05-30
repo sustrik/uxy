@@ -18,7 +18,6 @@
 
 import io
 import csv
-import sys
 
 import base
 
@@ -28,16 +27,16 @@ def from_csv(parser, args, uxy_args):
   args = parser.parse_args(args)
 
   # Read the headers
-  ln = base.trim_newline(sys.stdin.readline())
+  ln = base.stdin.readline()
   r = csv.reader(io.StringIO(ln))
   for fields in r:
-    fields = " ".join([encode_field(f) for f in fields])
+    fields = " ".join([base.encode_field(f) for f in fields])
     fmt = base.Format(fields)
     base.writeline(fields + "\n")
-  for ln in sys.stdin:
-    r = csv.reader(io.StringIO(trim_newline(ln)))
+  for ln in base.stdin:
+    r = csv.reader(io.StringIO(ln))
     for fields in r:
-      fields = [encode_field(f) for f in fields]
+      fields = [base.encode_field(f) for f in fields]
       base.writeline(fmt.render(fields))
 
 def to_csv(parser, args, uxy_args):
@@ -45,8 +44,8 @@ def to_csv(parser, args, uxy_args):
     help="convert UXY to CSV")
   args = parser.parse_args(args)
 
-  for ln in sys.stdin:
-    fields = base.split_fields(base.trim_newline(ln))
+  for ln in base.stdin:
+    fields = base.split_fields(ln)
     fields = [base.decode_field(f) for f in fields]
     buf = io.StringIO()
     w = csv.writer(buf)

@@ -16,20 +16,17 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import argparse
-import sys
-
 import base
 
 def align(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('align', help="align columns")
   args = parser.parse_args(args)
 
-  s = base.trim_newline(sys.stdin.readline())
+  s = base.stdin.readline()
   fmt = base.Format(s)
   records = []
-  for ln in sys.stdin:
-    fields = base.split_fields(base.trim_newline(ln))
+  for ln in base.stdin:
+    fields = base.split_fields(ln)
     fmt.adjust(fields)
     records.append(fields)
   base.writeline(fmt.render())

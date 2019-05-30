@@ -16,8 +16,6 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import sys
-
 import base
 
 def trim(parser, args, uxy_args):
@@ -26,15 +24,15 @@ def trim(parser, args, uxy_args):
   args = parser.parse_args(args)
 
   # Read the headers.
-  s = base.trim_newline(sys.stdin.readline())
+  s = base.stdin.readline()
   fmt = base.Format(s)
   # Adjust the column widths so that at least quoted elipsis fits in.
   for i in range(0, len(fmt.widths) - 1):
     fmt.widths[i] = max(fmt.widths[i], 6)
   base.writeline(fmt.render())
   # Process the records.
-  for ln in sys.stdin:
-    fields = base.split_fields(base.trim_newline(ln))
+  for ln in base.stdin:
+    fields = base.split_fields(ln)
     # Get rid of unnamed fields.
     fields = fields[:len(fmt.widths)]
     # Trim the long fields. Last field is never trimmed.

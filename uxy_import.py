@@ -17,7 +17,6 @@
 #  IN THE SOFTWARE.
 
 import re
-import sys
 
 import base
 
@@ -33,8 +32,8 @@ def do_import(parser, args, uxy_args):
   base.writeline(fmt.render())
   # Parse the data.
   regexp = re.compile(args.regexp)
-  for ln in sys.stdin:
-    m = regexp.match(base.trim_newline(ln))
+  for ln in base.stdin:
+    m = regexp.match(ln)
     # Non-matching lines are ignored.
     if not m:
       continue

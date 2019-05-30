@@ -16,8 +16,6 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import sys
-
 import base
 
 def fmt(parser, args, uxy_args):
@@ -31,11 +29,11 @@ def fmt(parser, args, uxy_args):
   newhdr = base.split_fields(args.header)
   base.writeline(fmt.render())
   # Read the old format.
-  s = base.trim_newline(sys.stdin.readline())
+  s = base.stdin.readline()
   oldhdr = base.split_fields(s)
   # Process the data.
-  for ln in sys.stdin:
-    oldfields = base.split_fields(base.trim_newline(ln))
+  for ln in base.stdin:
+    oldfields = base.split_fields(ln)
     newfields = ['""'] * len(newhdr)
     for i in range(0, len(oldfields)):
       if i >= len(oldhdr):

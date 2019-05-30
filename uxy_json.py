@@ -17,7 +17,6 @@
 #  IN THE SOFTWARE.
 
 import json
-import sys
 
 import base
 
@@ -28,7 +27,7 @@ def from_json(parser, args, uxy_args):
 
   # Read the entire input.
   s = ""
-  for ln in sys.stdin:
+  for ln in base.stdin:
     s += ln
   root = json.loads(s)
   # Normalize the JSON. Collect the field names along the way.
@@ -43,7 +42,7 @@ def from_json(parser, args, uxy_args):
   # Fields will go to the output in alphabetical order.
   fields = sorted(fields)
   # Collect the data. At the same time adjust the format sa that data fit in.
-  fmt = base.Format(" ".join([encode_field(f) for f in fields]))
+  fmt = base.Format(" ".join([base.encode_field(f) for f in fields]))
   records = []
   for i in range(0, len(root)):
     record = []
@@ -64,16 +63,16 @@ def to_json(parser, args, uxy_args):
     help="convert UXY to JSON")
   args = parser.parse_args(args)
 
-  s = base.trim_newline(sys.stdin.readline())
+  s = base.stdin.readline()
   hdr = base.split_fields(s)
   base.writeline("[\n")
   first = True
-  for ln in sys.stdin:
+  for ln in base.stdin:
     if not first:
       base.writeline(",\n")
     else:
       first = False
-    fields = base.split_fields(base.trim_newline(ln))
+    fields = base.split_fields(ln)
     item = {}
     for i in range(0, len(fields)):
       item[base.decode_field(hdr[i])] = base.decode_field(fields[i])

@@ -17,7 +17,6 @@
 #  IN THE SOFTWARE.
 
 import re
-import sys
 
 import base
 
@@ -28,7 +27,7 @@ def grep(parser, args, uxy_args):
   args = parser.parse_args(args)
 
   # Use the old headers.
-  s = base.trim_newline(sys.stdin.readline())
+  s = base.stdin.readline()
   fmt = base.Format(s)
   base.writeline(fmt.render())
 
@@ -44,8 +43,8 @@ def grep(parser, args, uxy_args):
     conds.append((re.compile(args.conditions[i]), field))
 
   # Process the data.
-  for ln in sys.stdin:
-    fields = base.split_fields(base.trim_newline(ln))
+  for ln in base.stdin:
+    fields = base.split_fields(ln)
     match = True
     for c in conds:
       if c[1] == None:
