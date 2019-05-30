@@ -17,8 +17,9 @@
 #  IN THE SOFTWARE.
 
 import re
+import sys
 
-from helpers import *
+import helpers
 
 def do_import(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('import',
@@ -28,16 +29,16 @@ def do_import(parser, args, uxy_args):
   args = parser.parse_args(args)
 
   # Use the supplied format.
-  fmt = Format(args.header)
-  writeout(fmt.render())
+  fmt = helpers.Format(args.header)
+  helpers.writeout(fmt.render())
   # Parse the data.
   regexp = re.compile(args.regexp)
   for ln in sys.stdin:
-    m = regexp.match(trim_newline(ln))
+    m = regexp.match(helpers.trim_newline(ln))
     # Non-matching lines are ignored.
     if not m:
       continue
     fields = []
     for i in range(1, regexp.groups + 1):
-      fields.append(encode_field(m.group(i)))
-    writeout(fmt.render(fields))
+      fields.append(helpers.encode_field(m.group(i)))
+    helpers.writeout(fmt.render(fields))

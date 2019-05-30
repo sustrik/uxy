@@ -20,7 +20,7 @@ import argparse
 import re
 import subprocess
 
-from helpers import *
+import helpers
 
 def ls(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy ls", add_help=False)
@@ -65,27 +65,27 @@ def ls(parser, args, uxy_args):
   parser.add_argument("--context", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-1", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--help", action="store_true", default=argparse.SUPPRESS)
-  check_args(args, parser)
+  helpers.check_args(args, parser)
 
   if uxy_args.long:
     fmtargs = ['-lNisZw0', '--time-style=full-iso']
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-    fmt = Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      CONTEXT SIZE         TIME                                  NAME")
+    fmt = helpers.Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      CONTEXT SIZE         TIME                                  NAME")
   else:
     fmtargs = ['-lNw0', '--time-style=full-iso']
     regexp = re.compile(r'\s*(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-    fmt = Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
+    fmt = helpers.Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
 
   proc = subprocess.Popen(['ls'] + fmtargs + args[1:], stdout=subprocess.PIPE)
-  writeout(fmt.render())
+  helpers.writeout(fmt.render())
   path = ""
   for ln in proc.stdout:
-    ln = trim_newline(ln.decode("utf-8"))
+    ln = helpers.trim_newline(ln.decode("utf-8"))
     if ln.startswith('total'):
       continue
     if ln == "":
       # When running with -R this is the name of the directory.
-      ln = trim_newline(proc.stdout.readline().decode("utf-8"))
+      ln = helpers.trim_newline(proc.stdout.readline().decode("utf-8"))
       if ln.endswith(":"):
         path = ln[:-1] + "/"
       continue
@@ -94,14 +94,14 @@ def ls(parser, args, uxy_args):
       continue
     fields = []
     for i in range(1, regexp.groups - 3):
-      fields.append(encode_field(m.group(i)))
+      fields.append(helpers.encode_field(m.group(i)))
     # Convert to actual ISO8601 format.
     time = "%sT%s%s:%s" % (
       m.group(regexp.groups - 3),
       m.group(regexp.groups - 2),
       m.group(regexp.groups - 1)[:-2],
       m.group(regexp.groups - 1)[-2:])
-    fields.append(encode_field(time))
-    fields.append(encode_field(path + m.group(regexp.groups)))
-    writeout(fmt.render(fields))
+    fields.append(helpers.encode_field(time))
+    fields.append(helpers.encode_field(path + m.group(regexp.groups)))
+    helpers.writeout(fmt.render(fields))
 

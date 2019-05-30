@@ -16,7 +16,9 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-from helpers import *
+import sys
+
+import helpers
 
 def fmt(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('fmt',
@@ -25,15 +27,15 @@ def fmt(parser, args, uxy_args):
   args = parser.parse_args(args)
 
   # Use the supplied format.
-  fmt = Format(args.header)
-  newhdr = split_fields(args.header)
-  writeout(fmt.render())
+  fmt = helpers.Format(args.header)
+  newhdr = helpers.split_fields(args.header)
+  helpers.writeout(fmt.render())
   # Read the old format.
-  s = trim_newline(sys.stdin.readline())
-  oldhdr = split_fields(s)
+  s = helpers.trim_newline(sys.stdin.readline())
+  oldhdr = helpers.split_fields(s)
   # Process the data.
   for ln in sys.stdin:
-    oldfields = split_fields(trim_newline(ln))
+    oldfields = helpers.split_fields(helpers.trim_newline(ln))
     newfields = ['""'] * len(newhdr)
     for i in range(0, len(oldfields)):
       if i >= len(oldhdr):
@@ -42,5 +44,5 @@ def fmt(parser, args, uxy_args):
       if oldname not in newhdr:
         continue
       newfields[newhdr.index(oldname)] = oldfields[i]
-    writeout(fmt.render(newfields))
+    helpers.writeout(fmt.render(newfields))
 

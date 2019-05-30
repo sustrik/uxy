@@ -20,7 +20,7 @@ import argparse
 import re
 import subprocess
 
-from helpers import *
+import helpers
 
 def du(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy du", add_help=False)
@@ -36,21 +36,21 @@ def du(parser, args, uxy_args):
   parser.add_argument("--time", nargs="?", default=argparse.SUPPRESS)
   parser.add_argument("--time-style", nargs=1, default=argparse.SUPPRESS)
   parser.add_argument("--help", action="store_true", default=argparse.SUPPRESS)
-  check_args(args, parser)
+  helpers.check_args(args, parser)
 
   if uxy_args.long:
     fmtargs = ['--time', '--time-style=full-iso']
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-    fmt = Format("USAGE    TIME                                FILE")
+    fmt = helpers.Format("USAGE    TIME                                FILE")
   else:
     fmtargs = []
     regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
-    fmt = Format("USAGE    FILE")
+    fmt = helpers.Format("USAGE    FILE")
 
   proc = subprocess.Popen(['du'] + fmtargs + args[1:], stdout=subprocess.PIPE)
-  writeout(fmt.render())
+  helpers.writeout(fmt.render())
   for ln in proc.stdout:
-    ln = trim_newline(ln.decode("utf-8"))
+    ln = helpers.trim_newline(ln.decode("utf-8"))
     m = regexp.match(ln)
     if not m:
       continue
@@ -58,11 +58,11 @@ def du(parser, args, uxy_args):
     if uxy_args.long:
       time = "%sT%s%s:%s" % (m.group(2), m.group(3), m.group(4)[:-2],
         m.group(4)[-2:])
-      fields.append(encode_field(m.group(1)))
-      fields.append(encode_field(time))
-      fields.append(encode_field(m.group(5)))
+      fields.append(helpers.encode_field(m.group(1)))
+      fields.append(helpers.encode_field(time))
+      fields.append(helpers.encode_field(m.group(5)))
     else:
       for i in range(1, regexp.groups + 1):
-        fields.append(encode_field(m.group(i)))
-    writeout(fmt.render(fields))
+        fields.append(helpers.encode_field(m.group(i)))
+    helpers.writeout(fmt.render(fields))
 

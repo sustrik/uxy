@@ -17,8 +17,9 @@
 #  IN THE SOFTWARE.
 
 import json
+import sys
 
-from helpers import *
+import helpers
 
 def from_json(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('from-json',
@@ -42,40 +43,40 @@ def from_json(parser, args, uxy_args):
   # Fields will go to the output in alphabetical order.
   fields = sorted(fields)
   # Collect the data. At the same time adjust the format sa that data fit in.
-  fmt = Format(" ".join([encode_field(f) for f in fields]))
+  fmt = helpers.Format(" ".join([encode_field(f) for f in fields]))
   records = []
   for i in range(0, len(root)):
     record = []
     for f in fields:
       if f in root[i]:
-        record.append(encode_field(str(root[i][f])))
+        record.append(helpers.encode_field(str(root[i][f])))
       else:
         record.append('""')
     fmt.adjust(record)
     records.append(record)
   # Write the result to output.
-  writeout(fmt.render())
+  helpers.writeout(fmt.render())
   for r in records:
-    writeout(fmt.render(r))
+    helpers.writeout(fmt.render(r))
 
 def to_json(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('to-json',
     help="convert UXY to JSON")
   args = parser.parse_args(args)
 
-  s = trim_newline(sys.stdin.readline())
-  hdr = split_fields(s)
-  writeout("[\n")
+  s = helpers.trim_newline(sys.stdin.readline())
+  hdr = helpers.split_fields(s)
+  helpers.writeout("[\n")
   first = True
   for ln in sys.stdin:
     if not first:
-      writeout(",\n")
+      helpers.writeout(",\n")
     else:
       first = False
-    fields = split_fields(trim_newline(ln))
+    fields = helpers.split_fields(helpers.trim_newline(ln))
     item = {}
     for i in range(0, len(fields)):
-      item[decode_field(hdr[i])] = decode_field(fields[i])
-    writeout(json.dumps(item, indent=4))
-  writeout("\n]\n")
+      item[helpers.decode_field(hdr[i])] = helpers.decode_field(fields[i])
+    helpers.writeout(json.dumps(item, indent=4))
+  helpers.writeout("\n]\n")
 

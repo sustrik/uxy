@@ -17,20 +17,21 @@
 #  IN THE SOFTWARE.
 
 import argparse
+import sys
 
-from helpers import *
+import helpers
 
 def align(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('align', help="align columns")
   args = parser.parse_args(args)
 
-  s = trim_newline(sys.stdin.readline())
-  fmt = Format(s)
+  s = helpers.trim_newline(sys.stdin.readline())
+  fmt = helpers.Format(s)
   records = []
   for ln in sys.stdin:
-    fields = split_fields(trim_newline(ln))
+    fields = helpers.split_fields(helpers.trim_newline(ln))
     fmt.adjust(fields)
     records.append(fields)
-  writeout(fmt.render())
+  helpers.writeout(fmt.render())
   for r in records:
-    writeout(fmt.render(r))
+    helpers.writeout(fmt.render(r))

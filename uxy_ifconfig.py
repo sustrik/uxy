@@ -19,17 +19,18 @@
 import argparse
 import re
 import subprocess
+import sys
 
-from helpers import *
+import helpers
 
-def write_ifconfig_record(fmt, iface):
+def _write_ifconfig_record(fmt, iface):
   fields = []
   for f in fmt.fields:
     if f in iface:
-      fields.append(encode_field(iface[f]))
+      fields.append(helpers.encode_field(iface[f]))
     else:
-      fields.append(encode_field(""))
-  writeout(fmt.render(fields))
+      fields.append(helpers.encode_field(""))
+  helpers.writeout(fmt.render(fields))
 
 
 def ifconfig(parser, args, uxy_args):
@@ -41,23 +42,23 @@ def ifconfig(parser, args, uxy_args):
   parser.parse_args(args[1:])
 
   if uxy_args.long:
-    fmt = Format("NAME       INET-ADDR       INET-NETMASK       INET6-ADDR               INET6-PREFIXLEN INET6-SCOPEID ETHER-ADDR        MTU   INTERRUPT MEMORY              RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED RX-OVERRUNS RX-FRAME TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED TX-OVERRUNS TX-CARRIER TX-COLLISIONS TX-QUEUELEN FLAGS")
+    fmt = helpers.Format("NAME       INET-ADDR       INET-NETMASK       INET6-ADDR               INET6-PREFIXLEN INET6-SCOPEID ETHER-ADDR        MTU   INTERRUPT MEMORY              RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED RX-OVERRUNS RX-FRAME TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED TX-OVERRUNS TX-CARRIER TX-COLLISIONS TX-QUEUELEN FLAGS")
   else:
-    fmt = Format("NAME       RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED FLAGS")
+    fmt = helpers.Format("NAME       RX-PACKETS RX-BYTES     RX-ERRORS RX-DROPPED TX-PACKETS TX-BYTES     TX-ERRORS TX-DROPPED FLAGS")
 
   proc = subprocess.Popen(['ifconfig'] + args[1:], stdout=subprocess.PIPE)
-  writeout(fmt.render())
+  helpers.writeout(fmt.render())
   leading = re.compile("([^:]+):\s+flags=\d+<([^>]*)>\s+mtu\s+(\d+)")
   first = True
   iface = {}
   for ln in proc.stdout:
-    ln = trim_newline(ln.decode("utf-8"))
+    ln = helpers.trim_newline(ln.decode("utf-8"))
     if len(ln) == 0:
       continue
     if ln[0] != ' ':
       if not first:
         # push the current record
-        write_ifconfig_record(fmt, iface)
+        _write_ifconfig_record(fmt, iface)
         iface = {}
       else:
         first = False
@@ -106,5 +107,5 @@ def ifconfig(parser, args, uxy_args):
           iface["RX-OVERRRUNS"] = parts[6]
           iface["RX-FRAME"] = parts[8]
   if not first:
-    write_ifconfig_record(fmt, iface)
+    _write_ifconfig_record(fmt, iface)
 

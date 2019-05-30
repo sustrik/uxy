@@ -19,8 +19,7 @@
 #  IN THE SOFTWARE.
 
 import argparse
-
-from helpers import *
+import sys
 
 import uxy_align
 import uxy_csv
