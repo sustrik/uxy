@@ -18,10 +18,11 @@
 
 import argparse
 import re
+import sys
 
 import base
 
-def top(parser, args, uxy_args):
+def _linux(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy top")
   parser.parse_args(args[1:])
 
@@ -47,3 +48,12 @@ def top(parser, args, uxy_args):
       fields.append(base.encode_field(m.group(i)))
     base.writeline(fmt.render(fields))
 
+def _bsd(parser, args, uxy_args):
+  # TODO
+  pass
+
+def top(parser, args, uxy_args):
+  if sys.platform.startswith("linux"):
+    _linux(parser, args, uxy_args)
+  else:
+    _bsd(parser, args, uxy_args)
