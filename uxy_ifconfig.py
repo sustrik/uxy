@@ -63,7 +63,7 @@ def ifconfig(parser, args, uxy_args):
       # Parse the leading line.
       m = leading.match(ln)
       if not m:
-        print("Invalid leading line: '%s'" % ls, file=sys.stderr)
+        print("Invalid leading line: '%s'" % ln, file=sys.stderr)
         sys.exit(1)
       iface["NAME"] = m.group(1)
       iface["FLAGS"] = m.group(2)
