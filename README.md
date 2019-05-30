@@ -126,8 +126,8 @@ as "the most useful info that fits on page") or long set of result fields
 When running with `-l` option it often happens that the output exceeds the
 terminal width, gets wrapped and unreadable. In such cases you can either
 filter out just the fields you are intersed in using `fmt` subcommand or
-convert the result to YAML which happens to rendev each field on a separate
-line:
+convert the result to YAML (`uxy to-yaml`) which happens to render each field
+on a separate line:
 
 <pre>
 <b>$ uxy -l ifconfig | uxy fmt "NAME         INET-ADDR"</b>
