@@ -126,16 +126,8 @@ def _bsd(parser, args, uxy_args):
     if not m:
       continue
     fields = []
-    for i in range(1, regexp.groups - 3):
+    for i in range(1, regexp.groups):
       fields.append(base.encode_field(m.group(i)))
-    # Convert to actual ISO8601 format.
-    time = "%sT%s%s:%s" % (
-      m.group(regexp.groups - 3),
-      m.group(regexp.groups - 2),
-      m.group(regexp.groups - 1)[:-2],
-      m.group(regexp.groups - 1)[-2:])
-    fields.append(base.encode_field(time))
-    fields.append(base.encode_field(path + m.group(regexp.groups)))
     base.writeline(fmt.render(fields))
 
 def ls(parser, args, uxy_args):

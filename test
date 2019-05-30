@@ -31,30 +31,30 @@ test_parser() {
 
 # Make sure that the tools don't straight out fail.
 
-$UXY ls testdata | $UXY align > /dev/null
-$UXY ls testdata | $UXY to-csv | $UXY from-csv > /dev/null
-$UXY du testdata > /dev/null
-$UXY -l du testdata > /dev/null
-$UXY ls testdata | $UXY fmt "NAME SIZE" > /dev/null
-$UXY ls testdata | $UXY grep a > /dev/null
-$UXY ls testdata | $UXY grep a NAME > /dev/null
-$UXY ifconfig testdata > /dev/null
-$UXY -l ifconfig testdata > /dev/null
-echo ABC | $UXY import COL "(.*)" > /dev/null
-$UXY ls testdata | $UXY to-json | $UXY from-json > /dev/null
-$UXY ls testdata > /dev/null
-$UXY -l ls testdata > /dev/null
-$UXY lsof > /dev/null
-$UXY -l lsof > /dev/null
-$UXY netstat > /dev/null
-$UXY -l netstat > /dev/null
-$UXY ps > /dev/null
-$UXY -l ps > /dev/null
-$UXY top > /dev/null
-$UXY -l top > /dev/null
-$UXY ls testdata | $UXY trim > /dev/null
-$UXY w > /dev/null
-$UXY -l w > /dev/null
+$UXY ls testdata | $UXY align
+$UXY ls testdata | $UXY to-csv | $UXY from-csv
+$UXY du testdata
+$UXY -l du testdata
+$UXY ls testdata | $UXY fmt "NAME SIZE"
+$UXY ls testdata | $UXY grep a
+$UXY ls testdata | $UXY grep a NAME
+$UXY ifconfig testdata
+$UXY -l ifconfig testdata
+echo ABC | $UXY import COL "(.*)"
+$UXY ls testdata | $UXY to-json | $UXY from-json
+$UXY ls testdata
+$UXY -l ls testdata
+$UXY lsof
+$UXY -l lsof
+$UXY netstat
+$UXY -l netstat
+$UXY ps
+$UXY -l ps
+$UXY top
+$UXY -l top
+$UXY ls testdata | $UXY trim
+$UXY w
+$UXY -l w
 
 
 # Check the parsers against the inputs collected from different systems.
