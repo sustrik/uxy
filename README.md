@@ -123,34 +123,27 @@ as "the most useful info that fits on page") or long set of result fields
 <b>$ uxy -l ps</b>
 </pre>
 
-Any options that have to do with sorting or filtering are perfectly all right
-to pass to the wrapped tool though.
-
 When running with `-l` option it often happens that the output exceeds the
-terminal width, gets wrapped and unreadable. In such cases it's useful to
-pipe the output to `to-yaml` tool. YAML has one-line-per-field syntax and thus
-makes the output more readable:
+terminal width, gets wrapped and unreadable. In such cases you can either
+filter out just the fields you are intersed in using `fmt` subcommand or
+convert the result to YAML which happens to rendev each field on a separate
+line:
 
 <pre>
-<b>$ uxy -l ps | head -n 2 | uxy to-yaml</b>
-- ADDR: '-'
-  C: '0'
-  CMD: bash
-  CONTEXT: unconfined
-  F: '0'
-  NI: '0'
-  PID: '4464'
-  PPID: '4455'
-  PRI: '80'
-  PSR: '2'
-  RSS: '6396'
-  S: S
-  STIME: May25
-  SZ: '5949'
-  TIME: 00:00:02
-  TTY: pts/0
-  UID: martin
-  WCHAN: wait
+<b>$ uxy -l ifconfig | uxy fmt "NAME         INET-ADDR"</b>
+NAME         INET-ADDR 
+enp0s31f6    ""       
+lo           127.0.0.1 
+wlp3s0       192.168.1.7
+<b>$ uxy -l ifconfig | uxy to-yaml</b>
+- ETHER-ADDR: e4:42:a6:f4:1d:02
+  FLAGS: UP,BROADCAST,RUNNING,MULTICAST
+  INET-ADDR: 192.168.1.7
+  INET-NETMASK: 255.255.255.0
+  INET6-ADDR: fe80::fd53:a17f:12ce:38a8
+  INET6-PREFIXLEN: '64'
+  INET6-SCOPEID: 0x20<link>
+  ...
 </pre> 
 
 - **[uxy du](doc/du.md)**
