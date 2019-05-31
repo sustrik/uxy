@@ -21,22 +21,22 @@
 import argparse
 import sys
 
-import uxy_align
-import uxy_csv
-import uxy_du
-import uxy_fmt
-import uxy_grep
-import uxy_ifconfig
-import uxy_import
-import uxy_json
-import uxy_ls
-import uxy_lsof
-import uxy_netstat
-import uxy_ps
-import uxy_top
-import uxy_trim
-import uxy_w
-import uxy_yaml
+from tools import uxy_align
+from tools import uxy_csv
+from tools import uxy_du
+from tools import uxy_fmt
+from tools import uxy_grep
+from tools import uxy_ifconfig
+from tools import uxy_import
+from tools import uxy_json
+from tools import uxy_ls
+from tools import uxy_lsof
+from tools import uxy_netstat
+from tools import uxy_ps
+from tools import uxy_top
+from tools import uxy_trim
+from tools import uxy_w
+from tools import uxy_yaml
 
 def main():
 
