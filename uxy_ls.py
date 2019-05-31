@@ -104,6 +104,10 @@ def _linux(parser, args, uxy_args):
     fields = []
     for i in range(1, regexp.groups - 3):
       field = m.group(i)
+      # In general, uxy is not supposed to supplant the functionality provided
+      # by the wrapped tool. However, there's little option here: User names
+      # can contain spaces (e.g. when provided by LDAP), but ls tool doesn't
+      # escape spaces in the names even with run with -b parameter.
       if resolve_ids:
           try:
             if i == owner_col:
