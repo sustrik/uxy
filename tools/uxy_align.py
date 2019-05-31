@@ -16,7 +16,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import base
+from tools import base
 
 def align(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('align', help="align columns")

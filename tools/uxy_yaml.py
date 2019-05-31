@@ -18,7 +18,7 @@
 
 import yaml
 
-import base
+from tools import base
 
 def from_yaml(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('from-yaml',

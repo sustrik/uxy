@@ -20,7 +20,7 @@ import itertools
 import re
 import sys
 
-import base
+from tools import base
 
 def _linux(parser, args, uxy_args):
   proc = base.launch(uxy_args, ['netstat', '--inet'] + args[1:])

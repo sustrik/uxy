@@ -20,7 +20,7 @@ import argparse
 import re
 import sys
 
-import base
+from tools import base
 
 def _write_ifconfig_record(fmt, iface):
   fields = []

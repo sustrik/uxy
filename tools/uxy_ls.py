@@ -22,7 +22,7 @@ import pwd
 import re
 import sys
 
-import base
+from tools import base
 
 def _linux(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy ls", add_help=False)

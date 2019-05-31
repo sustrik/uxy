@@ -20,7 +20,7 @@ import argparse
 import itertools
 import re
 
-import base
+from tools import base
 
 def lsof(parser, args, uxy_args):
   proc = base.launch(uxy_args, ['lsof', '+c', '0'] + args[1:])

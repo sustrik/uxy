@@ -20,7 +20,7 @@ import argparse
 import re
 import sys
 
-import base
+from tools import base
 
 def _linux(parser, args, uxy_args):
   parser = argparse.ArgumentParser("uxy w", add_help=False)
