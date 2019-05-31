@@ -17,6 +17,8 @@
 #  IN THE SOFTWARE.
 
 import argparse
+import grp
+import pwd
 import re
 import sys
 
@@ -68,13 +70,21 @@ def _linux(parser, args, uxy_args):
   base.check_args(args, parser)
 
   if uxy_args.long:
-    fmtargs = ['-lNisZ', '--time-style=full-iso']
+    fmtargs = ['-lnNisZ', '--time-style=full-iso']
     regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = base.Format("INODE   BLOCKS TYPE PERMISSIONS LINKS OWNER      GROUP      CONTEXT SIZE         TIME                                  NAME")
+    owner_col = 6
+    group_col = 7
   else:
-    fmtargs = ['-lN', '--time-style=full-iso']
+    fmtargs = ['-lnN', '--time-style=full-iso']
     regexp = re.compile(r'\s*(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
     fmt = base.Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
+    owner_col = 4
+    group_col = 5
+
+  resolve_ids = True
+  if "-n" in args[1:] or "--numeric-uid-gid" in args[1:]:
+    resolve_ids = False
 
   proc = base.launch(uxy_args, ['ls'] + fmtargs + args[1:])
   base.writeline(fmt.render())
@@ -93,7 +103,17 @@ def _linux(parser, args, uxy_args):
       continue
     fields = []
     for i in range(1, regexp.groups - 3):
-      fields.append(base.encode_field(m.group(i)))
+      field = m.group(i)
+      if resolve_ids:
+          try:
+            if i == owner_col:
+              field = pwd.getpwuid(int(field)).pw_name
+            elif i == group_col:
+              field = grp.getgrgid(int(field)).gr_name
+          except (KeyError, ValueError):
+            pass
+
+      fields.append(base.encode_field(field))
     # Convert to actual ISO8601 format.
     time = "%sT%s%s:%s" % (
       m.group(regexp.groups - 3),
