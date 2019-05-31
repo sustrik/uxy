@@ -29,4 +29,4 @@ test_parser() {
   diff $TESTDATA/$2.result $TESTDATA/$2.expected
 }
 
-ls -ln
+ls -lnT
