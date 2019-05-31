@@ -133,7 +133,7 @@ def _bsd(parser, args, uxy_args):
 
   fmtargs = ['-l']
   # -rw-r--r--   1 501  20  1025 May 31 07:11:49 2019 LICENSE
-  regexp = re.compile(r'\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+[^\s]*)\s+(.*)')
+  regexp = re.compile(r'\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*\s+[^\s]*)\s+(.*)')
   fmt = base.Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
 
   proc = base.launch(uxy_args, ['ls'] + fmtargs + args[1:])
