@@ -47,3 +47,4 @@ def lsof(parser, args, uxy_args):
     fields.append(ln[pos[16]:].strip())
     fields = [base.encode_field(f) for f in fields]
     base.writeline(fmt.render(fields))
+  return proc.wait()

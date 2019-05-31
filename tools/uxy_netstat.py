@@ -41,13 +41,14 @@ def _linux(parser, args, uxy_args):
     fields.append(ln[pos[13]:].strip())
     fields = [base.encode_field(f) for f in fields]
     base.writeline(fmt.render(fields))
+  return proc.wait()
 
 def _bsd(parser, args, uxy_args):
   # TODO
-  pass
+  return 0
 
 def netstat(parser, args, uxy_args):
   if sys.platform.startswith("linux"):
-    _linux(parser, args, uxy_args)
+    return _linux(parser, args, uxy_args)
   else:
-    _bsd(parser, args, uxy_args)
+    return _bsd(parser, args, uxy_args)

@@ -86,7 +86,8 @@ def main():
     sys.exit(1)
   parser = argparse.ArgumentParser(prog="uxy",
     description="Tool to manipulate UXY data.")
-  subcommands[subcommand](parser, args, uxy_args)
+  returncode = subcommands[subcommand](parser, args, uxy_args)
+  sys.exit(returncode)
 
 if __name__ == "__main__":
     main()

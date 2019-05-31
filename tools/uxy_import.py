@@ -41,3 +41,4 @@ def do_import(parser, args, uxy_args):
     for i in range(1, regexp.groups + 1):
       fields.append(base.encode_field(m.group(i)))
     base.writeline(fmt.render(fields))
+  return 0

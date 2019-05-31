@@ -43,4 +43,4 @@ def fmt(parser, args, uxy_args):
         continue
       newfields[newhdr.index(oldname)] = oldfields[i]
     base.writeline(fmt.render(newfields))
-
+  return 0

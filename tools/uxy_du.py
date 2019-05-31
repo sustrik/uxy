@@ -64,10 +64,11 @@ def _linux(parser, args, uxy_args):
       for i in range(1, regexp.groups + 1):
         fields.append(base.encode_field(m.group(i)))
     base.writeline(fmt.render(fields))
+  return proc.wait()
 
 def _bsd(parser, args, uxy_args):
   # TODO
-  pass
+  return 0
 
 def du(parser, args, uxy_args):
   if sys.platform.startswith("linux"):

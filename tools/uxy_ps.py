@@ -66,13 +66,14 @@ def _linux(parser, args, uxy_args):
     for i in range(1, regexp.groups + 1):
       fields.append(base.encode_field(m.group(i)))
     base.writeline(fmt.render(fields))
+  return proc.wait()
 
 def _bsd(parser, args, uxy_args):
   # TODO
-  pass
+  return 0
 
 def ps(parser, args, uxy_args):
   if sys.platform.startswith("linux"):
-    _linux(parser, args, uxy_args)
+    return _linux(parser, args, uxy_args)
   else:
-    _bsd(parser, args, uxy_args)
+    return _bsd(parser, args, uxy_args)

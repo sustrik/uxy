@@ -45,4 +45,4 @@ def trim(parser, args, uxy_args):
         else:
             fields[i] = fields[i][:fmt.widths[i] - 4] + "..."
     base.writeline(fmt.render(fields))
-
+  return 0

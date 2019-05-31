@@ -107,4 +107,4 @@ def ifconfig(parser, args, uxy_args):
           iface["RX-FRAME"] = parts[8]
   if not first:
     _write_ifconfig_record(fmt, iface)
-
+  return proc.wait()

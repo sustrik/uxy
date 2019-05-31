@@ -57,6 +57,7 @@ def from_json(parser, args, uxy_args):
   base.writeline(fmt.render())
   for r in records:
     base.writeline(fmt.render(r))
+  return 0
 
 def to_json(parser, args, uxy_args):
   subp = parser.add_subparsers().add_parser('to-json',
@@ -78,4 +79,4 @@ def to_json(parser, args, uxy_args):
       item[base.decode_field(hdr[i])] = base.decode_field(fields[i])
     base.writeline(json.dumps(item, indent=4))
   base.writeline("\n]\n")
-
+  return 0

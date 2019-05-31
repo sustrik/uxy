@@ -32,3 +32,4 @@ def align(parser, args, uxy_args):
   base.writeline(fmt.render())
   for r in records:
     base.writeline(fmt.render(r))
+  return 0

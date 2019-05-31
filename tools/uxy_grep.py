@@ -64,4 +64,4 @@ def grep(parser, args, uxy_args):
           break
     if match:
       base.writeline(fmt.render(fields))
-
+  return 0

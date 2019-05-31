@@ -202,8 +202,8 @@ def check_args(args, parser):
 
 # Make reading from the pipe much like reading from a file.
 class PipeReader(object):
-  def __init__(self, pipe):
-    self.pipe = pipe
+  def __init__(self, proc):
+    self.proc = proc
 
   def __iter__(self):
     return self
@@ -212,16 +212,19 @@ class PipeReader(object):
     return self.readline()
  
   def readline(self):
-    ln = self.pipe.readline()
+    ln = self.proc.stdout.readline()
     if not ln:
       raise StopIteration()
     return ln.decode("utf-8").rstrip("\n")
+
+  def wait(self):
+    return self.proc.wait()
 
 def launch(uxy_args, args):
   if uxy_args.test:
     return stdin
   proc = subprocess.Popen(args, stdout=subprocess.PIPE)
-  return PipeReader(proc.stdout)
+  return PipeReader(proc)
 
 # Like sys.stdin but trims newlines from the end of the lines.
 class StdinReader(object):
@@ -239,5 +242,8 @@ class StdinReader(object):
     if not ln:
       raise StopIteration()
     return ln.rstrip("\n")
+
+  def wait(self):
+    return 0
 
 stdin = StdinReader()
