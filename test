@@ -29,33 +29,4 @@ test_parser() {
   diff $TESTDATA/$2.result $TESTDATA/$2.expected
 }
 
-# Make sure that the tools don't straight out fail.
-
-$UXY ls testdata | $UXY align
-$UXY ls testdata | $UXY to-csv | $UXY from-csv
-$UXY du
-$UXY -l du
-$UXY ls testdata | $UXY fmt "NAME SIZE"
-$UXY ls testdata | $UXY grep a
-$UXY ls testdata | $UXY grep a NAME
-#$UXY ifconfig
-#$UXY -l ifconfig
-echo ABC | $UXY import COL "(.*)"
-$UXY ls testdata | $UXY to-json | $UXY from-json
-$UXY ls testdata
-$UXY -l ls testdata
-$UXY lsof
-$UXY -l lsof
-$UXY netstat
-$UXY -l netstat
-$UXY ps
-$UXY -l ps
-$UXY top
-$UXY -l top
-$UXY ls testdata | $UXY trim
-$UXY w
-$UXY -l w
-
-
-# Check the parsers against the inputs collected from different systems.
-test_parser ls ls-short-linux-1
+ls -ln
