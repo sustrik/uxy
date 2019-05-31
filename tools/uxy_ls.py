@@ -132,8 +132,9 @@ def _linux(parser, args, uxy_args):
 def _bsd(parser, args, uxy_args):
 
   fmtargs = ['-l']
-  regexp = re.compile(r'(.*)')
-  fmt = base.Format("ALL")
+  # -rw-r--r--   1 501  20  1025 May 31 07:11:49 2019 LICENSE
+  regexp = re.compile(r'\s+(.)([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*\s+[^\s]*\s+[^\s]*)\s+[^\s]*)\s+(.*)')
+  fmt = base.Format("TYPE PERMISSIONS LINKS OWNER      GROUP      SIZE         TIME                                  NAME")
 
   proc = base.launch(uxy_args, ['ls'] + fmtargs + args[1:])
   base.writeline(fmt.render())
