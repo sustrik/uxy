@@ -54,6 +54,8 @@ def main():
     help = "produce more data")
   parser.add_argument('--test', action="store_true", default=False,
     help = "used for testing; don't use directly")
+  parser.add_argument('--platform', default=sys.platform,
+    help = "force a specific platform; used for testing")
   parser.add_argument('subcommand', metavar="SUBCOMMAND",
     help = "subcommand to execute")
   uxy_args = parser.parse_args(sys.argv[1:idx + 1])

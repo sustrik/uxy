@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #  Copyright (c) 2019 Martin Sustrik
 #
@@ -25,8 +25,8 @@ UXY=$ROOT/uxy
 TESTDATA=$ROOT/testdata
 
 test_parser() {
-  $UXY --test $1 < $TESTDATA/$2.source > $TESTDATA/$2.result
-  diff $TESTDATA/$2.result $TESTDATA/$2.expected
+  $UXY --test --platform=$1 $2 < $TESTDATA/$3.source > $TESTDATA/$3.result
+  diff $TESTDATA/$3.result $TESTDATA/$3.expected
 }
 
 # Make sure that the tools don't straight out fail.
@@ -44,8 +44,8 @@ echo ABC | $UXY import COL "(.*)"
 $UXY ls testdata | $UXY to-json | $UXY from-json
 $UXY ls testdata
 $UXY -l ls testdata
-$UXY lsof
-$UXY -l lsof
+$UXY lsof | head -n 10
+$UXY -l lsof | head -n 10
 $UXY netstat
 $UXY -l netstat
 $UXY ps
@@ -58,5 +58,6 @@ $UXY -l w
 
 
 # Check the parsers against the inputs collected from different systems.
-test_parser ls ls-short-linux-1
+test_parser linux ls ls-short-linux-1
+test_parser darwin ls ls-short-darwin-1
 
