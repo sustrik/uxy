@@ -155,11 +155,9 @@ wlp3s0       192.168.1.7
 - **[uxy top](doc/top.md)**
 - **[uxy w](doc/w.md)**
 
-### Testing
+# TESTING
 
 To test, run `./test` script.
 
-Continuous integration:
-
-[![Build Status](https://travis-ci.org/sustrik/uxy.svg?branch=master)](https://travis-ci.org/sustrik/uxy)
+Continuous integration: [![Build Status](https://travis-ci.org/sustrik/uxy.svg?branch=master)](https://travis-ci.org/sustrik/uxy)
 
