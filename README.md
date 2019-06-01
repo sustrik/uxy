@@ -161,5 +161,5 @@ To test, run `./test` script.
 
 Continuous integration:
 
-<iframe width="100%" height="20" frameBorder="0" src="https://api.travis-ci.org/sustrik/uxy.svg?branch=master"></iframe>
+[![Build Status](https://travis-ci.org/sustrik/uxy.svg?branch=master)](https://travis-ci.org/sustrik/uxy)
 
