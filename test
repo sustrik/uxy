@@ -24,9 +24,16 @@ ROOT=$(dirname "$0")
 UXY=$ROOT/uxy
 TESTDATA=$ROOT/testdata
 
-test_parser() {
-  $UXY --test --platform=$1 $2 < $TESTDATA/$3.source > $TESTDATA/$3.result
-  diff $TESTDATA/$3.result $TESTDATA/$3.expected
+parse() {
+  PLATFORM=$1
+  COMMAND=$2
+  FORMAT=$3
+  SEQNUM=$4
+
+  FILENAME="$COMMAND-$FORMAT-$PLATFORM-$SEQNUM"
+
+  $UXY --test --platform=$PLATFORM $2 < $TESTDATA/$FILENAME.source > $TESTDATA/$FILENAME.result
+  diff $TESTDATA/$FILENAME.result $TESTDATA/$FILENAME.expected
 }
 
 # Make sure that the tools don't straight out fail.
@@ -58,12 +65,12 @@ $UXY -l w
 
 
 # Check the parsers against the inputs collected from different systems.
-test_parser linux ls ls-short-linux-1
-test_parser darwin ls ls-short-darwin-1
-test_parser darwin ps ps-short-darwin-1
-test_parser linux ps ps-short-linux-1
-test_parser darwin du du-short-darwin-1
-test_parser linux du du-short-linux-1
-test_parser darwin w w-short-darwin-1
-test_parser linux w w-short-linux-1
+parse linux ls short 1
+parse darwin ls short 1
+parse darwin ps short 1
+parse linux ps short 1
+parse darwin du short 1
+parse linux du short 1
+parse darwin w short 1
+parse linux w short 1
 
