@@ -50,11 +50,30 @@ def _linux(parser, args, uxy_args):
   return proc.wait()
 
 def _bsd(parser, args, uxy_args):
-  # TODO
-  return 0
+  parser = argparse.ArgumentParser("uxy top")
+  parser.parse_args(args[1:])
+
+  proc = base.launch(uxy_args, ['top', '-l 1'] + args[1:])
+  # Skip the summary.
+  for i in range(0, 12):
+    proc.readline()
+
+  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+.*')
+  fmt = base.Format("PID  CMD  CPU  TIME TH WQ PORTS MEM PURG CMPRS PGRP PPID STATE BOOSTS CPU_ME CPU_OTHRS UID FAULTS COW MSGSENT MSGRECV SYSBSD SYSMACH CSW PAGEINS IDLEW POWER INSTRS CYCLES USER")
+
+  base.writeline(fmt.render())
+  for ln in proc:
+    m = regexp.match(ln)
+    if not m:
+      continue
+    fields = []
+    for i in range(1, regexp.groups + 1):
+      fields.append(base.encode_field(m.group(i)))
+    base.writeline(fmt.render(fields))
+  return proc.wait()
 
 def top(parser, args, uxy_args):
-  if sys.platform.startswith("linux"):
+  if uxy_args.platform.startswith("linux"):
     return _linux(parser, args, uxy_args)
   else:
     return _bsd(parser, args, uxy_args)

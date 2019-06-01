@@ -73,4 +73,6 @@ parse darwin du short 1
 parse linux du short 1
 parse darwin w short 1
 parse linux w short 1
+parse darwin top short 1
+parse linux top short 1
 
