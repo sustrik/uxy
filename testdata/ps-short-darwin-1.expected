@@ -1,0 +1,5 @@
+PID     TTY         TIME       CMD 
+832     ttys000     0:00.12    "bash /Users/travis/wrapper.sh" 
+1068    ttys000     0:00.01    "nc 127.0.0.1 15782" 
+1069    ttys001     0:00.44    "/bin/bash --login /Users/travis/build.sh" 
+1908    ttys001     0:00.00    "bash ./test" 
