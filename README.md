@@ -159,5 +159,5 @@ wlp3s0       192.168.1.7
 
 To test, run `./test` script.
 
-Continuous integration: [![Build Status](https://travis-ci.org/sustrik/uxy.svg?branch=master)](https://travis-ci.org/sustrik/uxy)
+[![Build Status](https://travis-ci.org/sustrik/uxy.svg?branch=master)](https://travis-ci.org/sustrik/uxy)
 
