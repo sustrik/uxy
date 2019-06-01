@@ -89,6 +89,7 @@ def main():
   parser = argparse.ArgumentParser(prog="uxy",
     description="Tool to manipulate UXY data.")
   returncode = subcommands[subcommand](parser, args, uxy_args)
+  print("---->" + str(returncode), file=sys.stderr)
   sys.exit(returncode)
 
 if __name__ == "__main__":
