@@ -44,8 +44,8 @@ echo ABC | $UXY import COL "(.*)"
 $UXY ls testdata | $UXY to-json | $UXY from-json
 $UXY ls testdata
 $UXY -l ls testdata
-$UXY lsof | head -n 10
-$UXY -l lsof | head -n 10
+$UXY lsof
+$UXY -l lsof
 $UXY netstat
 $UXY -l netstat
 $UXY ps

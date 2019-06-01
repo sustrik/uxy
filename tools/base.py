@@ -26,7 +26,6 @@ def writeline(s):
  except BrokenPipeError:
    # The next command in the pipeline is not interested in more data.
    # We can shut down cleanly.
-   print("uxy: BrokenPipe", file=sys.stderr)
    sys.exit(0)
 
 ESCAPE_SEQUENCES1 = {
