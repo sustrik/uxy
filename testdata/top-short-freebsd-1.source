@@ -1,0 +1,26 @@
+last pid: 68120;  load averages:  0.08,  0.13,  0.15  up 112+18:49:41    09:42:36
+19 processes:  1 running, 18 sleeping
+
+Mem: 3096K Active, 178M Inact, 268M Wired, 81M Buf, 1508M Free
+Swap: 1024M Total, 1024M Free
+
+
+  PID USERNAME    THR PRI NICE   SIZE    RES STATE   C   TIME    WCPU COMMAND
+  573 root          1  20    0 57812K  7000K select  0  23:22   0.00% sshd
+  583 root          1  20    0 12592K  2496K nanslp  0   6:25   0.00% cron
+  576 root          1  20    0 20636K  6248K select  1   3:04   0.00% sendmail
+  382 root          1  20    0 10500K  2448K select  1   0:53   0.00% syslogd
+  579 smmsp         1  20    0 20636K  5932K pause   1   0:43   0.00% sendmail
+  309 root          1  20    0  9560K  5012K select  0   0:06   0.00% devd
+68090 root          1  34    0 85228K  7972K select  0   0:00   0.00% sshd
+68093 sustrik       1  30    0 13876K  3712K wait    1   0:00   0.00% bash
+68092 sustrik       1  20    0 85228K  8028K select  1   0:00   0.00% sshd
+68120 sustrik       1  33    0 20160K  3024K CPU0    0   0:00   0.00% top
+  638 root          1  52    0 10484K  2076K ttyin   0   0:00   0.00% getty
+  630 root          1  52    0 10484K  2080K ttyin   0   0:00   0.00% getty
+  636 root          1  52    0 10484K  2080K ttyin   0   0:00   0.00% getty
+  634 root          1  52    0 10484K  2080K ttyin   1   0:00   0.00% getty
+  633 root          1  52    0 10484K  2080K ttyin   0   0:00   0.00% getty
+  632 root          1  52    0 10484K  2080K ttyin   1   0:00   0.00% getty
+  631 root          1  52    0 10484K  2080K ttyin   1   0:00   0.00% getty
+  635 root          1  52    0 10484K  2080K ttyin   1   0:00   0.00% getty
