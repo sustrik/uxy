@@ -77,15 +77,8 @@ def _bsd(parser, args, uxy_args):
     if not m:
       continue
     fields = []
-    if uxy_args.long:
-      time = "%sT%s%s:%s" % (m.group(2), m.group(3), m.group(4)[:-2],
-        m.group(4)[-2:])
-      fields.append(base.encode_field(m.group(1)))
-      fields.append(base.encode_field(time))
-      fields.append(base.encode_field(m.group(5)))
-    else:
-      for i in range(1, regexp.groups + 1):
-        fields.append(base.encode_field(m.group(i)))
+    for i in range(1, regexp.groups + 1):
+      fields.append(base.encode_field(m.group(i)))
     base.writeline(fmt.render(fields))
   return proc.wait()
 
