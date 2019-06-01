@@ -69,11 +69,24 @@ def _linux(parser, args, uxy_args):
   return proc.wait()
 
 def _bsd(parser, args, uxy_args):
-  # TODO
-  return 0
+  fmtargs = []
+  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
+  fmt = base.Format("PID     TTY         TIME       CMD")
+  proc = base.launch(uxy_args, ['ps'] + fmtargs + args[1:])
+  proc.readline()
+  base.writeline(fmt.render())
+  for ln in proc:
+    m = regexp.match(ln)
+    if not m:
+      continue
+    fields = []
+    for i in range(1, regexp.groups + 1):
+      fields.append(base.encode_field(m.group(i)))
+    base.writeline(fmt.render(fields))
+  return proc.wait()
 
 def ps(parser, args, uxy_args):
-  if sys.platform.startswith("linux"):
+  if uxy_args.platform.startswith("linux"):
     return _linux(parser, args, uxy_args)
   else:
     return _bsd(parser, args, uxy_args)
