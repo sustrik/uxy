@@ -161,5 +161,5 @@ To test, run `./test` script.
 
 Continuous integration:
 
-<p><a href="https://travis-ci.org/sustrik/libdill" class="uri"><iframe width="100%" height="20" frameBorder="0" src="https://api.travis-ci.org/sustrik/uxy.svg?branch=master"></iframe></a></p>
+<iframe width="100%" height="20" frameBorder="0" src="https://api.travis-ci.org/sustrik/uxy.svg?branch=master"></iframe>
 
