@@ -1,0 +1,16 @@
+96	./.git/hooks
+8	./.git/info
+8	./.git/logs/refs/heads
+8	./.git/logs/refs
+16	./.git/logs
+0	./.git/objects/info
+128	./.git/objects/pack
+128	./.git/objects
+8	./.git/refs/heads
+0	./.git/refs/tags
+8	./.git/refs
+312	./.git
+160	./doc
+48	./testdata
+168	./tools
+752	.

@@ -1,0 +1,4 @@
+ 6:00  up 1 min, 2 users, load averages: 11.99 4.09 1.57
+USER     TTY      FROM              LOGIN@  IDLE WHAT
+travis   console  -                 5:59       - -
+travis   s000     10.182.0.83       5:59       - nc 127.0.0.1 15782
