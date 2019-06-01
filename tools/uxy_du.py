@@ -67,11 +67,30 @@ def _linux(parser, args, uxy_args):
   return proc.wait()
 
 def _bsd(parser, args, uxy_args):
-  # TODO
-  return 0
+  fmtargs = []
+  regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
+  fmt = base.Format("USAGE    FILE")
+  proc = base.launch(uxy_args, ['du'] + fmtargs + args[1:])
+  base.writeline(fmt.render())
+  for ln in proc:
+    m = regexp.match(ln)
+    if not m:
+      continue
+    fields = []
+    if uxy_args.long:
+      time = "%sT%s%s:%s" % (m.group(2), m.group(3), m.group(4)[:-2],
+        m.group(4)[-2:])
+      fields.append(base.encode_field(m.group(1)))
+      fields.append(base.encode_field(time))
+      fields.append(base.encode_field(m.group(5)))
+    else:
+      for i in range(1, regexp.groups + 1):
+        fields.append(base.encode_field(m.group(i)))
+    base.writeline(fmt.render(fields))
+  return proc.wait()
 
 def du(parser, args, uxy_args):
-  if sys.platform.startswith("linux"):
+  if uxy_args.platform.startswith("linux"):
     _linux(parser, args, uxy_args)
   else:
     _bsd(parser, args, uxy_args)

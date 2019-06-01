@@ -36,7 +36,7 @@ def _linux(parser, args, uxy_args):
   base.check_args(args, parser)
 
   proc = base.launch(uxy_args, ['w', '--no-header'] + args[1:])
-  regexp = re.compile(r'([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
+  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = base.Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
   base.writeline(fmt.render())
 
@@ -51,11 +51,27 @@ def _linux(parser, args, uxy_args):
   return proc.wait()
 
 def _bsd(parser, args, uxy_args):
-  # TODO
-  return 0
+  proc = base.launch(uxy_args, ['w'] + args[1:])
+  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
+  fmt = base.Format("USER     TTY      FROM          LOGIN   IDLE WHAT")
+
+  proc.readline()
+  proc.readline()
+
+  base.writeline(fmt.render())
+
+  for ln in proc:
+    m = regexp.match(ln)
+    if not m:
+      continue
+    fields = []
+    for i in range(1, regexp.groups + 1):
+      fields.append(base.encode_field(m.group(i)))
+    base.writeline(fmt.render(fields))
+  return proc.wait()
 
 def w(parser, args, uxy_args):
-  if sys.platform.startswith("linux"):
+  if uxy_args.platform.startswith("linux"):
     return _linux(parser, args, uxy_args)
   else:
     return _bsd(parser, args, uxy_args)
