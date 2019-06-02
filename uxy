@@ -22,21 +22,24 @@ import argparse
 import sys
 
 from tools import uxy_align
-from tools import uxy_csv
 from tools import uxy_du
 from tools import uxy_fmt
+from tools import uxy_from_csv
+from tools import uxy_from_json
+from tools import uxy_from_re
+from tools import uxy_from_yaml
 from tools import uxy_grep
 from tools import uxy_ifconfig
-from tools import uxy_import
-from tools import uxy_json
 from tools import uxy_ls
 from tools import uxy_lsof
 from tools import uxy_netstat
 from tools import uxy_ps
 from tools import uxy_top
+from tools import uxy_to_csv
+from tools import uxy_to_json
+from tools import uxy_to_yaml
 from tools import uxy_trim
 from tools import uxy_w
-from tools import uxy_yaml
 
 def main():
 
@@ -51,44 +54,26 @@ def main():
   parser = argparse.ArgumentParser(prog="uxy",
     description="Tool to manipulate UXY data.")
   parser.add_argument('-l', '--long', action="store_true", default=False,
-    help = "produce more data")
+    help = "print out all available data")
   parser.add_argument('--test', action="store_true", default=False,
-    help = "used for testing; don't use directly")
+    help = "get input from stdin rather than running the wrapped tool; " +
+           "used for testing")
   parser.add_argument('--platform', default=sys.platform,
-    help = "force a specific platform; used for testing")
+    help = "force a specific platform behaviour; used for testing")
   parser.add_argument('subcommand', metavar="SUBCOMMAND",
     help = "subcommand to execute")
   uxy_args = parser.parse_args(sys.argv[1:idx + 1])
-  subcommand = sys.argv[idx]
+  subcommand = sys.argv[idx].replace("-", "_")
   args = sys.argv[idx:]
-  subcommands = {
-    "align": uxy_align.align,
-    "du": uxy_du.du,
-    "fmt": uxy_fmt.fmt,
-    "from-csv": uxy_csv.from_csv,
-    "from-json": uxy_json.from_json,
-    "from-yaml": uxy_yaml.from_yaml,
-    "grep": uxy_grep.grep,
-    "ifconfig": uxy_ifconfig.ifconfig,
-    "import": uxy_import.do_import,
-    "ls": uxy_ls.ls,
-    "lsof": uxy_lsof.lsof,
-    "netstat": uxy_netstat.netstat,
-    "ps": uxy_ps.ps,
-    "to-csv": uxy_csv.to_csv,
-    "to-json": uxy_json.to_json,
-    "to-yaml": uxy_yaml.to_yaml,
-    "top": uxy_top.top,
-    "trim": uxy_trim.trim,
-    "w": uxy_w.w,
-  }
-  if subcommand not in subcommands:
-    print("uxy: invalid subcommand '%s' (choose from: %s)" % (subcommand,
-      ", ".join(subcommands.keys())), file=sys.stderr)
+
+  module = "tools.uxy_" + subcommand
+  if module not in sys.modules:
+    print("uxy: invalid subcommand '%s'" % subcommand, file=sys.stderr)
     sys.exit(1)
+
   parser = argparse.ArgumentParser(prog="uxy",
     description="Tool to manipulate UXY data.")
-  returncode = subcommands[subcommand](parser, args, uxy_args)
+  returncode = getattr(sys.modules[module], subcommand)(parser, args, uxy_args)
   sys.exit(returncode)
 
 if __name__ == "__main__":

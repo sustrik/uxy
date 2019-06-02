@@ -47,7 +47,7 @@ $UXY ls testdata | $UXY grep a
 $UXY ls testdata | $UXY grep a NAME
 #$UXY ifconfig
 #$UXY -l ifconfig
-echo ABC | $UXY import COL "(.*)"
+echo ABC | $UXY from-re COL "(.*)"
 $UXY ls testdata | $UXY to-json | $UXY from-json
 $UXY ls testdata
 $UXY -l ls testdata
@@ -62,6 +62,7 @@ $UXY -l top
 $UXY ls testdata | $UXY trim
 $UXY w
 $UXY -l w
+$UXY ls testdata | $UXY to-yaml | $UXY from-yaml
 
 # Check the parsers against the inputs collected from different systems.
 

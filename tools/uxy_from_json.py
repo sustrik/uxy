@@ -58,25 +58,3 @@ def from_json(parser, args, uxy_args):
   for r in records:
     base.writeline(fmt.render(r))
   return 0
-
-def to_json(parser, args, uxy_args):
-  subp = parser.add_subparsers().add_parser('to-json',
-    help="convert UXY to JSON")
-  args = parser.parse_args(args)
-
-  s = base.stdin.readline()
-  hdr = base.split_fields(s)
-  base.writeline("[\n")
-  first = True
-  for ln in base.stdin:
-    if not first:
-      base.writeline(",\n")
-    else:
-      first = False
-    fields = base.split_fields(ln)
-    item = {}
-    for i in range(0, len(fields)):
-      item[base.decode_field(hdr[i])] = base.decode_field(fields[i])
-    base.writeline(json.dumps(item, indent=4))
-  base.writeline("\n]\n")
-  return 0

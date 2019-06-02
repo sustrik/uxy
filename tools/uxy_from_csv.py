@@ -40,18 +40,3 @@ def from_csv(parser, args, uxy_args):
       base.writeline(fmt.render(fields))
 
   return 0
-
-def to_csv(parser, args, uxy_args):
-  subp = parser.add_subparsers().add_parser('to-csv',
-    help="convert UXY to CSV")
-  args = parser.parse_args(args)
-
-  for ln in base.stdin:
-    fields = base.split_fields(ln)
-    fields = [base.decode_field(f) for f in fields]
-    buf = io.StringIO()
-    w = csv.writer(buf)
-    w.writerow(fields)
-    base.writeline(buf.getvalue())
-
-  return 0

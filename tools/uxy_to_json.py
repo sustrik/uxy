@@ -16,60 +16,28 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import yaml
+import json
 
 from tools import base
 
-def from_yaml(parser, args, uxy_args):
-  subp = parser.add_subparsers().add_parser('from-yaml',
-    help="convert YAML to UXY")
-  args = parser.parse_args(args)
-
-  # Read the entire input.
-  s = ""
-  for ln in base.stdin:
-    s += ln + "\n"
-  root = yaml.load(s)
-  # Normalize the dict. Collect the field names along the way.
-  fields = {}
-  if not isinstance(root, list):
-    root = [root]
-  for i in range(0, len(root)):
-    if not isinstance(root[i], dict):
-      root[i] = {"COL1": root[i]}
-    for k, _ in root[i].items():
-      fields[k] = None
-  # Fields will go to the output in alphabetical order.
-  fields = sorted(fields)
-  # Collect the data. At the same time adjust the format sa that data fit in.
-  fmt = base.Format(" ".join([base.encode_field(f) for f in fields]))
-  records = []
-  for i in range(0, len(root)):
-    record = []
-    for f in fields:
-      if f in root[i]:
-        record.append(base.encode_field(str(root[i][f])))
-      else:
-        record.append('""')
-    fmt.adjust(record)
-    records.append(record)
-  # Write the result to output.
-  base.writeline(fmt.render())
-  for r in records:
-    base.writeline(fmt.render(r))
-  return 0
-
-def to_yaml(parser, args, uxy_args):
-  subp = parser.add_subparsers().add_parser('to-yaml',
-    help="convert UXY to YAML")
+def to_json(parser, args, uxy_args):
+  subp = parser.add_subparsers().add_parser('to-json',
+    help="convert UXY to JSON")
   args = parser.parse_args(args)
 
   s = base.stdin.readline()
   hdr = base.split_fields(s)
+  base.writeline("[\n")
+  first = True
   for ln in base.stdin:
+    if not first:
+      base.writeline(",\n")
+    else:
+      first = False
     fields = base.split_fields(ln)
     item = {}
     for i in range(0, len(fields)):
       item[base.decode_field(hdr[i])] = base.decode_field(fields[i])
-    base.writeline(yaml.dump([item], default_flow_style=False))
+    base.writeline(json.dumps(item, indent=4))
+  base.writeline("\n]\n")
   return 0

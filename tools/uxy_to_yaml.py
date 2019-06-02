@@ -16,29 +16,21 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import re
+import yaml
 
 from tools import base
 
-def do_import(parser, args, uxy_args):
-  subp = parser.add_subparsers().add_parser('import',
-    help="convert arbitrary input to UXY")
-  subp.add_argument('header', help="UXY header")
-  subp.add_argument('regexp', help="regexp to parse the input lines")
+def to_yaml(parser, args, uxy_args):
+  subp = parser.add_subparsers().add_parser('to-yaml',
+    help="convert UXY to YAML")
   args = parser.parse_args(args)
 
-  # Use the supplied format.
-  fmt = base.Format(args.header)
-  base.writeline(fmt.render())
-  # Parse the data.
-  regexp = re.compile(args.regexp)
+  s = base.stdin.readline()
+  hdr = base.split_fields(s)
   for ln in base.stdin:
-    m = regexp.match(ln)
-    # Non-matching lines are ignored.
-    if not m:
-      continue
-    fields = []
-    for i in range(1, regexp.groups + 1):
-      fields.append(base.encode_field(m.group(i)))
-    base.writeline(fmt.render(fields))
+    fields = base.split_fields(ln)
+    item = {}
+    for i in range(0, len(fields)):
+      item[base.decode_field(hdr[i])] = base.decode_field(fields[i])
+    base.writeline(yaml.dump([item], default_flow_style=False))
   return 0
