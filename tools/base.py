@@ -16,6 +16,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
+import re
 import sys
 import unicodedata
 import subprocess
@@ -247,3 +248,53 @@ class StdinReader(object):
     return 0
 
 stdin = StdinReader()
+
+def _substr(s, start, end):
+  if start == None or start >= len(s):
+    return ""
+  if end == None or end >= len(s):
+    return s[start:]
+  return s[start:end]
+
+def _at(s, pos):
+  if pos == None or pos < 0 or pos >= len(s):
+    return " "
+  return s[pos]
+
+class FmtParser:
+
+  def __init__(self, hdr):
+    fs = re.split("( +)", hdr.rstrip())
+    if fs[0] == "":
+      fs = fs[1:]
+    else:
+      fs = [""] + fs
+    self.fields = []
+    pos1 = 0
+    for i in range(0, len(fs) - 1, 2):
+      pos2 = pos1 + len(fs[i])
+      pos3 = pos2 + len(fs[i + 1])
+      if len(fs) <= i + 2:
+        pos4 = None
+      else:
+        pos4 = pos3 + len(fs[i + 2])
+      self.fields.append((fs[i + 1], pos1, pos2, pos3, pos4))
+      pos1 = pos3
+
+  def extract(self, ln):
+    res = []
+    for i in range(0, len(self.fields)):
+      f = self.fields[i]
+      s = _substr(ln, f[2],f[3])
+      if _at(ln, f[3] - 1) != " " and _at(ln, f[3]) != " ":
+        if i == len(self.fields) - 1:
+          s += _substr(ln, f[3], None)
+        else:
+          s += _substr(ln, f[3], f[4]).split(" ", 1)[0]
+      if _at(ln, f[2]) != " " and _at(ln, f[2] - 1) != " ":
+        s = _substr(ln, f[1], f[2]).rsplit(" ", 1)[-1] + s
+      res.append(encode_field(s.strip()))
+    return res
+
+
+

@@ -1,3 +1,3 @@
-USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT 
-matyas   :0     :0      Fri07    ?xdm?   9:44    0.01s   "/usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu" 
-martin   :1     :1      Fri08    ?xdm?   9:44    0.01s   "/usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu" 
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT 
+matyas   :0       :0               Fri07    ?xdm?  22:45  0.01s "/usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu" 
+martin   :1       :1               Fri08    ?xdm?  22:45  0.02s "/usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu" 

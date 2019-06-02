@@ -1,2 +1,4 @@
-matyas   :0       :0               Fri07   ?xdm?   9:44   0.01s /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu
-martin   :1       :1               Fri08   ?xdm?   9:44   0.01s /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu
+ 05:11:48 up 2 days, 10:45,  2 users,  load average: 0.16, 0.32, 0.89
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+matyas   :0       :0               Fri07   ?xdm?  22:45   0.01s /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu
+martin   :1       :1               Fri08   ?xdm?  22:45   0.02s /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu gnome-session --session=ubuntu

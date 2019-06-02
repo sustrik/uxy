@@ -22,7 +22,8 @@ import sys
 
 from tools import base
 
-def _linux(parser, args, uxy_args):
+def _linux_args(args):
+  # Prevent passing formatting arguments to the function.
   parser = argparse.ArgumentParser("uxy w", add_help=False)
   parser.add_argument("-h", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--no-header", action="store_true", default=argparse.SUPPRESS)
@@ -34,7 +35,15 @@ def _linux(parser, args, uxy_args):
   parser.add_argument("--old-style", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--help", action="store_true", default=argparse.SUPPRESS)
   base.check_args(args, parser)
+  return args + []
 
+def _osx_args(args):
+  return args + []
+
+def _bsd_args(args):
+  return args + []
+
+  """
   proc = base.launch(uxy_args, ['w', '--no-header'] + args[1:])
   regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = base.Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
@@ -49,29 +58,26 @@ def _linux(parser, args, uxy_args):
       fields.append(base.encode_field(m.group(i)))
     base.writeline(fmt.render(fields))
   return proc.wait()
-
-def _bsd(parser, args, uxy_args):
-  proc = base.launch(uxy_args, ['w'] + args[1:])
-  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-  fmt = base.Format("USER     TTY      FROM          LOGIN   IDLE WHAT")
-
-  proc.readline()
-  proc.readline()
-
-  base.writeline(fmt.render())
-
-  for ln in proc:
-    m = regexp.match(ln)
-    if not m:
-      continue
-    fields = []
-    for i in range(1, regexp.groups + 1):
-      fields.append(base.encode_field(m.group(i)))
-    base.writeline(fmt.render(fields))
-  return proc.wait()
+  """
 
 def w(parser, args, uxy_args):
+  # Launch the underlying binary.
   if uxy_args.platform.startswith("linux"):
-    return _linux(parser, args, uxy_args)
+    args = _linux_args(args)
+  elif uxy_args.platform.startswith("darwin"):
+    args = _osx_args(args)
   else:
-    return _bsd(parser, args, uxy_args)
+    args = _bsd_args(args)
+  proc = base.launch(uxy_args, ['w'] + args[1:])
+  # Ignore status line.
+  proc.readline()
+  # Process the header line.
+  hdr = proc.readline()
+  parser = base.FmtParser(hdr)
+  fmt = base.Format(hdr)
+  base.writeline(fmt.render())
+  # Process data lines.
+  for ln in proc:
+    base.writeline(fmt.render(parser.extract(ln)))
+  return proc.wait()
+
