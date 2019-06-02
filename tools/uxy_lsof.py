@@ -16,13 +16,12 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import argparse
 import itertools
 import re
 
 from tools import base
 
-def lsof(parser, args, uxy_args):
+def lsof(args, uxy_args):
   proc = base.launch(uxy_args, ['lsof', '+c', '0'] + args[1:])
   hdr = proc.readline()
   parts = re.split("(\s+)", hdr)

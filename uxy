@@ -71,9 +71,7 @@ def main():
     print("uxy: invalid subcommand '%s'" % subcommand, file=sys.stderr)
     sys.exit(1)
 
-  parser = argparse.ArgumentParser(prog="uxy",
-    description="Tool to manipulate UXY data.")
-  returncode = getattr(sys.modules[module], subcommand)(parser, args, uxy_args)
+  returncode = getattr(sys.modules[module], subcommand)(args, uxy_args)
   sys.exit(returncode)
 
 if __name__ == "__main__":

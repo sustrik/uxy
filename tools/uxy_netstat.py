@@ -22,7 +22,7 @@ import sys
 
 from tools import base
 
-def _linux(parser, args, uxy_args):
+def _linux(args, uxy_args):
   proc = base.launch(uxy_args, ['netstat', '--inet'] + args[1:])
   # Skip header line.
   proc.readline()
@@ -43,12 +43,12 @@ def _linux(parser, args, uxy_args):
     base.writeline(fmt.render(fields))
   return proc.wait()
 
-def _bsd(parser, args, uxy_args):
+def _bsd(args, uxy_args):
   # TODO
   return 0
 
-def netstat(parser, args, uxy_args):
+def netstat(args, uxy_args):
   if sys.platform.startswith("linux"):
-    return _linux(parser, args, uxy_args)
+    return _linux(args, uxy_args)
   else:
-    return _bsd(parser, args, uxy_args)
+    return _bsd(args, uxy_args)

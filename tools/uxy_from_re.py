@@ -16,11 +16,13 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
+import argparse
 import re
 
 from tools import base
 
 def from_re(parser, args, uxy_args):
+  parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('from-re',
     help="convert arbitrary input to UXY")
   subp.add_argument('header', help="UXY header")

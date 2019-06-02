@@ -16,11 +16,13 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
+import argparse
 import json
 
 from tools import base
 
-def to_json(parser, args, uxy_args):
+def to_json(args, uxy_args):
+  parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('to-json',
     help="convert UXY to JSON")
   args = parser.parse_args(args)

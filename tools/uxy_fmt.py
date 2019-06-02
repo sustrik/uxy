@@ -16,9 +16,12 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
+import argparse
+
 from tools import base
 
-def fmt(parser, args, uxy_args):
+def fmt(args, uxy_args):
+  parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('fmt',
     help="reformat UXY data")
   subp.add_argument('header', help="new UXY header")

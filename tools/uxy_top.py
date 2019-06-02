@@ -22,7 +22,7 @@ import sys
 
 from tools import base
 
-def _linux(parser, args, uxy_args):
+def _linux(args, uxy_args):
   parser = argparse.ArgumentParser("uxy top")
   parser.parse_args(args[1:])
 
@@ -49,7 +49,7 @@ def _linux(parser, args, uxy_args):
     base.writeline(fmt.render(fields))
   return proc.wait()
 
-def _bsd(parser, args, uxy_args):
+def _bsd(args, uxy_args):
   parser = argparse.ArgumentParser("uxy top")
   parser.parse_args(args[1:])
 
@@ -72,8 +72,8 @@ def _bsd(parser, args, uxy_args):
     base.writeline(fmt.render(fields))
   return proc.wait()
 
-def top(parser, args, uxy_args):
+def top(args, uxy_args):
   if uxy_args.platform.startswith("linux"):
-    return _linux(parser, args, uxy_args)
+    return _linux(args, uxy_args)
   else:
-    return _bsd(parser, args, uxy_args)
+    return _bsd(args, uxy_args)

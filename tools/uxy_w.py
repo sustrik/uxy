@@ -42,7 +42,7 @@ def _osx_args(args):
 def _bsd_args(args):
   return args + []
 
-def w(parser, args, uxy_args):
+def w(args, uxy_args):
   # Launch the underlying binary.
   if uxy_args.platform.startswith("linux"):
     args = _linux_args(args)

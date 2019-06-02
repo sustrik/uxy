@@ -16,9 +16,12 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
+import argparse
+
 from tools import base
 
-def trim(parser, args, uxy_args):
+def trim(args, uxy_args):
+  parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('trim',
     help="trim long fields to fit into columns")
   args = parser.parse_args(args)

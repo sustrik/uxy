@@ -22,7 +22,7 @@ import sys
 
 from tools import base
 
-def _linux(parser, args, uxy_args):
+def _linux(args, uxy_args):
   parser = argparse.ArgumentParser("uxy du", add_help=False)
   parser.add_argument("-0", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--null", action="store_true", default=argparse.SUPPRESS)
@@ -66,7 +66,7 @@ def _linux(parser, args, uxy_args):
     base.writeline(fmt.render(fields))
   return proc.wait()
 
-def _bsd(parser, args, uxy_args):
+def _bsd(args, uxy_args):
   fmtargs = []
   regexp = re.compile(r'\s*([^\s]*)\s+(.*)')
   fmt = base.Format("USAGE    FILE")
@@ -82,8 +82,8 @@ def _bsd(parser, args, uxy_args):
     base.writeline(fmt.render(fields))
   return proc.wait()
 
-def du(parser, args, uxy_args):
+def du(args, uxy_args):
   if uxy_args.platform.startswith("linux"):
-    _linux(parser, args, uxy_args)
+    _linux(args, uxy_args)
   else:
-    _bsd(parser, args, uxy_args)
+    _bsd(args, uxy_args)

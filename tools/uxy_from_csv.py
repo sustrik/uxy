@@ -16,12 +16,14 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
+import argparse
 import io
 import csv
 
 from tools import base
 
-def from_csv(parser, args, uxy_args):
+def from_csv(args, uxy_args):
+  parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('from-csv',
     help="convert CSV to UXY")
   args = parser.parse_args(args)

@@ -22,7 +22,7 @@ import sys
 
 from tools import base
 
-def _linux(parser, args, uxy_args):
+def _linux(args, uxy_args):
   parser = argparse.ArgumentParser("uxy ps", add_help=False)
   parser.add_argument("-c", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--context", action="store_true", default=argparse.SUPPRESS)
@@ -68,7 +68,7 @@ def _linux(parser, args, uxy_args):
     base.writeline(fmt.render(fields))
   return proc.wait()
 
-def _bsd(parser, args, uxy_args):
+def _bsd(args, uxy_args):
   fmtargs = []
   regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
   fmt = base.Format("PID     TTY         TIME       CMD")
@@ -85,8 +85,8 @@ def _bsd(parser, args, uxy_args):
     base.writeline(fmt.render(fields))
   return proc.wait()
 
-def ps(parser, args, uxy_args):
+def ps(args, uxy_args):
   if uxy_args.platform.startswith("linux"):
-    return _linux(parser, args, uxy_args)
+    return _linux(args, uxy_args)
   else:
-    return _bsd(parser, args, uxy_args)
+    return _bsd(args, uxy_args)

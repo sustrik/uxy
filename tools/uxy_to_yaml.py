@@ -16,11 +16,13 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
+import argparse
 import yaml
 
 from tools import base
 
-def to_yaml(parser, args, uxy_args):
+def to_yaml(args, uxy_args):
+  parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('to-yaml',
     help="convert UXY to YAML")
   args = parser.parse_args(args)

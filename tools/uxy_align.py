@@ -16,9 +16,12 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
+import argparse
+
 from tools import base
 
-def align(parser, args, uxy_args):
+def align(args, uxy_args):
+  parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('align', help="align columns")
   args = parser.parse_args(args)
 

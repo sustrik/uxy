@@ -32,7 +32,7 @@ def _write_ifconfig_record(fmt, iface):
   base.writeline(fmt.render(fields))
 
 
-def ifconfig(parser, args, uxy_args):
+def ifconfig(args, uxy_args):
   parser = argparse.ArgumentParser("uxy ifconfig")
   parser.add_argument("-a", action="store_true", default=False,
     help=" display all interfaces which are currently available, even if down")

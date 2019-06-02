@@ -16,11 +16,13 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
+import argparse
 import re
 
 from tools import base
 
-def grep(parser, args, uxy_args):
+def grep(args, uxy_args):
+  parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('grep', help="find regexp in UXY")
   subp.add_argument('conditions', nargs="*", metavar="CONDITION",
     help="list of regexp and field pairs; regexp without a field matches any field")

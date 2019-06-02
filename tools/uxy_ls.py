@@ -24,7 +24,7 @@ import sys
 
 from tools import base
 
-def _linux(parser, args, uxy_args):
+def _linux(args, uxy_args):
   parser = argparse.ArgumentParser("uxy ls", add_help=False)
   parser.add_argument("--author", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-b", action="store_true", default=argparse.SUPPRESS)
@@ -129,7 +129,7 @@ def _linux(parser, args, uxy_args):
     base.writeline(fmt.render(fields))
   return proc.wait()
 
-def _bsd(parser, args, uxy_args):
+def _bsd(args, uxy_args):
 
   fmtargs = ['-l']
   # -rw-r--r--   1 501  20  1025 May 31 07:11:49 2019 LICENSE
@@ -158,8 +158,8 @@ def _bsd(parser, args, uxy_args):
   return proc.wait()
     
 
-def ls(parser, args, uxy_args):
+def ls(args, uxy_args):
   if uxy_args.platform.startswith("linux"):
-    return _linux(parser, args, uxy_args)
+    return _linux(args, uxy_args)
   else:
-    return _bsd(parser, args, uxy_args)
+    return _bsd(args, uxy_args)
