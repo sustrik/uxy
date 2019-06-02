@@ -23,7 +23,6 @@ import sys
 from tools import base
 
 def _linux_args(args):
-  # Prevent passing formatting arguments to the function.
   parser = argparse.ArgumentParser("uxy w", add_help=False)
   parser.add_argument("-h", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--no-header", action="store_true", default=argparse.SUPPRESS)
@@ -42,23 +41,6 @@ def _osx_args(args):
 
 def _bsd_args(args):
   return args + []
-
-  """
-  proc = base.launch(uxy_args, ['w', '--no-header'] + args[1:])
-  regexp = re.compile(r'\s*([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+([^\s]*)\s+(.*)')
-  fmt = base.Format("USER     TTY    FROM    LOGIN    IDLE    JCPU    PCPU    WHAT")
-  base.writeline(fmt.render())
-
-  for ln in proc:
-    m = regexp.match(ln)
-    if not m:
-      continue
-    fields = []
-    for i in range(1, regexp.groups + 1):
-      fields.append(base.encode_field(m.group(i)))
-    base.writeline(fmt.render(fields))
-  return proc.wait()
-  """
 
 def w(parser, args, uxy_args):
   # Launch the underlying binary.
