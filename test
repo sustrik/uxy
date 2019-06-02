@@ -63,16 +63,21 @@ $UXY ls testdata | $UXY trim
 $UXY w
 $UXY -l w
 
-
 # Check the parsers against the inputs collected from different systems.
+
 parse linux ls short 1
 parse darwin ls short 1
+
 parse darwin ps short 1
 parse linux ps short 1
+
 parse darwin du short 1
 parse linux du short 1
+
 parse darwin w short 1
 parse linux w short 1
+parse freebsd w short 1
+
 parse darwin top short 1
 parse linux top short 1
 
