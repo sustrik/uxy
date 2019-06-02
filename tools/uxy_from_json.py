@@ -21,7 +21,7 @@ import json
 
 from tools import base
 
-def from_json(parser, args, uxy_args):
+def from_json(args, uxy_args):
   parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('from-json',
     help="convert JSON to UXY")

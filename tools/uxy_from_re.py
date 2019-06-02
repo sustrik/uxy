@@ -21,7 +21,7 @@ import re
 
 from tools import base
 
-def from_re(parser, args, uxy_args):
+def from_re(args, uxy_args):
   parser = argparse.ArgumentParser()
   subp = parser.add_subparsers().add_parser('from-re',
     help="convert arbitrary input to UXY")
