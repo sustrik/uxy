@@ -37,6 +37,9 @@ def _linux_args(args):
   return args + []
 
 def _osx_args(args):
+  parser = argparse.ArgumentParser("uxy w", add_help=False)
+  parser.add_argument("-h", action="store_true", default=argparse.SUPPRESS)
+  base.check_args(args, parser)
   return args + []
 
 def _bsd_args(args):

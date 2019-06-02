@@ -51,6 +51,7 @@ def main():
     if not sys.argv[i].startswith("-"):
       idx = i
       break
+
   parser = argparse.ArgumentParser(prog="uxy",
     description="Tool to manipulate UXY data.")
   parser.add_argument('-l', '--long', action="store_true", default=False,
