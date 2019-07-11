@@ -17,23 +17,29 @@
 #  IN THE SOFTWARE.
 
 import argparse
-import io
-import csv
+import json
 
-from tools import base
+from uxy import base
 
-def to_csv(args, uxy_args):
+def to_json(args, uxy_args):
   parser = argparse.ArgumentParser()
-  subp = parser.add_subparsers().add_parser('to-csv',
-    help="convert UXY to CSV")
+  subp = parser.add_subparsers().add_parser('to-json',
+    help="convert UXY to JSON")
   args = parser.parse_args(args)
 
+  s = base.stdin.readline()
+  hdr = base.split_fields(s)
+  base.writeline("[\n")
+  first = True
   for ln in base.stdin:
+    if not first:
+      base.writeline(",\n")
+    else:
+      first = False
     fields = base.split_fields(ln)
-    fields = [base.decode_field(f) for f in fields]
-    buf = io.StringIO()
-    w = csv.writer(buf)
-    w.writerow(fields)
-    base.writeline(buf.getvalue())
-
+    item = {}
+    for i in range(0, len(fields)):
+      item[base.decode_field(hdr[i])] = base.decode_field(fields[i])
+    base.writeline(json.dumps(item, indent=4))
+  base.writeline("\n]\n")
   return 0

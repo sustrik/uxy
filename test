@@ -36,7 +36,7 @@ parse() {
   diff $TESTDATA/$FILENAME.result $TESTDATA/$FILENAME.expected
 }
 
-# Make sure that the tools don't straight out fail.
+# Make sure that the uxy don't straight out fail.
 
 $UXY ls testdata | $UXY align
 $UXY ls testdata | $UXY to-csv | $UXY from-csv

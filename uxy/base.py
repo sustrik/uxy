@@ -45,7 +45,7 @@ ESCAPE_SEQUENCES2 = {
 }
 
 
-# Convert uxy field into a string.
+# Convert __main__.py field into a string.
 def decode_field(s):
   # Replace control characters by question marks.
   s = "".join((c if unicodedata.category(c)[0] != "C" else '?') for c in s)
@@ -74,7 +74,7 @@ def decode_field(s):
   return f
 
 
-# Convert arbitrary string into a uxy field.
+# Convert arbitrary string into a __main__.py field.
 def encode_field(s):
   # Empty string converts to "".
   if s == "":
@@ -104,7 +104,7 @@ QUOTED = 2
 ESCAPE = 3
 TRAILING = 4
 
-# Given a line, this function splits it into individual uxy fields and
+# Given a line, this function splits it into individual __main__.py fields and
 # field widths.
 def split_fields_widths(s):
   fields = []
@@ -131,7 +131,7 @@ def split_fields_widths(s):
         state = TRAILING
       else:
         field += c
-        width += 1      
+        width += 1
     elif state == ESCAPE:
       field += c
       width += 1
@@ -155,7 +155,7 @@ def split_fields_widths(s):
   return (fields, widths)
 
 
-# Given a line, this function splits it into individual uxy fields.
+# Given a line, this function splits it into individual __main__.py fields.
 def split_fields(s):
   fields, _ = split_fields_widths(s)
   return fields
@@ -196,7 +196,7 @@ def check_args(args, parser):
   offending = list(vars(found).keys())
   if len(offending) > 0:
     print(
-      "uxy: argument '%s' is overriden by uxy, cannot be set by the user" %
+      "__main__.py: argument '%s' is overriden by __main__.py, cannot be set by the user" %
         offending[0],
       file=sys.stderr)
     sys.exit(1)
@@ -211,7 +211,7 @@ class PipeReader(object):
 
   def __next__(self):
     return self.readline()
- 
+
   def readline(self):
     ln = self.proc.stdout.readline()
     if not ln:
@@ -237,7 +237,7 @@ class StdinReader(object):
 
   def __next__(self):
     return self.readline()
- 
+
   def readline(self):
     ln = sys.stdin.readline()
     if not ln:

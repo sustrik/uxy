@@ -20,10 +20,10 @@ import argparse
 import re
 import sys
 
-from tools import base
+from uxy import base
 
 def _linux_args(args):
-  parser = argparse.ArgumentParser("uxy w", add_help=False)
+  parser = argparse.ArgumentParser("__main__.py w", add_help=False)
   parser.add_argument("-h", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--no-header", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-s", action="store_true", default=argparse.SUPPRESS)
@@ -37,7 +37,7 @@ def _linux_args(args):
   return args + []
 
 def _osx_args(args):
-  parser = argparse.ArgumentParser("uxy w", add_help=False)
+  parser = argparse.ArgumentParser("__main__.py w", add_help=False)
   parser.add_argument("-h", action="store_true", default=argparse.SUPPRESS)
   base.check_args(args, parser)
   return args + []

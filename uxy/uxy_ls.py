@@ -22,10 +22,10 @@ import pwd
 import re
 import sys
 
-from tools import base
+from uxy import base
 
 def _linux(args, uxy_args):
-  parser = argparse.ArgumentParser("uxy ls", add_help=False)
+  parser = argparse.ArgumentParser("__main__.py ls", add_help=False)
   parser.add_argument("--author", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-b", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--escape", action="store_true", default=argparse.SUPPRESS)
@@ -104,7 +104,7 @@ def _linux(args, uxy_args):
     fields = []
     for i in range(1, regexp.groups - 3):
       field = m.group(i)
-      # In general, uxy is not supposed to supplant the functionality provided
+      # In general, __main__.py is not supposed to supplant the functionality provided
       # by the wrapped tool. However, there's little option here: User names
       # can contain spaces (e.g. when provided by LDAP), but ls tool doesn't
       # escape spaces in the names even with run with -b parameter.
@@ -156,7 +156,7 @@ def _bsd(args, uxy_args):
       fields.append(base.encode_field(m.group(i)))
     base.writeline(fmt.render(fields))
   return proc.wait()
-    
+
 
 def ls(args, uxy_args):
   if uxy_args.platform.startswith("linux"):

@@ -17,21 +17,45 @@
 #  IN THE SOFTWARE.
 
 import argparse
+import yaml
 
-from tools import base
+from uxy import base
 
-def align(args, uxy_args):
+def from_yaml(args, uxy_args):
   parser = argparse.ArgumentParser()
-  subp = parser.add_subparsers().add_parser('align', help="align columns")
+  subp = parser.add_subparsers().add_parser('from-yaml',
+    help="convert YAML to UXY")
   args = parser.parse_args(args)
 
-  s = base.stdin.readline()
-  fmt = base.Format(s)
-  records = []
+  # Read the entire input.
+  s = ""
   for ln in base.stdin:
-    fields = base.split_fields(ln)
-    fmt.adjust(fields)
-    records.append(fields)
+    s += ln + "\n"
+  root = yaml.load(s)
+  # Normalize the dict. Collect the field names along the way.
+  fields = {}
+  if not isinstance(root, list):
+    root = [root]
+  for i in range(0, len(root)):
+    if not isinstance(root[i], dict):
+      root[i] = {"COL1": root[i]}
+    for k, _ in root[i].items():
+      fields[k] = None
+  # Fields will go to the output in alphabetical order.
+  fields = sorted(fields)
+  # Collect the data. At the same time adjust the format sa that data fit in.
+  fmt = base.Format(" ".join([base.encode_field(f) for f in fields]))
+  records = []
+  for i in range(0, len(root)):
+    record = []
+    for f in fields:
+      if f in root[i]:
+        record.append(base.encode_field(str(root[i][f])))
+      else:
+        record.append('""')
+    fmt.adjust(record)
+    records.append(record)
+  # Write the result to output.
   base.writeline(fmt.render())
   for r in records:
     base.writeline(fmt.render(r))

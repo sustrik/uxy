@@ -20,10 +20,10 @@ import argparse
 import re
 import sys
 
-from tools import base
+from uxy import base
 
 def _linux(args, uxy_args):
-  parser = argparse.ArgumentParser("uxy ps", add_help=False)
+  parser = argparse.ArgumentParser("__main__.py ps", add_help=False)
   parser.add_argument("-c", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("--context", action="store_true", default=argparse.SUPPRESS)
   parser.add_argument("-f", action="store_true", default=argparse.SUPPRESS)

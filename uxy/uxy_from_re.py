@@ -17,46 +17,30 @@
 #  IN THE SOFTWARE.
 
 import argparse
-import json
+import re
 
-from tools import base
+from uxy import base
 
-def from_json(args, uxy_args):
+def from_re(args, uxy_args):
   parser = argparse.ArgumentParser()
-  subp = parser.add_subparsers().add_parser('from-json',
-    help="convert JSON to UXY")
+  subp = parser.add_subparsers().add_parser('from-re',
+    help="convert arbitrary input to UXY")
+  subp.add_argument('header', help="UXY header")
+  subp.add_argument('regexp', help="regexp to parse the input lines")
   args = parser.parse_args(args)
 
-  # Read the entire input.
-  s = ""
-  for ln in base.stdin:
-    s += ln
-  root = json.loads(s)
-  # Normalize the JSON. Collect the field names along the way.
-  fields = {}
-  if not isinstance(root, list):
-    root = [root]
-  for i in range(0, len(root)):
-    if not isinstance(root[i], dict):
-      root[i] = {"COL1": root[i]}
-    for k, _ in root[i].items():
-      fields[k] = None
-  # Fields will go to the output in alphabetical order.
-  fields = sorted(fields)
-  # Collect the data. At the same time adjust the format sa that data fit in.
-  fmt = base.Format(" ".join([base.encode_field(f) for f in fields]))
-  records = []
-  for i in range(0, len(root)):
-    record = []
-    for f in fields:
-      if f in root[i]:
-        record.append(base.encode_field(str(root[i][f])))
-      else:
-        record.append('""')
-    fmt.adjust(record)
-    records.append(record)
-  # Write the result to output.
+  # Use the supplied format.
+  fmt = base.Format(args.header)
   base.writeline(fmt.render())
-  for r in records:
-    base.writeline(fmt.render(r))
+  # Parse the data.
+  regexp = re.compile(args.regexp)
+  for ln in base.stdin:
+    m = regexp.match(ln)
+    # Non-matching lines are ignored.
+    if not m:
+      continue
+    fields = []
+    for i in range(1, regexp.groups + 1):
+      fields.append(base.encode_field(m.group(i)))
+    base.writeline(fmt.render(fields))
   return 0

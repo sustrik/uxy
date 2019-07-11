@@ -16,39 +16,36 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import itertools
-import re
-import sys
+import argparse
 
-from tools import base
+from uxy import base
 
-def _linux(args, uxy_args):
-  proc = base.launch(uxy_args, ['netstat', '--inet'] + args[1:])
-  # Skip header line.
-  proc.readline()
-  hdr = proc.readline()
-  parts = re.split("(\s+)", hdr)
-  pos = [len(p) for p in list(itertools.accumulate(parts))]
-  fmt = base.Format("PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE")
+def trim(args, uxy_args):
+  parser = argparse.ArgumentParser()
+  subp = parser.add_subparsers().add_parser('trim',
+    help="trim long fields to fit into columns")
+  args = parser.parse_args(args)
+
+  # Read the headers.
+  s = base.stdin.readline()
+  fmt = base.Format(s)
+  # Adjust the column widths so that at least quoted elipsis fits in.
+  for i in range(0, len(fmt.widths) - 1):
+    fmt.widths[i] = max(fmt.widths[i], 6)
   base.writeline(fmt.render())
-  for ln in proc:
-    fields = []
-    fields.append(ln[0:pos[0]].strip())
-    fields.append(ln[pos[0]:pos[2]].strip())
-    fields.append(ln[pos[2]:pos[4]].strip())
-    fields.append(ln[pos[4]:pos[8]].strip())
-    fields.append(ln[pos[8]:pos[13]].strip())
-    fields.append(ln[pos[13]:].strip())
-    fields = [base.encode_field(f) for f in fields]
+  # Process the records.
+  for ln in base.stdin:
+    fields = base.split_fields(ln)
+    # Get rid of unnamed fields.
+    fields = fields[:len(fmt.widths)]
+    # Trim the long fields. Last field is never trimmed.
+    for i in range(0, len(fields) - 1):
+      if len(fields[i]) > fmt.widths[i] - 1:
+        if fields[i].startswith('"') and fields[i].endswith('"'):
+            fields[i] = '"' + fields[i][1:fmt.widths[i] - 6] + '..."'
+            if fields[i] == '"..."':
+              fields[i] = '...'
+        else:
+            fields[i] = fields[i][:fmt.widths[i] - 4] + "..."
     base.writeline(fmt.render(fields))
-  return proc.wait()
-
-def _bsd(args, uxy_args):
-  # TODO
   return 0
-
-def netstat(args, uxy_args):
-  if sys.platform.startswith("linux"):
-    return _linux(args, uxy_args)
-  else:
-    return _bsd(args, uxy_args)

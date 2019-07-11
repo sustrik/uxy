@@ -21,29 +21,29 @@
 import argparse
 import sys
 
-from tools import uxy_align
-from tools import uxy_du
-from tools import uxy_fmt
-from tools import uxy_from_csv
-from tools import uxy_from_json
-from tools import uxy_from_re
-from tools import uxy_from_yaml
-from tools import uxy_grep
-from tools import uxy_ifconfig
-from tools import uxy_ls
-from tools import uxy_lsof
-from tools import uxy_netstat
-from tools import uxy_ps
-from tools import uxy_top
-from tools import uxy_to_csv
-from tools import uxy_to_json
-from tools import uxy_to_yaml
-from tools import uxy_trim
-from tools import uxy_w
+from uxy import uxy_align
+from uxy import uxy_du
+from uxy import uxy_fmt
+from uxy import uxy_from_csv
+from uxy import uxy_from_json
+from uxy import uxy_from_re
+from uxy import uxy_from_yaml
+from uxy import uxy_grep
+from uxy import uxy_ifconfig
+from uxy import uxy_ls
+from uxy import uxy_lsof
+from uxy import uxy_netstat
+from uxy import uxy_ps
+from uxy import uxy_top
+from uxy import uxy_to_csv
+from uxy import uxy_to_json
+from uxy import uxy_to_yaml
+from uxy import uxy_trim
+from uxy import uxy_w
 
 def main():
 
-  # Start by finding the subcommand and splitting args meant for uxy itself and
+  # Start by finding the subcommand and splitting args meant for __main__.py itself and
   # the arguments to be passed to the subcommand (which may be an arbitrary
   # UNIX tool with arbitrary arguments).
   idx = len(sys.argv)
@@ -52,7 +52,7 @@ def main():
       idx = i
       break
 
-  parser = argparse.ArgumentParser(prog="uxy",
+  parser = argparse.ArgumentParser(prog="__main__.py",
     description="Tool to manipulate UXY data.")
   parser.add_argument('-l', '--long', action="store_true", default=False,
     help = "print out all available data")
@@ -67,9 +67,9 @@ def main():
   subcommand = sys.argv[idx].replace("-", "_")
   args = sys.argv[idx:]
 
-  module = "tools.uxy_" + subcommand
+  module = "uxy.uxy_" + subcommand
   if module not in sys.modules:
-    print("uxy: invalid subcommand '%s'" % subcommand, file=sys.stderr)
+    print("__main__.py: invalid subcommand '%s'" % subcommand, file=sys.stderr)
     sys.exit(1)
 
   returncode = getattr(sys.modules[module], subcommand)(args, uxy_args)

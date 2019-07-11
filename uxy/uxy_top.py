@@ -20,10 +20,10 @@ import argparse
 import re
 import sys
 
-from tools import base
+from uxy import base
 
 def _linux(args, uxy_args):
-  parser = argparse.ArgumentParser("uxy top")
+  parser = argparse.ArgumentParser("__main__.py top")
   parser.parse_args(args[1:])
 
   proc = base.launch(uxy_args, ['top', '-bn1'] + args[1:])
@@ -50,7 +50,7 @@ def _linux(args, uxy_args):
   return proc.wait()
 
 def _bsd(args, uxy_args):
-  parser = argparse.ArgumentParser("uxy top")
+  parser = argparse.ArgumentParser("__main__.py top")
   parser.parse_args(args[1:])
 
   proc = base.launch(uxy_args, ['top', '-l 1'] + args[1:])

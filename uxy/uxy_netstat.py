@@ -16,31 +16,39 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import argparse
+import itertools
 import re
+import sys
 
-from tools import base
+from uxy import base
 
-def from_re(args, uxy_args):
-  parser = argparse.ArgumentParser()
-  subp = parser.add_subparsers().add_parser('from-re',
-    help="convert arbitrary input to UXY")
-  subp.add_argument('header', help="UXY header")
-  subp.add_argument('regexp', help="regexp to parse the input lines")
-  args = parser.parse_args(args)
-
-  # Use the supplied format.
-  fmt = base.Format(args.header)
+def _linux(args, uxy_args):
+  proc = base.launch(uxy_args, ['netstat', '--inet'] + args[1:])
+  # Skip header line.
+  proc.readline()
+  hdr = proc.readline()
+  parts = re.split("(\s+)", hdr)
+  pos = [len(p) for p in list(itertools.accumulate(parts))]
+  fmt = base.Format("PROTO  RECVQ  SENDQ  LOCAL            REMOTE                      STATE")
   base.writeline(fmt.render())
-  # Parse the data.
-  regexp = re.compile(args.regexp)
-  for ln in base.stdin:
-    m = regexp.match(ln)
-    # Non-matching lines are ignored.
-    if not m:
-      continue
+  for ln in proc:
     fields = []
-    for i in range(1, regexp.groups + 1):
-      fields.append(base.encode_field(m.group(i)))
+    fields.append(ln[0:pos[0]].strip())
+    fields.append(ln[pos[0]:pos[2]].strip())
+    fields.append(ln[pos[2]:pos[4]].strip())
+    fields.append(ln[pos[4]:pos[8]].strip())
+    fields.append(ln[pos[8]:pos[13]].strip())
+    fields.append(ln[pos[13]:].strip())
+    fields = [base.encode_field(f) for f in fields]
     base.writeline(fmt.render(fields))
+  return proc.wait()
+
+def _bsd(args, uxy_args):
+  # TODO
   return 0
+
+def netstat(args, uxy_args):
+  if sys.platform.startswith("linux"):
+    return _linux(args, uxy_args)
+  else:
+    return _bsd(args, uxy_args)
