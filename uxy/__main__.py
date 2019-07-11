@@ -48,7 +48,7 @@ def main():
   args = sys.argv[idx:]
 
   try:
-    module = importlib.import_module("uxy_" + subcommand, "uxy")
+    module = importlib.import_module("uxy.uxy_" + subcommand)
   except:
     print("__main__.py: invalid subcommand '%s'" % subcommand, file=sys.stderr)
     sys.exit(1)
