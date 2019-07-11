@@ -17,29 +17,9 @@
 #  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
-from __future__ import print_function
 import argparse
+import importlib
 import sys
-
-from uxy import uxy_align
-from uxy import uxy_du
-from uxy import uxy_fmt
-from uxy import uxy_from_csv
-from uxy import uxy_from_json
-from uxy import uxy_from_re
-from uxy import uxy_from_yaml
-from uxy import uxy_grep
-from uxy import uxy_ifconfig
-from uxy import uxy_ls
-from uxy import uxy_lsof
-from uxy import uxy_netstat
-from uxy import uxy_ps
-from uxy import uxy_top
-from uxy import uxy_to_csv
-from uxy import uxy_to_json
-from uxy import uxy_to_yaml
-from uxy import uxy_trim
-from uxy import uxy_w
 
 def main():
 
@@ -67,12 +47,13 @@ def main():
   subcommand = sys.argv[idx].replace("-", "_")
   args = sys.argv[idx:]
 
-  module = "uxy.uxy_" + subcommand
-  if module not in sys.modules:
+  try:
+    module = importlib.import_module("uxy_" + subcommand, "uxy")
+  except:
     print("__main__.py: invalid subcommand '%s'" % subcommand, file=sys.stderr)
     sys.exit(1)
 
-  returncode = getattr(sys.modules[module], subcommand)(args, uxy_args)
+  returncode = getattr(module, subcommand)(args, uxy_args)
   sys.exit(returncode)
 
 if __name__ == "__main__":

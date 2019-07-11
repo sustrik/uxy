@@ -21,7 +21,7 @@
 set -exo pipefail
 
 ROOT=$(dirname "$0")
-UXY="python -m uxy"
+UXY="python3 -m uxy"
 TESTDATA=$ROOT/testdata
 
 parse() {
