@@ -17,28 +17,33 @@
 #  IN THE SOFTWARE.
 
 import argparse
-import io
-import csv
 
-from tools import base
+from uxy import base
 
-def from_csv(args, uxy_args):
+def fmt(args, uxy_args):
   parser = argparse.ArgumentParser()
-  subp = parser.add_subparsers().add_parser('from-csv',
-    help="convert CSV to UXY")
+  subp = parser.add_subparsers().add_parser('fmt',
+    help="reformat UXY data")
+  subp.add_argument('header', help="new UXY header")
   args = parser.parse_args(args)
 
-  # Read the headers
-  ln = base.stdin.readline()
-  r = csv.reader(io.StringIO(ln))
-  for fields in r:
-    fields = " ".join([base.encode_field(f) for f in fields])
-    fmt = base.Format(fields)
-    base.writeline(fields + "\n")
+  # Use the supplied format.
+  fmt = base.Format(args.header)
+  newhdr = base.split_fields(args.header)
+  base.writeline(fmt.render())
+  # Read the old format.
+  s = base.stdin.readline()
+  oldhdr = base.split_fields(s)
+  # Process the data.
   for ln in base.stdin:
-    r = csv.reader(io.StringIO(ln))
-    for fields in r:
-      fields = [base.encode_field(f) for f in fields]
-      base.writeline(fmt.render(fields))
-
+    oldfields = base.split_fields(ln)
+    newfields = ['""'] * len(newhdr)
+    for i in range(0, len(oldfields)):
+      if i >= len(oldhdr):
+        break
+      oldname = oldhdr[i]
+      if oldname not in newhdr:
+        continue
+      newfields[newhdr.index(oldname)] = oldfields[i]
+    base.writeline(fmt.render(newfields))
   return 0

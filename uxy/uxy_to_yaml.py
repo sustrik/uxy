@@ -19,7 +19,7 @@
 import argparse
 import yaml
 
-from tools import base
+from uxy import base
 
 def to_yaml(args, uxy_args):
   parser = argparse.ArgumentParser()

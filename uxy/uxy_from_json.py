@@ -17,22 +17,22 @@
 #  IN THE SOFTWARE.
 
 import argparse
-import yaml
+import json
 
-from tools import base
+from uxy import base
 
-def from_yaml(args, uxy_args):
+def from_json(args, uxy_args):
   parser = argparse.ArgumentParser()
-  subp = parser.add_subparsers().add_parser('from-yaml',
-    help="convert YAML to UXY")
+  subp = parser.add_subparsers().add_parser('from-json',
+    help="convert JSON to UXY")
   args = parser.parse_args(args)
 
   # Read the entire input.
   s = ""
   for ln in base.stdin:
-    s += ln + "\n"
-  root = yaml.load(s)
-  # Normalize the dict. Collect the field names along the way.
+    s += ln
+  root = json.loads(s)
+  # Normalize the JSON. Collect the field names along the way.
   fields = {}
   if not isinstance(root, list):
     root = [root]

@@ -16,34 +16,23 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 #  IN THE SOFTWARE.
 
-import itertools
-import re
+import argparse
 
-from tools import base
+from uxy import base
 
-def lsof(args, uxy_args):
-  proc = base.launch(uxy_args, ['lsof', '+c', '0'] + args[1:])
-  hdr = proc.readline()
-  parts = re.split("(\s+)", hdr)
-  pos = [len(p) for p in list(itertools.accumulate(parts))]
-  r1 = re.compile(r'([^\s]*)\s+([^\s]*)')
-  fmt = base.Format("COMMAND             PID    TID    USER           FD      TYPE    DEVICE             SIZEOFF   NODE       NAME")
+def align(args, uxy_args):
+  parser = argparse.ArgumentParser()
+  subp = parser.add_subparsers().add_parser('align', help="align columns")
+  args = parser.parse_args(args)
+
+  s = base.stdin.readline()
+  fmt = base.Format(s)
+  records = []
+  for ln in base.stdin:
+    fields = base.split_fields(ln)
+    fmt.adjust(fields)
+    records.append(fields)
   base.writeline(fmt.render())
-  for ln in proc:
-    fields = []
-    m = r1.match(ln[:pos[2]])
-    if not m:
-      continue
-    fields.append(m.group(1))
-    fields.append(m.group(2))
-    fields.append(ln[pos[2]:pos[4]].strip())
-    fields.append(ln[pos[4]:pos[6]].strip())
-    fields.append(ln[pos[6]:pos[8] + 1].strip())
-    fields.append(ln[pos[8] + 1:pos[10]].strip())
-    fields.append(ln[pos[10]:pos[12]].strip())
-    fields.append(ln[pos[12]:pos[14]].strip())
-    fields.append(ln[pos[14]:pos[16]].strip())
-    fields.append(ln[pos[16]:].strip())
-    fields = [base.encode_field(f) for f in fields]
-    base.writeline(fmt.render(fields))
-  return proc.wait()
+  for r in records:
+    base.writeline(fmt.render(r))
+  return 0

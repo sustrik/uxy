@@ -20,7 +20,7 @@ import argparse
 import re
 import sys
 
-from tools import base
+from uxy import base
 
 def _write_ifconfig_record(fmt, iface):
   fields = []
@@ -33,7 +33,7 @@ def _write_ifconfig_record(fmt, iface):
 
 
 def ifconfig(args, uxy_args):
-  parser = argparse.ArgumentParser("uxy ifconfig")
+  parser = argparse.ArgumentParser("__main__.py ifconfig")
   parser.add_argument("-a", action="store_true", default=False,
     help=" display all interfaces which are currently available, even if down")
   parser.add_argument('interface', nargs="?", default=None,

@@ -17,33 +17,53 @@
 #  IN THE SOFTWARE.
 
 import argparse
+import re
 
-from tools import base
+from uxy import base
 
-def fmt(args, uxy_args):
+def grep(args, uxy_args):
   parser = argparse.ArgumentParser()
-  subp = parser.add_subparsers().add_parser('fmt',
-    help="reformat UXY data")
-  subp.add_argument('header', help="new UXY header")
+  subp = parser.add_subparsers().add_parser('grep', help="find regexp in UXY")
+  subp.add_argument('conditions', nargs="*", metavar="CONDITION",
+    help="list of regexp and field pairs; regexp without a field matches any field")
   args = parser.parse_args(args)
 
-  # Use the supplied format.
-  fmt = base.Format(args.header)
-  newhdr = base.split_fields(args.header)
-  base.writeline(fmt.render())
-  # Read the old format.
+  # Use the old headers.
   s = base.stdin.readline()
-  oldhdr = base.split_fields(s)
+  fmt = base.Format(s)
+  base.writeline(fmt.render())
+
+  # Precompile the conditions.
+  conds = []
+  for i in range(0, len(args.conditions), 2):
+    if i + 1 >= len(args.conditions):
+      field = None
+    else:
+      if not args.conditions[i + 1] in fmt.fields:
+        continue
+      field = fmt.fields.index(args.conditions[i + 1])
+    conds.append((re.compile(args.conditions[i]), field))
+
   # Process the data.
   for ln in base.stdin:
-    oldfields = base.split_fields(ln)
-    newfields = ['""'] * len(newhdr)
-    for i in range(0, len(oldfields)):
-      if i >= len(oldhdr):
-        break
-      oldname = oldhdr[i]
-      if oldname not in newhdr:
-        continue
-      newfields[newhdr.index(oldname)] = oldfields[i]
-    base.writeline(fmt.render(newfields))
+    fields = base.split_fields(ln)
+    match = True
+    for c in conds:
+      if c[1] == None:
+        match2 = False
+        for f in fields:
+          m = c[0].search(f)
+          if m:
+            match2 = True
+            break
+        if not match2:
+          match = False
+          break
+      else:
+        m = c[0].search(fields[c[1]])
+        if not m:
+          match = False
+          break
+    if match:
+      base.writeline(fmt.render(fields))
   return 0

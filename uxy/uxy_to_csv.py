@@ -17,35 +17,23 @@
 #  IN THE SOFTWARE.
 
 import argparse
+import io
+import csv
 
-from tools import base
+from uxy import base
 
-def trim(args, uxy_args):
+def to_csv(args, uxy_args):
   parser = argparse.ArgumentParser()
-  subp = parser.add_subparsers().add_parser('trim',
-    help="trim long fields to fit into columns")
+  subp = parser.add_subparsers().add_parser('to-csv',
+    help="convert UXY to CSV")
   args = parser.parse_args(args)
 
-  # Read the headers.
-  s = base.stdin.readline()
-  fmt = base.Format(s)
-  # Adjust the column widths so that at least quoted elipsis fits in.
-  for i in range(0, len(fmt.widths) - 1):
-    fmt.widths[i] = max(fmt.widths[i], 6)
-  base.writeline(fmt.render())
-  # Process the records.
   for ln in base.stdin:
     fields = base.split_fields(ln)
-    # Get rid of unnamed fields.
-    fields = fields[:len(fmt.widths)]
-    # Trim the long fields. Last field is never trimmed.
-    for i in range(0, len(fields) - 1):
-      if len(fields[i]) > fmt.widths[i] - 1:
-        if fields[i].startswith('"') and fields[i].endswith('"'):
-            fields[i] = '"' + fields[i][1:fmt.widths[i] - 6] + '..."'
-            if fields[i] == '"..."':
-              fields[i] = '...'
-        else:
-            fields[i] = fields[i][:fmt.widths[i] - 4] + "..."
-    base.writeline(fmt.render(fields))
+    fields = [base.decode_field(f) for f in fields]
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(fields)
+    base.writeline(buf.getvalue())
+
   return 0
