@@ -94,15 +94,14 @@ Clone the repository:
 $ git clone https://github.com/sustrik/uxy.git
 ```
 
-You can now run `uxy` in one of several ways:
+You can now run `uxy` in one of several ways. Do one of these from within the `uxy` directory:
 
-* From within the uxy directory:
-    * Run `python -m uxy ...`
-    * Package the code into a zip file:
-        ```bash
-        $ zip uxy.zip -r uxy
-        $ python uxy.zip ...
-        ```
+* Run `python -m uxy ...`
+* Package the code into a zip file:
+    ```bash
+    $ zip uxy.zip -r uxy
+    $ python uxy.zip ...
+    ```
 * Build and install a wheel using [poetry](https://github.com/sdispater/poetry/):
     ```bash
     $ poetry build
