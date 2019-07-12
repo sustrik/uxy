@@ -86,6 +86,31 @@ Quasimodo   14:30
 "Moby Dick" 14:22 
 </pre>
 
+# INSTALLATION
+
+Clone the repository:
+
+```bash
+$ git clone https://github.com/sustrik/uxy.git
+```
+
+You can now run `uxy` in one of several ways. Do one of these from within the `uxy` directory:
+
+* Run `python -m uxy ...`
+* Package the code into a zip file:
+    ```bash
+    $ zip uxy.zip -r uxy
+    $ python uxy.zip ...
+    ```
+* Build and install a wheel using [poetry](https://github.com/sdispater/poetry/):
+    ```bash
+    $ poetry build
+    $ pip3 install dist/uxy-0.1.0-py3-none-any.whl
+    
+    # Now uxy should be in your $PATH, so from anywhere you can run:
+    $ uxy ...
+    ```
+
 # TOOLS
 
 ### UXY tools
