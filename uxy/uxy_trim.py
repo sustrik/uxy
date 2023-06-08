@@ -29,7 +29,7 @@ def trim(args, uxy_args):
   # Read the headers.
   s = base.stdin.readline()
   fmt = base.Format(s)
-  # Adjust the column widths so that at least quoted elipsis fits in.
+  # Adjust the column widths so that at least quoted ellipsis fits in.
   for i in range(0, len(fmt.widths) - 1):
     fmt.widths[i] = max(fmt.widths[i], 6)
   base.writeline(fmt.render())
