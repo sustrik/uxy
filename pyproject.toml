@@ -13,7 +13,7 @@ uxy = "uxy.__main__:main"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-PyYAML  = "4.2b1"
+PyYAML  = "5.4"
 
 [tool.poetry.dev-dependencies]
 
